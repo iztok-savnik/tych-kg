@@ -1,0 +1,54 @@
+= rules for identifiers
+- assumtions
+. suppose we have I, a set of identifiers from g
+. suppose we have a 
+
+- type-check literals
+
+
+- construction of an ordering of I (i1<=i2)
+
+. (i1,type,i2) => i1 <=_1 i2
+. i1,i2\in Ic \and (i1,subClassOf,i2) => i1 <=_1 i2
+. i1,i2\in Ip \and (i1,subPropertyOf,i2) => i1 <=_1  i2
+
+. i1,i2\in Ic \and (i1,subClassOf+,i2) => i1 <= i2                      /* general case */
+. i1,i2\in Ip \and (i1,subPropertyOf+,i2) => i1 <= i2                   /* general case */
+
+. i1 <=_1 i2 => i1 <= i2
+. i1 <= i2 \land i2 <= i3 => i1 <= i3                                   /* general case */
+
+- type-check identifiers
+
+. i1\in I_i \and \exists\/i2\in I_c(i1 <=_1 i2) => i1:i2
+. i1\in I_i \and \exists\/i_2,i_3\in I_c(i1:i2 \and i2 <=_1 i3) => i1:i3
+. i1\in I_i \and \exists\/i_2\in I_c(i1 <= i2) => i1:i2                    /* general case */
+
+- lub 
+.................before 05/27/22....................
+
+= (task) general picture
+- we have graph pattern 
+. a set of triples including consts and vars
+- we derive types of TPs
+- we derive types of GPs
+
+
+= (task) determine a type of a TP
+. type of TP without a predicate? use rdf:predicate.
+. type of TP without the schema? use generalizations.
+. type of TP with predicate? use a triple type defined as the schema.
+. type of TP can be \cup of triple types (defined in the schema).
+
+
+= (task) compute a type of a GP
+. meeting points in GP: use \cap type constructor
+. \cap of \cup of triple types can select one of triple types
+. one triple type is selected by other oper of \cap
+
+
+= (task) compute the type of a concrete triple
+- we need a type of a concrete triple, e.g. for distribution
+. if we have schema triple than it can be utilized
+. obtain the type of each constant
+. schema type, or, the most specific type?

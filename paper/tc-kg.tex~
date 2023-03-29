@@ -1,0 +1,631 @@
+\documentclass[runningheads]{llncs}
+
+\pdfoutput=1
+\usepackage{times}
+\normalfont
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{verbatim}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphics}
+\usepackage{color}
+\usepackage{url}
+
+% symbols
+\newcommand{\T}{{\cal T}} 
+\newcommand{\D}{{\cal D}} 
+\newcommand{\I}{{\cal I}} 
+\newcommand{\Ii}{{\cal I}_i} 
+\newcommand{\Ic}{{\cal I}_c} 
+\newcommand{\Ip}{{\cal I}_p} 
+\newcommand{\cl}{\text{:}} 
+\newcommand{\rdftype}{\text{rdf:type}} 
+\newcommand{\rdfsubcl}{\text{rdfs:subClassOf}} 
+\newcommand{\rdfsubclpl}{\text{rdfs:subClassOf+}} 
+\newcommand{\rdfsubprop}{\text{rdfs:subPropertyOf}} 
+\newcommand{\rdfsubproppl}{\text{rdfs:subPropertyOf+}} 
+\newcommand{\rdfsdomain}{\text{rdfs:domain}} 
+\newcommand{\rdfsrange}{\text{rdfs:range}} 
+\newcommand{\finbox}{\phantom{.}\hfill\Box}
+\newcommand{\nl}{\hfill\break}
+\newcommand{\vb}[1]{\begin{small}\texttt{#1}\end{small}}
+\newcommand{\memo}[1]{}
+\newcommand{\notes}[1]{\noindent\begin{small}-- \emph{#1}\\\end{small}}
+
+\def\ojoin{\setbox0=\hbox{$\bowtie$}%
+  \rule[-.02ex]{.25em}{.4pt}\llap{\rule[\ht0]{.25em}{.4pt}}}
+\def\leftouterjoin{\mathbin{\ojoin\mkern-5.8mu\bowtie}}
+\def\rightouterjoin{\mathbin{\bowtie\mkern-5.8mu\ojoin}}
+\def\fullouterjoin{\mathbin{\ojoin\mkern-5.8mu\bowtie\mkern-5.8mu\ojoin}}
+
+\pagestyle{headings}
+\setcounter{tocdepth}{5} %show more in the toc
+
+\begin{document}
+
+\title{Type-checking knowledge graphs}
+
+\author{Iztok Savnik\inst{1} \and Kiyoshi Nitta\inst{2}} 
+
+\authorrunning{I. Savnik et al.}
+
+\institute{Faculty of mathematics, natural sciences and information technologies, \\
+  University of Primorska, Slovenia \\
+  \email{iztok.savnik@upr.si} \and
+  Yahoo Japan Corporation, Tokyo, Japan \\
+  \email{knitta@yahoo-corp.jp}}
+
+\maketitle
+
+\begin{abstract}
+  We first present a formal view of a knowledge graph. On this basis,
+  the type-checking rules are developed to define correct typing
+  relationships among the triples of a knowledge graph. We discuss the
+  algorithms for verifying the typing relationships against the given
+  knowledge graph. Finally, we present the experimental results of
+  type-checking the Yago4 knowledge graph.
+
+\keywords{RDF stores \and graph databases \and knowledge graphs \and database statistics \and statistics of graph databases.}
+\end{abstract}
+
+%\newpage
+%\tableofcontents
+%\newpage
+
+\thispagestyle{headings}
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This is intro... \cite{Hogan22KGsSurveyCsur}.
+
+\section{Formal framework}
+
+This section describes the formal view of knowledge graphs 
+
+\section{Typing knowledge graphs}
+
+\subsection{Typing literals}
+
+
+
+\subsection{Typing identifiers $I$}
+
+The set $I$ includes individual identifiers $I_i$, class identifiers
+$I_c$ and predicate identifiers $I_p$. Let $i_1,i_2\in\/I$. The
+relationship preceeds $\preceq$ on the set $I$ is defined as
+follows. If the identifier $i_1$ is more specific than or equal to
+$i_2$ with respect to the conceptual schema of a knowledge graph, then
+$i_1\preceq\/i_2$.
+
+The relationship $\preceq$ defines a partial ordering of the
+identifiers from $I$ that we denote $(I,\preceq)$. As described in the
+section on formalization, the class identifiers $I_c$ stand for the
+types of individual identifiers $I_i$. Hence, the partial ordering
+$(I,\preceq)$ is defined by means of the relationships
+rdf:type, rdfs:SubClassOf and rdfs:subPropertyOf. In this way, we
+obtain also the isomorphical poset defined on the interpretations of
+individual types (classes) using the subsumption relationship
+$\subseteq$.
+
+
+\subsubsection{Stored partial ordering of identifiers.}\nl
+
+\notes{Partial ordering defined with triples in a database.}
+\notes{The relationships that poset covers are rdf:type, rdfs:subClassOf and rdfs:subPropertyOf. }
+\notes{All identifiers included in the relalationship $\preceq_1$.}
+\notes{This allows us to separate and also address separately the stored schema graph and subtyping relationship.}
+\notes{The relation $\preceq_1$ includes solely the \emph{stored} relationships among identifiers.}
+\notes{The relation $\preceq$ is the relation $\preceq_1$ extended with the reflexivity and transitivity.}
+
+\noindent Reflecting the one-step relationship rdf:type in $(\I,\preceq)$. 
+
+\begin{equation}
+\dfrac{I_1\in\Ii \quad I_2\in\Ic \quad (I_1,\text{rdf:type},I_2)\in \D}
+      {I_1 \preceq_1 I_2}
+\end{equation}
+
+\noindent Including the one-step relationship rdfs:subClassOf in
+$(\I,\preceq)$.
+
+\begin{equation}
+\dfrac{I_1,I_2\in\Ic \quad (I_1,\text{rdfs:subClassOf},I_2)\in \D}
+      {I_1 \preceq_1 I_2}
+\end{equation}
+
+\noindent Including the one-step relationship rdfs:subPropertyOf in
+$(\I,\preceq)$.
+
+\begin{equation}
+\dfrac{I_1,I_2\in\Ip \quad (I_1,\text{rdfs:subPropertyOf},I_2)\in \D}
+      {I_1\preceq_1\/I_2}
+\end{equation}
+
+\notes{Show that all identifiers are included.}
+
+
+\subsubsection{Subtyping identifiers.} 
+
+%\medskip\noindent Including the many-step step relationship rdfs:subClassOf in $(I,\preceq)$.
+%
+%\begin{equation}%\medskip\noindent Including the many-step step relationship rdfs:subClassOf in $(I,\preceq)$.
+
+%\dfrac{i_1,i_2\in\/I_c \land (i_1,\text{rdfs:subClassOf}+,i_2)}
+%      {i_1\preceq i_2}
+%\end{equation}
+%
+%\medskip\noindent Including the many-step step relationship rdfs:subPropertyOf in $(I,\preceq)$.
+%
+%\begin{equation}
+%\dfrac{i_1,i_2\in I_p \land (i_1,\text{rdfs:subPropertyOf}+,i_2)}
+%      {i_1\preceq i_2}
+%\end{equation}
+
+\noindent
+\notes{Relate everything with subsumption poset.}
+
+Generalizing one-step relationship $\preceq_1$ to the relationship
+$\preceq$ in $(I,\preceq)$.  $\preceq_1$ is a basis og $\preceq$.
+
+\begin{equation}
+\dfrac{I_1,I_2\in\I \quad I_1\preceq_1 I_2}
+      {I_1 \preceq I_2}
+\end{equation}
+
+\noindent Subtyping is reflexive.
+
+\begin{equation}
+\dfrac{S\in \I}
+      {S\preceq\/S}
+\end{equation}
+
+\noindent The subtype relationship is transitive. We require that the
+symbols $S$, $U$ and $T$ are identifiers. Note that $S$ can be an
+individual identifier while $U$ and $T$ have to represent
+classes.
+
+\begin{equation}
+\dfrac{S,U,T\in\I \quad S\preceq\/U \quad U\preceq\/T}
+      {S\preceq\/T}   
+\end{equation}
+
+\noindent Types include a special type $\top$ that represents the most
+general type in the ontology. Every type is more specific than the top
+type $\top$.
+
+\begin{equation}
+S\preceq\top
+\end{equation}
+
+
+\subsubsection{Typing of identifiers.}
+
+\noindent A base type of an individual identifier $I$ is a type
+related to $I$ by the relationship $\preceq_1$. Derivation of base
+types of $I$ is defined using the following rule.
+
+\begin{equation}
+\dfrac{I\in\Ii \quad C\in\Ic \quad I\preceq_1\/C}
+      {I:_1C}
+\end{equation}
+
+\noindent There are two possible ways of defining a type of an
+identifier. One way is to use the relationship $\preceq$. The other
+way is to use existent typing.
+
+All possible types of $I$ include the base types of $I$ and all
+types that are more general than the base types. Note that the
+relationship $\preceq$ subsumes the relationship $\preceq_1$.
+
+%%% bounded universal type?
+%\begin{equation}
+%\dfrac{i_1\in I_i \land \forall\/i_2\in I_c(i_1 \preceq i_2)§}
+%      {i_1:i_2/\text{deriv}}   
+%\end{equation}
+
+\begin{equation}
+\dfrac{I\in\Ii \quad C\in\Ic\quad I\preceq\/C}
+      {I:C}   
+\end{equation}
+
+\noindent The bridge between the typing relation and subtype relation
+is provided by adding a new typing rule \cite{Pierce02TypesProgLang}. The
+following rule is called \emph{rule of subsumption}.
+
+\begin{equation}
+\dfrac{I\in\Ii \quad I:S \quad S\preceq\/T}
+      {I:T}    
+\end{equation}
+
+% - lub 
+
+%\subsection{lub}
+  
+
+
+\subsection{Intersection type}
+
+The instances of the intersection type $T_1\land\/T_2$ are objects
+belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
+greatest lower bound of the types $T_1$ and $T_2$. In general,
+$\land[T_1\ldots\/T_n]$ is the greatest lower bound of types
+$T_1\ldots\/T_n$ \cite{Pierce91IntersectUnion,Pierce96IntersectionTypes}.
+
+\begin{equation}
+T_1\land\/T_2\preceq\/T_1    
+\end{equation}
+
+\begin{equation}
+T_1\land\/T_2\preceq\/T_2  
+\end{equation}
+
+\begin{equation}
+\land[T_1\ldots\/T_n] \preceq\/T_i  
+\end{equation}
+
+If the type $S$ is more specific than the types $T_1\ldots\/T_n$ then
+$S$ is more specific then $\land[T_1\ldots\/T_n]$. First, we present
+the rule for a pair of types $T_1$ and $T_2$.
+
+\begin{equation}
+\dfrac{S\preceq\/T_1\quad\/S\preceq\/\/T_2}
+      {S\preceq\/T_1\land\/T_2}  
+\end{equation}
+
+\begin{equation}
+\dfrac{\text{forall i,\ } S\preceq\/T_i}
+      {S\preceq\land[T_1\ldots\/T_n]}  
+\end{equation}
+
+
+
+
+\subsection{Union type}
+
+The intersection and union types are dual. This can be seen also from
+the rules that are used for each particular type.
+
+The instances from the union type $T_1\lor\/T_2$ are either the
+instances of $T_1$ or $T_2$, or the instances of both types. The type
+$T_1\lor\/T_2$ is the smallest upper bound of the types $T_1$ and
+$T_2$. In general, $\lor[T_1\ldots\/T_n]$ is the smallest upper bound
+of types $T_1\ldots\/T_n$ \cite{Pierce90CalculusIntersectUnion}.
+
+\begin{equation}
+T_1\preceq\/T_1\lor\/T_2    
+\end{equation}
+
+\begin{equation}
+T_2\preceq\/T_1\lor\/T_2  
+\end{equation}
+
+\begin{equation}
+T_i\preceq\/\lor[T_1\ldots\/T_n]  
+\end{equation}
+
+If the type $T$ is more general than the types $S_1\ldots\/S_n$ then
+$T$ is more general then $\lor[S_1\ldots\/S_n]$. First, we present
+the rule for types $T_1$ and $T_2$.
+
+\begin{equation}
+\dfrac{S_1\preceq\/T\quad\/S_2\preceq\/\/T}
+      {S_1\lor\S_2\preceq\/T}  
+\end{equation}
+
+\begin{equation}
+\dfrac{\text{forall i,\ } S_i\preceq\/T}
+      {\lor[S_1\ldots\/S_n]\preceq\/T}  
+\end{equation}
+
+
+
+\subsection{Type-checking triples}
+
+% base
+\subsubsection{Triples and schema triples.}\nl
+
+\notes{Is the following defined in formalization of KG?}
+\notes{Maybe typing of ground, schema triples is presented? Which aspect?}
+\notes{Show the complete poset of triples.}
+\notes{Define the set of ground triples.}
+\notes{Define the set of type triples (schema triples) and the schema graph .}
+\notes{Define the stored schema graph.}
+
+\subsubsection{Deriving a base type of a triple.}
+
+\noindent The base type of an individual identifier $i$ is a class $c$
+related to $i$ by one-step relationship $\preceq_1$. In terms of the
+concepts of a knowledge graph, $c$ and $i$ are related by the
+relationship rdf:type.
+
+A base type of a triple $t=(s,p,o)$ is a triple $T=(T_s,T_p,T_o)$ that
+includes the base types of $t$'s components. A base type of a triple
+is defined by the following rule.
+
+\begin{equation}
+\dfrac{s:_1T_o\quad p:_1T_p\quad T_p\preceq\/\text{rdf:Property}\quad o:_1T_o}
+      {(s,p,o):_1T_s*T_p*T_o}
+\end{equation}
+
+The types of $s$ and $o$ can be any classes $T_s$ and $T_o$ from
+${\cal I}_c$, while the type of $p$ has to be a class $T_p$ that is a
+subclass of rdf:Property. The typing of a triple $t$ is correct since
+the interpretation of $T$ includes $t$. Moreover, the types $T$ that
+are derived by the above rule are minimal in the sense that given the
+information provided, i.e., the types of $t$'s components, their
+interpretations are minimal possible comparing them to the
+interpretations of all other derived types of $t$.
+
+%\medskip\noindent Remarks:
+%\begin{itemize}
+%\item If $i_1,i_2\in\/I_c \land i_1\preceq\/i_2$ then $i_1\sqcap\/j_1\sqcap\/...\sqcap\/j_k\preceq i_2$.
+%\end{itemize}
+
+
+\subsubsection{Deriving a top type of a triple.}
+
+\noindent The following rule is a judgment for a top type of a
+concrete triple $t=(s,p,o)$. A top type of a triple $t$ is the most
+specific type from the stored schema graph which interpretation
+includes $t$.
+
+We first find the schema triples for a given predicate $p$. The set of
+stored schema triples is constructed by selecting the most specific
+schema triples with a predicate that is more general then $p$.
+
+\begin{equation}
+\begin{array}{l}
+S_0 = \{(T_s,p',T_o)\ |\ p'\succeq\/p \land (p',\text{dom},T_s)\in\/g \land (p',\text{rng},T_o)\in\/g\ \land \\
+\phantom{S = \{(T_s,p',T_o)\ |} \not\exists\/p''(p''\preceq\/p'\land(p'',\text{dom},T_s)\in\/g\land(p'',\text{rng},T_o)\in\/g)\}
+\end{array}
+\end{equation}
+
+Generator view of rules: Just describe the properties of
+pre-conditions and conclusions.
+
+\begin{equation}
+\dfrac{T\in\/\text{ssg}\quad p\preceq\/T_p\quad  
+       \text{for all\ } T'\in\/\text{ssg},\ T'\succ\/T \lor p\succ\/T'_p\lor T'_p\succ\/T_p}
+      {(s,p,o):_2\/T}
+\end{equation}
+
+\begin{equation}
+\dfrac{T\in\/\text{ssg}\quad\/t:_1T_1\quad\/T_1\preceq\/T\quad  
+       \not\exists\/S\in\/\text{ssg},\ S\prec\/T \land T_1\preceq\/S}
+      {(s,p,o):_2\/T}
+\end{equation}
+
+The first two premises require that the type $T$ is an element of the
+stored schema graph, and the predicate of $T$, i.e., $T_p$, is more
+general than the predicate $p$ of the input triple $(s,p,o)$.
+
+The last premise in the above rule requires that the top type $T$ is
+the least general type including a predicate equal or more general to
+$p$. The condition can be better understood in the existential form:
+$\not\exists\/T'\in \text{ssg}: T'\preceq\/T\land
+p\preceq\/T'_p\preceq\/T_p$.
+
+Note that the rule is not linked to the $t$'s components $s$ and
+$o$ in any way. This means that $s\preceq\/T_S$ and $o\preceq\/T_O$
+may not hold.\footnote{Does it make sense to add the conditions? Further, at
+this point the type errors can be catched.}
+
+From the other point of view, the schema triples are obtained from the
+inherited values of the predicates rdfs:domain and rdfs:range. The
+inherited values have to be the closest when traveling from property
+$p$ towards the more general properties. Note that multiple different
+schema triples are possible only in the case of multiple inheritance.
+
+
+\subsubsection{Typing a triple.}\nl
+
+\notes{Why the type selected from ssg? }
+\notes{How (conceptually) types from ssg are selected?}
+
+The type of a triple $t=(s,p,o)$ is computed by first deriving the
+base type $T$ and the top type $S$ of $t$. Then, we check if $S$ is
+reachable from $T$ through the sub-class and sub-property hierarchies,
+i.e., $T\preceq\/S$.
+
+\begin{equation}
+\dfrac{(s,p,o):_1T\quad (s,p,o):_2S\quad (T\preceq\/S)}
+      {(s,p,o):S}
+\end{equation}
+
+\notes{How to compute $T\preceq\/S$? Refer to position where we have a description.}
+\notes{How to gather a complete type of $t$ including different
+$S\in\/\text{sgg}$? Union of selected $S$'s... this is a
+\emph{complete} type. It does make sense.}
+
+%The alternative types are joined by using the union type contructor to represent the type of $(s,p,o)$.
+%
+%\begin{equation}
+%S = \bigsqcup_{T\in\/S_0}T
+%\end{equation}
+%
+%The final type $S$ of a triple $(s,p,o)$ is composed of the previously selected alternative stored schema triples that are reachable from the base types of the triple. The presented procedure for the computation of $S$ is further referrred to as ssg-type(p) where $p$ is a parameter property.
+
+\noindent
+\notes{Order the possible derivations, gatherings (groupings) ... of types.}
+\notes{How to derive all possible types of a triple? How to integrate them using union and intersection types?}
+\notes{How to derive types of a triple deriving in some specific direction? For example, the cover (lub) type of a triple? The most specific type (base type)?}
+
+\noindent
+\notes{Possible diagnoses.}
+\notes{Components not related to a top type of a triple?}
+\notes{Components related to sub-types of a top type?}
+\notes{Above pertain to all components.}
+
+
+\subsubsection{Typing a graph.}\nl
+
+\notes{What is a type of a graph?}
+\notes{A type of a graph is a graph!}
+\notes{It includes a set of schema triples forming a schema graph.}
+
+\notes{Typing a graph bottom-up?}
+\notes{Checking that all the triples are of correct types.}
+
+
+\subsubsection{Typing a schema triple.}\nl
+
+\notes{What can be checked?}
+\notes{Is a schema triple properly related to the super-classes and types of components.}
+\notes{Consistency of the placement of a class in an ontology. What is this?}
+\notes{A class or predicate component not related to other classes?}
+\notes{A class or predicate component attached to ``conflicting'' set of classes? What can be detected?}
+\notes{@kiyoshi Do you see any other examples?}
+\notes{}
+
+
+
+
+\section{Typing  an algebra of graphs}
+
+\noindent
+\notes{Announcement of contents.}
+\notes{Algebra of graphs is presented first.}
+\notes{A triple-pattern is a basic access method.}
+\notes{A graph pattern includes joins.}
+
+\subsection{Algebra of graphs}
+
+\noindent
+\notes{Algebra of sets of triples.}
+\notes{Algebra of sets of edges (graphs).}
+
+\noindent
+\notes{Algebra is close to the relational algebra.}
+\notes{The relations have three columns storing the named mappings between S and P columns.}
+\notes{The access method is a triple-pattern that can be converted into 6 possible standard relational index-based access methods.}
+\notes{Angles's algebra is close to denotational sematics, while relational algebra can be efficiently implemented by using existing technology.}
+
+\noindent
+\notes{Triple-pattern is an access method.}
+\notes{Selection ($\sigma$) can be added either to one TP or can cover multiple TPs (however joins are extracted?)}
+\notes{Joins are connecting two TPs. Simple conditions involve equality of TP components. More complex conditions (can explot indexes).}
+\notes{Left outer joins link two TPs.}
+
+\noindent
+\notes{Mechanization for the union and intersection types. Should generate all possible lub, glb, in combination with unions, ...}
+\notes{Check wheather types can be derived in all plausable directions, such as, interoduction, elimination, ...?}
+\notes{If a variable has two types that are related by $\preceq$ than more general one can be skipped. This is a rule (elimination) that links typing and subtyping? Union and intersection with subtyping?}
+\notes{If $v:A\land\/B$ and $A\preceq\/B$ then $v:A$. Type $B$ can be skipped. This is elimination and this is also lub type.}
+
+
+\subsection{Typing triple-patterns}
+
+\noindent
+\notes{A triple pattern is an access method.}
+\notes{Assign types to constants (as for triples) and find the candidates for types from ssg.}
+\notes{Initially we have unions of types that are the candidates.}
+\notes{Use these types in connection with the other TPs to resolve the types of the components that include the variables.}
+\notes{A type of a TP can be very general in the case that we do not have a P component.}
+
+
+\subsection{Typing operation select}
+
+\noindent
+\notes{The selection retains the type of the parameter set of graphs.}
+\notes{A type of a selection condition have to be checked.}
+\notes{Typing rules for possible operations in selection conditions have to be defined. These are expressions composed of individual objects.}
+\notes{Narrowing a type of a TP can be achieved through the selection comprising class identifiers.}
+
+
+\subsection{Typing operation project}
+
+\noindent
+\notes{The type of the parameter set of graphs is a set of schema triples forming a schema graph of the parameter set of graphs.}
+\notes{The projection $\Pi(q)$ selects those triples (from input graphs) that include a variable from the parameter set of variables.}
+\notes{The type of the projection result is again a set of schema triples.}
+\notes{Some types may change as the consequence of removing some schema triples from the type of the input set of graphs?}
+\notes{Check situations where this is the case!}
+
+
+\subsection{Typing operations product, join and outer left join}
+
+\noindent
+\notes{The operation Cartesian product $\times(q_1,q_2)$ takes two sets of graphs that are the results of queries $q_1$ and $q_2$ and generates all possible pairs of graphs.}
+\notes{The type of the result is the union of the two sets of schema triples representing the types of the two input queries.}
+\notes{Express the above in a rule.}
+
+\noindent
+\notes{The join $\bowtie(q_1,q_2)$ is defined as an equi join between the results of the two queries, $q_1$ and $q_2$.}
+\notes{The join condition is defined by the common variables from $q_!$ and $q_2$.}
+\notes{The type of the joined graphs is, as in the case of $\times$, the union of the schema graphs of the parameter graphs.}
+
+\noindent
+\notes{Left outer join $\leftouterjoin$ ...}
+\notes{...}
+
+
+\subsection{Typing operations union, intersect and difference}
+
+\subsection{Typing graph patterns}
+
+\noindent
+\notes{A graph pattern is a set of TPs.}
+\notes{What is a type of a graph? A subset of the schema graph.}
+
+
+
+
+
+
+
+%\section{Acknowledgments}
+%
+%The authors acknowledge the financial support from the Slovenian Research Agency (research core funding No. P1-00383).
+
+\bibliographystyle{abbrv}
+\bibliography{biblio}
+
+\end{document}
+
+
+
+= rules for identifiers
+- assumtions
+. suppose we have I, a set of identifiers from g
+. suppose we have a 
+
+- type-check literals
+
+
+.................before 05/27/22....................
+
+= (task) general picture
+- we have graph pattern 
+. a set of triples including consts and vars
+- we derive types of TPs
+
+
+
+- we derive types of GPs
+
+
+= (task) determine a type of a TP
+. type of TP without a predicate? use rdf:predicate.
+. type of TP without the schema? use generalizations.
+. type of TP with predicate? use a triple type defined as the schema.
+. type of TP can be \cup of triple types (defined in the schema).
+
+
+= (task) compute a type of a GP
+. meeting points in GP: use \cap type constructor
+. \cap of \cup of triple types can select one of triple types
+. one triple type is selected by other oper of \cap
+
+
+= (task) compute the type of a concrete triple
+- we need a type of a concrete triple, e.g. for distribution
+. if we have schema triple than it can be utilized
+. obtain the type of each constant
+. schema type, or, the most specific type?
