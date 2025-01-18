@@ -18,6 +18,8 @@
 \usepackage{url}
 
 % symbols
+\newcommand{\darr}{\downarrow} 
+\newcommand{\uarr}{\uparrow} 
 \newcommand{\D}{{\cal D}} 
 \newcommand{\I}{{\cal I}} 
 \newcommand{\Ii}{{\cal I}_i} 
@@ -25,6 +27,7 @@
 \newcommand{\Ip}{{\cal I}_p}
 \newcommand{\T}{{\cal T}}
 \newcommand{\Ti}{{\cal T}_i}
+\newcommand{\Tt}{{\cal T}_t}
 \newcommand{\cl}{\text{:}} 
 \newcommand{\rdftype}{\text{rdf:type}} 
 \newcommand{\rdfsubcl}{\text{rdfs:subClassOf}} 
@@ -86,7 +89,10 @@
 
 This is intro... \cite{Hogan22KGsSurveyCsur}.
 
+\notes{Topic: KGs are becoming KBs...}
 
+\notes{Topic: Give an abstract insight into the structure of KB. Identifiers, schema, types, ...}
+\notes{Topic: Show the ground triples, poset of triples.types triples, schema graph, etc.}
 
 
 
@@ -160,6 +166,7 @@ the rule for a pair of types $T_1$ and $T_2$.
 \end{equation}
 
 \begin{equation}
+\label{rul:intsc-gather}
 \dfrac{\text{forall i,\ } S\preceq\/T_i}
       {S\preceq\land[T_1\ldots\/T_n]}  
 \end{equation}
@@ -193,7 +200,7 @@ the rule for types $T_1$ and $T_2$.
 
 \begin{equation}
 \dfrac{S_1\preceq\/T\quad\/S_2\preceq\/\/T}
-      {S_1\lor\S_2\preceq\/T}  
+      {S_1\lor\/S_2\preceq\/T}  
 \end{equation}
 
 \begin{equation}
@@ -235,34 +242,61 @@ the rule for types $T_1$ and $T_2$.
 
 \subsection{Stored typing and subtyping of identifiers.}\nl
 
-\notes{Partial ordering defined with stored schema triples in a database.}
-\notes{The relationships that poset $\preceq_1$ covers are rdfs:subClassOf and rdfs:subPropertyOf. }
-\notes{Identifiers included in $:_1$ are between ground idents and base classes.}
-\notes{This allows us to separate and also address separately the ssg and subtyping relationship.}
+The individual and class entities are represented by identifiers from
+the set $\I$. The individual identifiers $\Ii$ stand for literals,
+concrete and abstract entities. The class identifiers $\Ic$ represent
+abstract entities that have an unempty interpretation. The abstract
+entities include, besides the identifiers of user-defined classes,
+the types (classes) of literals.
 
-\notes{Notes.}
-\notes{Oportunity to introduce ``mixed'' objects including ground and schema components.}
+A graph database includes stored definitions for typing the individual
+identifiers, and for representing the specialization/generalization
+hierarchies of classes and properties.
 
+Let us introduce the typing and specialization/generalization
+relationships formally. The expression $i:_\darr\/C$ states that a
+class $C$ is a type of an individual identifier $i$. The expression
+$i_1\preceq_\darr\/i_2$ defines the sub-class relationship between the
+class identifiers $i_1$ and $i_2$. The index '$\darr$' in relations
+$:_\darr$ and $\preceq_\darr$ denotes that the relationships is stored
+in a database. Such notation allows us to address differently the
+stored and the derived parts of the graph database schema.
 
-\noindent Reflecting the one-step relationship rdf:type with $:_1$. 
+%\notes{Partial ordering defined with stored schema triples in a database.}
+%\notes{The relationships that poset $\preceq_1$ covers are rdfs:subClassOf and rdfs:subPropertyOf. }
+%\notes{Identifiers included in $:_1$ are between ground idents and base classes.}
+%\notes{This allows us to separate and also address separately the ssg and subtyping relationship.}
+
+\memo{Oportunity to introduce ``mixed'' objects including ground and schema components.}
+
+The rule for the one-step relationship $:_\darr$ is defined using the
+predicate rdf:type.
 
 \begin{equation}
-\dfrac{I_1\in\Ii \quad I_2\in\Ic \quad (I_1,\text{rdf:type},I_2)\in \D}
-      {I_1 :_1 I_2}
+\dfrac{I\in\Ii\quad I_c\in\Ic\quad (I,\text{rdf:type},I_c)\in \D}
+      {I :_\darr I_c}
 \end{equation}
 
-Expressing the one-step subtyping relationship rdfs:subClassOf with $\preceq_1$.
+The individual entity $I$ can have more than one stored types, e.g.,
+$I_{c1}$ and $I_{c2}$. Therefore, $I:_\darr\/I_{c1}$ and
+$I:_\darr\/I_{c2}$ holds, and we can instead write
+$I:_\darr\/I_{c1}\land\/I_{c2}$. All existing stored typings of $I$
+can be gathered by Rule \ref{rul:3-ground-gather} presented later.
+
+A one-step subtyping relationship $\preceq_\darr$ is defined by means
+of the RDF predicate rdfs:sub\-ClassOf in the following rule.
 
 \begin{equation}
 \dfrac{I_1,I_2\in\Ic \quad (I_1,\text{rdfs:subClassOf},I_2)\in \D}
-{I_1 \preceq_1 I_2}
+{I_1 \preceq_\darr\/I_2}
 \end{equation}
 
-Expressing the one-step subtyping relationship rdfs:subPropertyOf with $\preceq$.
+The rule for the definition of the one-step subtyping relationship
+$\preceq_\darr$ is based on the predicate rdfs:subPropertyOf.
 
 \begin{equation}
 \dfrac{I_1,I_2\in\Ip \quad (I_1,\text{rdfs:subPropertyOf},I_2)\in \D}
-      {I_1\preceq_1\/I_2}
+      {I_1\preceq_\darr\/I_2}
 \end{equation}
 
 
@@ -270,58 +304,73 @@ Expressing the one-step subtyping relationship rdfs:subPropertyOf with $\preceq$
 
 \subsection{Typing and subtyping identifiers.}\nl
 
-\notes{Extend one-step relationships $:_1$ and $\preceq_1$ to relationships $:$ and $\preceq$.}
-\notes{The relation $\preceq$ is the relation $\preceq_1$ extended with the reflexivity and transitivity.}
-\notes{Link typing $:$ and subtyping $\preceq$ with a rule.}
+The one-step relationships $:_\darr$ and $\preceq_\darr$ are now
+extended with the reflexivity and transitivity to obtain the
+relationships $:$ and $\preceq$. The relation $\preceq$ forms a
+partial ordering of class
+identifiers. %Further, the subtyping relation $\preceq$ is used to
+%extend typing relation $:$ with the rule of \emph{subsumption}.
 
-
-
-\noindent
-Generalizing one-step relationship $\preceq_1$ to the relationship
-$\preceq$.
+First, the one-step relationship $\preceq_s$ is generalized to the
+relationship $\preceq$ defined over class identifiers $\Ic$.
 
 \begin{equation}
-\dfrac{I_1,I_2\in\I \quad I_1\preceq_1 I_2}
+\label{rul:Ic-extended}
+\dfrac{I_1,I_2\in\Ic \quad I_1\preceq_\darr I_2}
       {I_1 \preceq I_2}
 \end{equation}
 
-Subtyping is reflexive.
+Next, the subtyping relationship $\preceq$ is reflexive.
 
 \begin{equation}
-\dfrac{S\in \I}
+\label{rul:Ic-reflexivity}
+\dfrac{S\in \Ic}
       {S\preceq\/S}
 \end{equation}
 
-The subtype relationship is transitive. We require that the
-symbols $S$, $U$ and $T$ are identifiers. Note that $S$ can be an
-individual identifier while $U$ and $T$ have to represent
-classes.
+The subtype relationship is also transitive. 
 
 \begin{equation}
-\dfrac{S,U,T\in\I \quad S\preceq\/U \quad U\preceq\/T}
+\label{rul:Ic-transitivity}
+\dfrac{S,U,T\in\Ic \quad S\preceq\/U \quad U\preceq\/T}
       {S\preceq\/T}   
 \end{equation}
 
-Types include a special type $\top$ that represents the most
-general type in the ontology. Every type is more specific than the top
-type $\top$.
+Finally, the subtype relationship is asymmetric which is expressed
+using the following rule. 
+
+\begin{equation}
+\label{rul:Ic-antisymmetry}
+\dfrac{S,U\in\Ic \quad S\preceq\/U \quad U\preceq\/S}
+      {S=T}   
+\end{equation}
+
+As a consequence of the rules
+\ref{rul:Ic-reflexivity}-\ref{rul:Ic-antisymmetry} the relation
+$\preceq$ is a poset.
+
+Knowledge graphs include a special class $\top$ that represents the
+root class of the ontology. In RDF ontologies $\top$ is usually
+represented by the predicate owl:Thing. The following rule specifys
+that all class identifiers are more specific than $\top$.
 
 \begin{equation}
 S\preceq\top
 \end{equation}
 
 %\subsection{Typing of identifiers.}
-
-A base type of an individual identifier $I$ is a type of $I$.
+The stored typing relation $:_s$ is now extended to the typing
+relation $:$ that takes into account the subtyping relation $\preceq$.
+The following rule states that a stored type is a type.
 
 \begin{equation}
-\dfrac{I\in\Ii \quad C\in\Ic \quad I:_1\/C}
+\dfrac{I\in\Ii \quad C\in\Ic \quad I:_s\/C}
       {I:C}
 \end{equation}
 
-The link between the typing relation and subtype relation is
-provided by adding a new typing rule \cite{Pierce02TypesProgLang}. The
-following rule is called \emph{rule of subsumption}.
+The link between the typing relation and subtype relation is provided
+by adding a typing rule called \emph{rule of subsumption}
+\cite{Pierce02TypesProgLang}.
 
 \begin{equation}
 \dfrac{I\in\Ii \quad I:S \quad S\preceq\/T}
@@ -332,14 +381,13 @@ following rule is called \emph{rule of subsumption}.
 \notes{Properties have dual role: they are instances and types at the same time.}
 \notes{Present the features of properties from this point of view.}
 
+\memo{Put together the base types of ground identifiers using $\land$ type.}
+\memo{First, the base type of an ground identifier is the $\land$ of all base types.}
+\memo{The \emph{base type} of a ground identifier is defined explicitely!}
 
-\notes{Put together the base types of ground identifiers using $\land$ type.}
-\notes{First, the base type of an ground identifier is the $\land$ of all base types.}
-\notes{The \emph{base type} of a ground identifier is defined explicitely!}
-
-\notes{The lub types of base types B are the smallest types related to all base types.}
-\notes{The lub types are related by $\land$ to form a (complete) type of a ground identifier.}
-\notes{The complete type of a ground identifier is defined explicitely.}
+\memo{The lub types of base types B are the smallest types related to all base types.}
+\memo{The lub types are related by $\land$ to form a (complete) type of a ground identifier.}
+\memo{The complete type of a ground identifier is defined explicitely.}
 
 
 
@@ -349,11 +397,6 @@ following rule is called \emph{rule of subsumption}.
 
 
 \section{Typing triples}
-
-%\notes{Show the complete poset of triples.}
-%\notes{Define the set of ground triples.}
-%\notes{Define the set of type triples (schema triples) and the schema graph .}
-%\notes{Define the stored schema graph.}
 
 \notes{There are two basic aspects of a triple type.}
 \notes{First, the type is computed bottom-up: from the stored types of triple components.}
@@ -369,70 +412,77 @@ following rule is called \emph{rule of subsumption}.
 \notes{Show rules relating $\land/\lor$ types and triple types. Example.}
 \notes{E.g., $(S_1\land\/S_2)*p*R = S_1*p*R\land\/S_2*p*R$.}
 
+\notes{Predicates should be treated in the same way as the classes.}
+\notes{They can have a rich hierarchy.}
+\notes{\emph{Note:} Where to include discussion on special role of predicates and their relations to classes?}
+\notes{Mention Cyc as the practical KB with rich hierarchy of predicates.}
 
 
 
-\subsection{Deriving a base type of a triple.}
 
-\memo{\noindent The base type of an individual identifier $i$ is a
-  class $c$ related to $i$ by one-step relationship $\preceq_1$. In
-  terms of the concepts of a knowledge graph, $c$ and $i$ are related
-  by the relationship rdf:type.}
+\subsection{Deriving a ground type of a triple.}
 
-A base type of a triple $t=(s,p,o)$ is a triple $T=T_s*p*T_o$ that
-includes the base types of $t$'s components $s$ and $o$, and the
-property $p$ which now has the role of a type. A base type of a triple
-is defined by the following rule.
+\noindent
+A ground type of an individual identifier $i$ is a class $C$ related
+to $i$ by one-step type relationship $:_\darr$ denoting a ground
+type. In terms of the concepts of a knowledge graph, $C$ and $i$ are
+related by the relationship rdf:type.
+
+A ground type of a triple $t=(s,p,o)$ is a triple $T=T_s*p*T_o$ that
+includes the ground types of $t$'s components $s$ and $o$, and the
+property $p$ which now has the role of a type. A ground type of a
+triple is defined by the following rule.
 
 \begin{equation}
   \label{rul:3-ground}
-\dfrac{t=(s,p,o)\quad s:_1T_s\quad p:_1\text{owl:ObjectProperty}\quad o:_1T_o}
-      {t:_1T_s*p*T_o}
+\dfrac{t\in\/\Ti,\ t=(s,p,o)\quad I_s,I_o\in\Ic\quad s:_\darr\/I_s\quad p:_\darr\text{owl:ObjectProperty}\quad o:_\darr\/I_o}
+      {t:_\darr\/I_s*p*I_o}
 \end{equation}
 
-The type of S component $T_s$ is one of the ground types of $s$, and
-the type of O components is one of the ground types of $o$. The
-predicate $P$ is treated differently to S and O components. The
+The class $I_s$ is one of the ground types of $s$, and the type $I_o$
+is one of the ground types of $o$. The predicates are treated
+differently to the subject and object components of triples. The
 predicates have the role of classes while they are instances of
 owl:ObjectProperty.
 
-There are multiple ground types of a triple. They can be gathered into
-a single type using the $\land$ type.
+There can be multiple ground types of a triple. They may be gathered
+into a single $\land$-type by using the following rule. The types
+$T_1$,\ldots,$T_n$ are obtained using Rule~\ref{rul:3-ground}.
 
 \begin{equation}
-\dfrac{t\in \Ti\quad \forall\ i, t:_1T_i}
-      {t:_\land\bigwedge[T_1..T_n]}
+\label{rul:3-ground-gather}
+\dfrac{t\in \Ti\quad \forall i\in[1,n], T_i\in\Tt\quad t:_\darr\/T_i}
+      {t:_\darr\land[T_i]}
 \end{equation}
 
 
-\notes{Ground typing by using lub types of $T_1..T_n$.}
-\notes{Is this really needed?}
+\subsection{Deriving a lub type of a triple}
 
+\notes{Typing using lub types of $T_1..T_n$. Explain why this is needed?}
 
-Let us now select the least upper bound types of the ground types
-derived by the rule \ref{rul:3-ground}.
+Let us now define the least upper bound types (abbr. \emph{lub}) of
+ground types derived by Rule \ref{rul:3-ground-gather}. Since a
+partialy ordered set is not a lattice, we can have more than one lub
+type for a given set of ground types.
+
+The lub types of a given list of triple types $T_1..T_n$ are
+computed in two steps as before when gathering multiple ground types
+with conjunction. A single lub type is defined as follows.
 
 \begin{equation}
-\dfrac{t:_1\bigwedge[T_1..T_n]\quad \forall\/i, T_i\preceq\/T}
-      {\vdash\/t:_{\land1}\/T}
+\dfrac{t:_\darr\land[T_1..T_n]\quad T,S\in\Tt\quad \forall\/i,\ T_i\preceq\/T\quad \forall\/j, T_j\preceq\/S\quad T\preceq\/S}
+      {\vdash\/t:_\sqcup\/T}
 \end{equation}
 
-
-\notes{Now only the minimal types have to be selected.}
-
-
-\begin{equation}
-\dfrac{t:_{\land1}\/T\quad \forall(t:_\land\/S), S\preceq\/T}
-      {t:_{\land2}\/T}
-\end{equation}
-
-
-\notes{Finally, lub2 types are gathered with $\land$.}
-
+The above rule states that a lub type $T$ is a ground type
+$\land[T_1..T_n]$ if all ground types $T_i$ are subtypes of
+$T$. Furthermore, the lub type $T$ is the least (closest) supertype of
+all members of ground $\land$-type $T_1,\ldots\/,T_n$. The lub types
+can be now gathered using the following rule.
 
 \begin{equation}
-\dfrac{\quad \forall i, t:_{\land2}\/T_i}
-      {t:_\land\/T}
+\dfrac{\forall i, T_i\in\Tt\quad t:_\sqcup\/T_i}
+      {t:_\sqcup\land[T_1..T_n]}
 \end{equation}
 
 
@@ -455,21 +505,17 @@ derived by the rule \ref{rul:3-ground}.
 \subsection{Stored types of triples.}\nl
 
 \notes{Make a bit more clear picture of the GLB triple types selected as the final stored type of a triple.}
-\notes{Analysis tool. Show minimality of the stored types (either enumerated of gathered with $\bigvee$).}
+\notes{Analysis tool. Show minimality of the stored types (either enumerated or gathered with $\bigvee$).}
 \notes{\emph{Reminder:} when a complete stored (user-defined) type is related to the base type of a triple, some of GLB types may be eliminated.}
-
-\notes{Predicates should be treated in the same way as the classes.}
-\notes{They can have a rich hierarchy.}
-\notes{\emph{Note:} Where to include discussion on special role of predicates and their relations to classes?}
 
 We first find a stored schema triples for a given triple $t=(s,p,o)$. A
 stored schema triple is constructed by selecting types including a
-predicate that have the domain and range defined.
+predicate that has the domain and range defined.
 
 \begin{equation}
 \label{rul:3-stored}
-\dfrac{t\in\Ti,t=(s,p,o)\quad p\preceq\/p'\quad (p',\text{domain},T_s)\in\/g\quad (p',\text{range},T_o)\in\/g}
-      {t:_s(T_s,p,T_o)}
+\dfrac{t\in\Ti,t=(s,p,o)\quad p\preceq\/p'\quad (p',\text{domain},T_u)\in\/g\quad (p',\text{range},T_o)\in\/g}
+      {t:_u(T_u,p,T_o)}
 \end{equation}
 
 
@@ -485,33 +531,41 @@ separately. The following rule captures also the last statement.
 
 \begin{equation}
 \label{rul:3-stored1}
-\dfrac{t=(s,p,o)\quad p\preceq\/p_1\quad p\preceq\/p_2\quad (p_1,\text{domain},T_s)\in\/g\quad (p_2,\text{range},T_o)\in\/g}
-      {t:_s(T_s,p,T_o)}
+\dfrac{t\in\Ti, t=(s,p,o)\quad p\preceq\/p_1\quad p\preceq\/p_2\quad (p_1,\text{domain},T_u)\in\/g
+                \quad (p_2,\text{range},T_o)\in\/g}
+      {t:_u(T_s,p,T_o)}
 \end{equation}
 
 \notes{If $p$ inherits from multiple $p'\succeq\/p$, then the above rule generates multiple types. Explain.}
 
 Note that the type is determined only in the case that the domain and
 range of $p$ or some $p'\succeq\/p$ is defined. Otherwise, the domain
-and range shoud be $\top$. 
+and range shoud be $\top$.
 
 The following rule is a judgment for a (user-defined) type of a
 concrete triple $t=(s,p,o)$. A user-defined type of $t$ is the
 greatest lower bound of stored types generated by the rule
-\ref{rul:3-stored1}.
+\ref{rul:3-stored}.
 
 \notes{A general explanation for choosing glb type should be given. Further expanded below. (?)}
+\notes{Explanation: Choosing the smallest types to have the smallest interpretations.}
+\notes{Explaination: Smallest search space for queries.} 
+
+\notes{The meaning of $\not\sim$ is \emph{not related}.}
+\notes{This can be either is if we have two $p$ roots with unrelated glb schema triples (trees up).}
+\notes{Or, two $p$-rooted but unrelated stored types through multiple inheritance.}
+\notes{Therefore, we can have more than one glb stored types.}
 
 \begin{equation}
-\dfrac{t\in\Ti\quad t:_s\/T\quad\forall\/S, t:_s\/S\land\/T\preceq\/S}
-      {t:_\lor\/T}
+\dfrac{t\in\Ti\quad t:_u\/T\quad \forall(t:_u\/S), T\preceq\/S\lor\/T\not\sim\/S}
+      {t:_{glb}\/T}
 \end{equation}
 
-
 The first premise says that $t$ is an individual triple. The second
-premise determines one of the stored type $T$ of $t$. The third
-premise requires that the user-defined type $T$ is the least general
-type.
+premise determines one of the stored types $T$ of $t$. The third
+premise requires that type $T$ is the least general type of a
+(reverse) tree above the property $p$. Note that there may be more
+than one tree rooted in unrelated stored types above $p$.
 
 The implementation view of the above rule is as follows. The schema
 triples are obtained from the inherited values of the predicates
@@ -520,7 +574,7 @@ closest when traveling from property $p$ towards the more general
 properties.
 
 \medskip
-\notes{Why do we have multiple glb types? Add explanation.}
+\notes{Why do we have multixsple glb types? Add explanation.}
 \notes{(The following paragraph is not completed! More precise!)}
 
 Multiple different schema triples for a given $t$ are possible only in
@@ -529,8 +583,6 @@ disjunctive domain/range types, or if predicate is defined for
 semantically different concepts. (describe each possibility in more
 detail.)
 
-
-\medskip
 \notes{Add explanation about why glb types are connected with $\lor$.}
 \notes{$\lor$ is used since they represent alternative semantics of a triple.}
 \notes{When type-checking a language, a context can be used to resolve disjunctions.}
@@ -539,11 +591,10 @@ Now we can put together the greatest lower bounds of the top types by
 making the union of the glb types computed by the previous rule.
 
 \begin{equation}
-\dfrac{t\in\Ti\quad \forall\/i, t:_\lor\/T_i}
-      {t:_\lor\bigvee\/T_i}
+\dfrac{t\in\Ti\quad \forall\/i\in[1..n], t:_{glb}\/T_i}
+      {t:_u\bigvee\/T_i}
 \end{equation}
 
-\medskip
 \notes{Expand on the influence/effect of using $\bigvee$ type in context and in other rules.}
 
 

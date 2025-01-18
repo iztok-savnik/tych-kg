@@ -1,22 +1,22 @@
 \contentsline {title}{Type-checking knowledge graphs}{1}{}%
-\authcount {2}
-\contentsline {author}{Iztok Savnik \and Kiyoshi Nitta}{1}{}%
+\authcount {1}
+\contentsline {author}{Iztok Savnik}{1}{}%
 \contentsline {section}{\numberline {1}Introduction}{3}{}%
-\contentsline {section}{\numberline {2}Formal framework}{3}{}%
-\contentsline {section}{\numberline {3}Typing knowledge graphs}{3}{}%
-\contentsline {subsection}{\numberline {3.1}Typing literals}{3}{}%
-\contentsline {subsection}{\numberline {3.2}Typing identifiers}{3}{}%
-\contentsline {subsubsection}{Stored sub-typing of identifiers.}{3}{}%
-\contentsline {subsubsection}{Subtyping identifiers.}{4}{}%
-\contentsline {subsubsection}{Typing of identifiers.}{4}{}%
-\contentsline {subsection}{\numberline {3.3}Intersection type}{5}{}%
-\contentsline {subsection}{\numberline {3.4}Union type}{5}{}%
-\contentsline {subsection}{\numberline {3.5}Type-checking triples}{6}{}%
-\contentsline {subsubsection}{Triples and schema triples.}{6}{}%
-\contentsline {subsubsection}{Deriving a base type of a triple.}{6}{}%
-\contentsline {subsubsection}{Deriving a top type of a triple.}{6}{}%
-\contentsline {subsubsection}{Typing a triple.}{7}{}%
-\contentsline {subsection}{\numberline {3.6}Typing a graph.}{8}{}%
-\contentsline {subsubsection}{Typing a schema triple.}{8}{}%
-\contentsline {section}{\numberline {4}Empirical analysis}{8}{}%
-\contentsline {section}{\numberline {5}Conclusions}{8}{}%
+\contentsline {section}{\numberline {2}Definition of knowledge graph}{3}{}%
+\contentsline {section}{\numberline {3}Type system used}{3}{}%
+\contentsline {subsection}{\numberline {3.1}Product types}{3}{}%
+\contentsline {subsection}{\numberline {3.2}Intersection type}{3}{}%
+\contentsline {subsection}{\numberline {3.3}Union type}{4}{}%
+\contentsline {section}{\numberline {4}Typing identifiers}{4}{}%
+\contentsline {subsection}{\numberline {4.1}Typing literals}{5}{}%
+\contentsline {subsection}{\numberline {4.2}Stored typing and subtyping of identifiers.}{5}{}%
+\contentsline {subsection}{\numberline {4.3}Typing and subtyping identifiers.}{5}{}%
+\contentsline {section}{\numberline {5}Typing triples}{7}{}%
+\contentsline {subsection}{\numberline {5.1}Deriving a ground type of a triple.}{7}{}%
+\contentsline {subsection}{\numberline {5.2}Deriving a lub type of a triple}{8}{}%
+\contentsline {subsection}{\numberline {5.3}Stored types of triples.}{8}{}%
+\contentsline {subsection}{\numberline {5.4}Typing a triple.}{10}{}%
+\contentsline {section}{\numberline {6}Typing a graph.}{10}{}%
+\contentsline {subsection}{\numberline {6.1}Typing a schema triple.}{11}{}%
+\contentsline {section}{\numberline {7}Empirical analysis}{11}{}%
+\contentsline {section}{\numberline {8}Conclusions}{11}{}%

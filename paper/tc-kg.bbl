@@ -27,4 +27,12 @@ B.~C. Pierce.
 \newblock {\em {Types and Programming Languages}}.
 \newblock MIT Press, 1 edition, Feb. 2002.
 
+\bibitem{rdf}
+Resource description framework (rdf).
+\newblock http://www.w3.org/RDF/, 2004.
+
+\bibitem{rdfschema}
+Rdf schema.
+\newblock http://www.w3.org/TR/rdf-schema/, 2004.
+
 \end{thebibliography}
