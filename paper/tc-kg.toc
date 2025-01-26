@@ -13,9 +13,8 @@
 \contentsline {subsection}{\numberline {4.3}Typing and subtyping identifiers.}{5}{}%
 \contentsline {section}{\numberline {5}Typing triples}{7}{}%
 \contentsline {subsection}{\numberline {5.1}Deriving a ground type of a triple.}{7}{}%
-\contentsline {subsection}{\numberline {5.2}Deriving a lub type of a triple}{8}{}%
-\contentsline {subsection}{\numberline {5.3}Stored types of triples.}{8}{}%
-\contentsline {subsection}{\numberline {5.4}Typing a triple.}{10}{}%
+\contentsline {subsection}{\numberline {5.2}Stored types of triples.}{8}{}%
+\contentsline {subsection}{\numberline {5.3}Typing a triple.}{10}{}%
 \contentsline {section}{\numberline {6}Typing a graph.}{10}{}%
 \contentsline {subsection}{\numberline {6.1}Typing a schema triple.}{11}{}%
 \contentsline {section}{\numberline {7}Empirical analysis}{11}{}%

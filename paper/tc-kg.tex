@@ -74,7 +74,7 @@
   knowledge graph. Finally, we present the experimental results of
   type-checking the Yago4 knowledge graph.
 
-\keywords{RDF stores \and graph databases \and knowledge graphs \and database statistics \and statistics of graph databases.}
+\keywords{type checking \and knowledge graphs \and RDF stores \and graph databases.}
 \end{abstract}
 
 %\newpage
@@ -94,7 +94,10 @@ This is intro... \cite{Hogan22KGsSurveyCsur}.
 \notes{Topic: Give an abstract insight into the structure of KB. Identifiers, schema, types, ...}
 \notes{Topic: Show the ground triples, poset of triples.types triples, schema graph, etc.}
 
-
+\notes{Put somewhere general discussion on rules.}
+\notes{What elements of rule are reasonable. Criterium: tracable elements of rule.}
+\notes{What is tracable? Looping on a "selected" set. Loop may go thruogh elements of a set, all more specific/general elements, etc.}
+\notes{They are extended to handle poset of identifiers that can form triples.}
 
 \section{Definition of knowledge graph}
 
@@ -434,8 +437,8 @@ property $p$ which now has the role of a type. A ground type of a
 triple is defined by the following rule.
 
 \begin{equation}
-  \label{rul:3-ground}
-\dfrac{t\in\/\Ti,\ t=(s,p,o)\quad I_s,I_o\in\Ic\quad s:_\darr\/I_s\quad p:_\darr\text{owl:ObjectProperty}\quad o:_\darr\/I_o}
+\label{rul:3-ground}
+\dfrac{t\in\/\Ti,\ t=(s,p,o)\quad I_s,I_o\in\Ic, s:_\darr\/I_s\land\/o:_\darr\/I_o\quad p:_\darr\text{rdf:Property}}
       {t:_\darr\/I_s*p*I_o}
 \end{equation}
 
@@ -443,7 +446,7 @@ The class $I_s$ is one of the ground types of $s$, and the type $I_o$
 is one of the ground types of $o$. The predicates are treated
 differently to the subject and object components of triples. The
 predicates have the role of classes while they are instances of
-owl:ObjectProperty.
+rdf:Property.
 
 There can be multiple ground types of a triple. They may be gathered
 into a single $\land$-type by using the following rule. The types
@@ -455,8 +458,6 @@ $T_1$,\ldots,$T_n$ are obtained using Rule~\ref{rul:3-ground}.
       {t:_\darr\land[T_i]}
 \end{equation}
 
-
-\subsection{Deriving a lub type of a triple}
 
 \notes{Typing using lub types of $T_1..T_n$. Explain why this is needed?}
 
@@ -470,11 +471,11 @@ computed in two steps as before when gathering multiple ground types
 with conjunction. A single lub type is defined as follows.
 
 \begin{equation}
-\dfrac{t:_\darr\land[T_1..T_n]\quad T,S\in\Tt\quad \forall\/i,\ T_i\preceq\/T\quad \forall\/j, T_j\preceq\/S\quad T\preceq\/S}
+\dfrac{t:_\darr\land[T_1..T_n]\quad T\in\Tt\quad \forall\/i\in[1..n], T_i\preceq\/T\quad \forall\/S\in\T_t,\forall\/i\in[1..n], T_i\preceq\/S\land\/T\preceq\/S}
       {\vdash\/t:_\sqcup\/T}
 \end{equation}
 
-The above rule states that a lub type $T$ is a ground type
+The above rule states that a type $T$ is a lub type of a ground type 
 $\land[T_1..T_n]$ if all ground types $T_i$ are subtypes of
 $T$. Furthermore, the lub type $T$ is the least (closest) supertype of
 all members of ground $\land$-type $T_1,\ldots\/,T_n$. The lub types
@@ -504,13 +505,22 @@ can be now gathered using the following rule.
 
 \subsection{Stored types of triples.}\nl
 
-\notes{Make a bit more clear picture of the GLB triple types selected as the final stored type of a triple.}
+\notes{General comments.}
 \notes{Analysis tool. Show minimality of the stored types (either enumerated or gathered with $\bigvee$).}
 \notes{\emph{Reminder:} when a complete stored (user-defined) type is related to the base type of a triple, some of GLB types may be eliminated.}
 
+\notes{Present the complete story.}
+\notes{Computing the minimal and valid stored type of a triple $t=(s,p,o)\in\T_i$.}
+\notes{Stored types are defined by linking a predicate $p$ to a domain and range classes.}
+\notes{Only types (domains and ranges) defined for $p'\succeq\/p$ are valid stored types.}
+\notes{There are no other valid types below, i.e., for $p'\prec\/p$.}
+\notes{Among the valid stored types the most specific and unrelated stored types are selected.}
+\notes{In other words, only glb types of valid stored types are selected.}
+\notes{Finally, the minimal and complete type of $t$ is an $\lor$-type including all previously selected glb types.}
+
 We first find stored triple types for a given triple $t=(s,p,o)$. A
 stored schema triple is constructed by selecting types including a
-predicate that has the domain and range defined.
+predicates $p'\succeq\/p$ that  the domain and range defined.
 
 \begin{equation}
 \label{rul:3-stored}
@@ -522,14 +532,20 @@ predicate that has the domain and range defined.
 \medskip
 %\notes{Generator view of rules: Just describe the properties of pre-conditions and conclusions for a particular lub type of triple.}
 \notes{Comments and description of the above rule.}
+\notes{Note p is used for all types. p shoud be in most specific type -}
+\notes{It makes no sense to generate types with p'.} 
 
 The domain and range of a predicate $p$ can be defined for any
-super-predicate, they do not need to be defined for $p$. In addition,
-the domain and range of a predicates do not need to be defined for the
-same predicate; they can be defined for any of the super-predicates
-separately. The following rule captures also the last statement.
+super-predicate, they do not need to be defined particulary for
+$p$. In addition, the domain and range of a predicates do not need to
+be defined for the same predicate; they can be defined for any of the
+super-predicates separately. The following rule captures also the last
+statement.
 
-\notes{Initially, this definition can be skipped!}
+\medskip
+\notes{Somewhere here, the inheritance should be noted.}
+\notes{Inheritance should be treated in knowledge graphs!}
+\notes{Predicates inherit in the same way as the classes.}
 
 \begin{equation}
 \label{rul:3-stored1}
@@ -540,21 +556,23 @@ separately. The following rule captures also the last statement.
 
 \notes{Explanation of the rule.}
 \notes{If $p$ inherits from multiple $p'\succeq\/p$, then the above rule generates multiple types. Explain.}
-
 \notes{Note that the type is determined only if the domain and range of $p$ or some $p'\succeq\/p$ is defined.}
-\notes{Otherwise, the domain and range shoud be $\top$.}
+\notes{Otherwise, the domain and range shoud be $\top$. This should be included.}
 
 The following rule is a judgment for a (user-defined) type of a
 concrete triple $t=(s,p,o)$. A user-defined type of $t$ is the
-greatest lower bound of stored types generated by the rule
+greatest lower bound (abbr. glb) of stored types generated by the rule
 \ref{rul:3-stored}.
 
 \medskip
-\notes{A general explanation for choosing glb type should be given. Further expanded below. (?)}
-\notes{Explanation: Among stored types of t: select the smallest GLB types that have the smallest interpretations.}
-\notes{Therefore, smallest search space for queries.} 
+\notes{Valid stored types of t: the smallest valid glb types of all stored types.}
+\notes{Justification: smallest interpretation - smallest search space for queries.}
+\notes{Valid stored types are solely those defined "above" p.}
+\notes{The glb types of valid stored types "above" p is selected!}
+\notes{The rule generates one glb type by one.}
+\notes{These (glb types) are collected in a $\lor$-type including all GLB types.}
 
-\notes{The meaning of $\not\sim$ is \emph{not related}.}
+\notes{The meaning of $\not\sim$ is "\emph{not related}".}
 \notes{This can be either that we have two $p$ roots with unrelated glb schema triples (trees up).}
 \notes{Or, two $p$-rooted but unrelated stored types through multiple inheritance.}
 \notes{Therefore, we can have more than one stored GLB types.}
@@ -564,11 +582,10 @@ greatest lower bound of stored types generated by the rule
       {t:_\sqcap\lor[T_i]}
 \end{equation}
 
-The first premise says that $t$ is an individual triple. The second
-premise determines one of the stored types $T$ of $t$. The third
-premise requires that type $T$ is the least general type of a
-(reverse) tree above the property $p$. Note that there may be more
-than one tree rooted in unrelated stored types above $p$.
+The first premise says that we identify all triple types $T_i$ that
+are the types of $t$. The second premise says that for each $T_i$, all
+types $S$ of $t$ are either more general or equal, or not related to
+$T_i$. Hence, $T_i$ is the glb type of the stored types of $t$.
 
 The implementation view of the above rule is as follows. The schema
 triples are obtained from the inherited values of the predicates
@@ -577,30 +594,14 @@ closest when traveling from property $p$ towards the more general
 properties.
 
 \medskip
-\notes{Why do we have multixsple glb types? Add explanation.}
-\notes{(The following paragraph is not completed! More precise!)}
+\notes{What is the reason that we have multiple glb types?}
 
-Multiple different schema triples for a given $t$ are possible only in
+Multiple different stored types of $t$ are possible only in
 the case of multiple inheritance, in the case of the definition of the
 disjunctive domain/range types, or if predicate is defined for
-semantically different concepts. (describe each possibility in more
-detail.)
+semantically different concepts.
 
-\notes{Add explanation about why glb types are connected with $\lor$.}
-\notes{$\lor$ is used since they represent alternative semantics of a triple.}
-\notes{When type-checking a language, a context can be used to resolve disjunctions.}
-
-Now we can put together the greatest lower bounds of the top types by
-making the union of the glb types computed by the previous rule.
-
-\begin{equation}
-\dfrac{t\in\Ti\quad \forall\/i\in[1..n], t:_{glb}\/T_i}
-      {t:_u\bigvee\/T_i}
-\end{equation}
-
-\notes{Expand on the influence/effect of using $\bigvee$ type in context and in other rules.}
-
-
+\notes{Describe each possibility in more detail.}
 
 
 
