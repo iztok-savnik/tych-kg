@@ -18,6 +18,8 @@
 \usepackage{url}
 
 % symbols
+\newcommand{\ul}{\underline} 
+\newcommand{\ol}{\overline} 
 \newcommand{\darr}{\downarrow} 
 \newcommand{\uarr}{\uparrow} 
 \newcommand{\D}{{\cal D}} 
@@ -99,6 +101,21 @@ This is intro... \cite{Hogan22KGsSurveyCsur}.
 \notes{What is tracable? Looping on a "selected" set. Loop may go thruogh elements of a set, all more specific/general elements, etc.}
 \notes{They are extended to handle poset of identifiers that can form triples.}
 
+\notes{About the domains.}
+\notes{We have a specific domain, i.e., a knowledge graph including nodes and triples.}
+\notes{The class identifiers are ordered in poset and, consequently, triples are also poset.}
+\notes{$\Lambda$-expressions form a domain expressing derivations of $\lambda$-expressions.}
+\notes{??}
+
+\notes{The type-checking problems???}
+\notes{Checking the types of ground triples.}
+\notes{- Errors in typing of a KG.}
+\notes{Typing BGP queries.}
+\notes{- Typing triple patterns!}
+\notes{- Rules? Meets points in TP joins?}
+\notes{}
+
+
 \section{Definition of knowledge graph}
 
 This section defines a knowledge graph as a RDF graph \cite{rdf} using
@@ -125,15 +142,6 @@ $g_2$.
 
 \notes{Define major structure of KG on the basis of the sorts of data.}
 \notes{...the set $I$ includes individual identifiers $I_i$, class identifiers $I_c$ and predicate identifiers $I_p$.}
-
-
-
-
-
-
-
-
-
 
 \section{Type system used}
 
@@ -358,16 +366,17 @@ represented by the predicate owl:Thing. The following rule specifys
 that all class identifiers are more specific than $\top$.
 
 \begin{equation}
-S\preceq\top
+\dfrac{\forall\/S\in\Ic}
+      {S\preceq\top}
 \end{equation}
 
 %\subsection{Typing of identifiers.}
-The stored typing relation $:_s$ is now extended to the typing
+The stored typing relation $:_\darr$ is now extended to the typing
 relation $:$ that takes into account the subtyping relation $\preceq$.
 The following rule states that a stored type is a type.
 
 \begin{equation}
-\dfrac{I\in\Ii \quad C\in\Ic \quad I:_s\/C}
+\dfrac{I\in\Ii \quad C\in\Ic \quad I:_\darr\/C}
       {I:C}
 \end{equation}
 
@@ -376,7 +385,7 @@ by adding a typing rule called \emph{rule of subsumption}
 \cite{Pierce02TypesProgLang}.
 
 \begin{equation}
-\dfrac{I\in\Ii \quad I:S \quad S\preceq\/T}
+\dfrac{I\in\Ii\quad S\in\Ic\quad I:S \quad S\preceq\/T}
       {I:T}    
 \end{equation}
 
@@ -405,16 +414,23 @@ by adding a typing rule called \emph{rule of subsumption}
 \notes{First, the type is computed bottom-up: from the stored types of triple components.}
 \notes{Second, the type can be computed top-down: from the user-defined domain/range types of properties.}
 
-\notes{Ground type of a triple is computed first using $:_1$.}
-\notes{Next, the lub type of a triple is derived using $:_l$.}
-\notes{From the top side of the ontology, the stored type $:_s$ is determined based on $p$.}
-\notes{Finally, the type $:$ of $t$ is deterimned by summing alternative $:_s$ types.}
+\notes{About the types that are computed bottom-up.}
+\notes{Ground type of a triple is computed first using $:_\darr$.}
+\notes{Next, the lub type of a triple is derived using $:_\sqcup$.}
 
+\notes{About the stored types that are computed as glb of valid stored types.}
+\notes{From the top side of the ontology, the stored type $:_\uarr$ is determined based on $p$.}
+\notes{The glb types of all types obtained using $:_\uarr$ obtaining a glb type $:_\sqcap$.}
+\notes{Finally, the type $:$ of $t$ is deterimned by summing alternative $:_\uarr$ types.}
+
+\notes{Unfinished!!}
 \notes{Interactions between the $\land/\lor$ types of triple components and triples must be added.}
-\notes{Analogy between. the types of functions in lambda calculus and types of triples.}
+\notes{Analogy between the types of functions in LC and types of triples.}
 \notes{Show rules relating $\land/\lor$ types and triple types. Example.}
 \notes{E.g., $(S_1\land\/S_2)*p*R = S_1*p*R\land\/S_2*p*R$.}
+\notes{Are all rules covered?}
 
+\notes{Unfinished!!}
 \notes{Predicates should be treated in the same way as the classes.}
 \notes{They can have a rich hierarchy.}
 \notes{\emph{Note:} Where to include discussion on special role of predicates and their relations to classes?}
@@ -438,7 +454,7 @@ triple is defined by the following rule.
 
 \begin{equation}
 \label{rul:3-ground}
-\dfrac{t\in\/\Ti,\ t=(s,p,o)\quad I_s,I_o\in\Ic, s:_\darr\/I_s\land\/o:_\darr\/I_o\quad p:_\darr\text{rdf:Property}}
+\dfrac{t\in\/\Ti,\ t=(s,p,o)\quad I_s,I_o\in\Ic,\ s:_\darr\/I_s\land\/o:_\darr\/I_o\quad p:_\darr\text{rdf:Property}}
       {t:_\darr\/I_s*p*I_o}
 \end{equation}
 
@@ -454,7 +470,7 @@ $T_1$,\ldots,$T_n$ are obtained using Rule~\ref{rul:3-ground}.
 
 \begin{equation}
 \label{rul:3-ground-gather}
-\dfrac{t\in \Ti\quad \forall i\in[1,n], T_i\in\Tt\quad t:_\darr\/T_i}
+\dfrac{t\in \T_i\quad \forall\/T_i\in\T_t,\ t:_\darr\/T_i}
       {t:_\darr\land[T_i]}
 \end{equation}
 
@@ -471,7 +487,7 @@ computed in two steps as before when gathering multiple ground types
 with conjunction. A single lub type is defined as follows.
 
 \begin{equation}
-\dfrac{t:_\darr\land[T_1..T_n]\quad T\in\Tt\quad \forall\/i\in[1..n], T_i\preceq\/T\quad \forall\/S\in\T_t,\forall\/i\in[1..n], T_i\preceq\/S\land\/T\preceq\/S}
+\dfrac{t:_\darr\land[T_1..T_n]\quad T\in\Tt\quad \forall\/i,\ T_i\preceq\/T\quad \forall\/S\in\T_t,\ \forall\/i,\ T_i\preceq\/S\land\/T\preceq\/S}
       {\vdash\/t:_\sqcup\/T}
 \end{equation}
 
@@ -524,7 +540,7 @@ predicates $p'\succeq\/p$ that  the domain and range defined.
 
 \begin{equation}
 \label{rul:3-stored}
-\dfrac{t\in\Ti,t=(s,p,o)\quad p'\in\I_p, p\preceq\/p'\quad (p',\text{domain},T_s)\in\/g\quad (p',\text{range},T_o)\in\/g}
+\dfrac{t\in\T_i,\, t=(s,p,o)\quad p'\in\I_p, p\preceq\/p'\quad (p',\text{domain},T_s)\in\/g\quad (p',\text{range},T_o)\in\/g}
       {t:_\uarr(T_s,p,T_o)}
 \end{equation}
 
@@ -578,13 +594,14 @@ greatest lower bound (abbr. glb) of stored types generated by the rule
 \notes{Therefore, we can have more than one stored GLB types.}
 
 \begin{equation}
-\dfrac{\forall(T_i\in\T_t), t:_\uarr\/T_i\quad \forall(t:_\uarr\/S), T_i\preceq\/S\lor\/T_i\not\sim\/S}
-      {t:_\sqcap\lor[T_i]}
+\dfrac{t\in\T_i\quad T_i\in\T_t,\, t:_\uarr\/T_i\quad \forall\/S\in\T_t,\, t:_\uarr\/S\quad T_i\preceq\/S\lor\/T_i\not\sim\/S}
+      {t:_\sqcap\/T_i}
 \end{equation}
 
-The first premise says that we identify all triple types $T_i$ that
-are the types of $t$. The second premise says that for each $T_i$, all
-types $S$ of $t$ are either more general or equal, or not related to
+The first premise says that $t$ is a ground triple. The second premise
+enumerates stored types $T_i$ of $t$. The third premise requires that
+$T_i$ is the most specific type of all possible types $S$ of $t$. In
+other words, there is no type $S$ of $t$ that is a subtype of
 $T_i$. Hence, $T_i$ is the glb type of the stored types of $t$.
 
 The implementation view of the above rule is as follows. The schema
@@ -592,6 +609,17 @@ triples are obtained from the inherited values of the predicates
 rdfs:domain and rdfs:range. The inherited values have to be the
 closest when traveling from property $p$ towards the more general
 properties.
+
+The glb types are now gathered in a $\lor$-type. Hence, the resulting
+$\lor$-type includes all glb types of $t$.
+
+\begin{equation}
+\dfrac{\forall\/T_i\in\T_t,\, t:_\sqcap\/T_i}
+      {t:_\sqcap\lor[T_i]}
+\end{equation}
+
+The premise says that we identify all triple types $T_i$ that
+are the individual (glb) $\sqcap$-types of $t$. 
 
 \medskip
 \notes{What is the reason that we have multiple glb types?}
@@ -602,6 +630,7 @@ disjunctive domain/range types, or if predicate is defined for
 semantically different concepts.
 
 \notes{Describe each possibility in more detail.}
+
 
 
 
@@ -624,8 +653,8 @@ reachable from $T$ through the sub-class and sub-property hierarchies,
 i.e., $T\preceq\/S$.
 
 \begin{equation}
-\dfrac{(s,p,o):_1T\quad (s,p,o):_2S\quad (T\preceq\/S)}
-      {(s,p,o):S}
+\dfrac{t\in\T_i\quad T\in\T_t,\, t:_{\darr}T\quad S\in\T_t,\, t:_\uarr\/S\quad T\preceq\/S}
+      {t:S}
 \end{equation}
 
 \medskip
