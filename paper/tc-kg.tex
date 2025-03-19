@@ -23,6 +23,12 @@
 \newcommand{\darr}{\downarrow} 
 \newcommand{\uarr}{\uparrow} 
 \newcommand{\D}{{\cal D}} 
+\newcommand{\U}{{\cal U}} 
+\newcommand{\B}{{\cal B}} 
+\newcommand{\Lt}{{\cal L}} 
+\newcommand{\St}{{\cal St}} 
+\newcommand{\Pt}{{\cal Pt}} 
+\newcommand{\Ot}{{\cal Ot}} 
 \newcommand{\I}{{\cal I}} 
 \newcommand{\Ii}{{\cal I}_i} 
 \newcommand{\Ic}{{\cal I}_c} 
@@ -116,7 +122,12 @@ This is intro... \cite{Hogan22KGsSurveyCsur}.
 \notes{}
 
 
-\section{Definition of knowledge graph}
+
+
+
+
+
+\section{Knowledge graph}
 
 This section defines a knowledge graph as a RDF graph \cite{rdf} using
 RDF-Schema \cite{rdfschema} for the representation of the structural
@@ -143,11 +154,70 @@ $g_2$.
 \notes{Define major structure of KG on the basis of the sorts of data.}
 \notes{...the set $I$ includes individual identifiers $I_i$, class identifiers $I_c$ and predicate identifiers $I_p$.}
 
-\section{Type system used}
 
-\subsection{Product types}
 
-\subsection{Intersection type}
+
+
+
+\section{Typing identifiers}
+
+\notes{Introduction includes the formalization of RDF, RDF-Schema as given in Angles and Peres.}
+\notes{Typing idents without considering and info about the triples.}
+
+\notes{General.}
+\notes{At the end of section define the lub type using $\land$/$\lor$ types.}
+\notes{1. Define lub types as the closest to base types of given ground ident.}
+\notes{2. Collect all lub types using $\land$ type in a single type.}
+
+The individual and class entities are represented by identifiers from
+the set $\I$. The individual identifiers $\Ii$ stand for literals,
+concrete and abstract entities. The class identifiers $\Ic$ represent
+abstract entities that have an unempty interpretation. The abstract
+entities include, besides the identifiers of user-defined classes,
+the types (classes) of literals.
+
+A graph database includes stored definitions for typing the individual
+identifiers, and for representing the specialization/generalization
+hierarchies of classes and properties.
+
+
+\notes{Details.}
+\notes{1. First define base type of identifiers $:_1$ and stored subtyping relationship $\preceq_1$.}
+\notes{2. From the basis define the indent typing $:$ and subtyping rel $\preceq$ among identifiers.}
+\notes{3. Include the link between subtyping and typing.}
+\notes{4. Define lub type using $\land$ type for a given ground ident.}
+
+
+
+
+
+
+\subsection{Typing literals}
+
+Literals are the values of an atomic type. The atomic types are in RDF
+provided by the RDF-Schema dictionary \cite{rdfschema}. RDF-Schema
+defines a list of atomic types, such as xsd:integer, xsd:string, or
+xsd:boolean.
+
+Typing of the atomic types is determined by the following rule.
+
+\begin{equation}
+\dfrac{L\in\I_l, T\in\I_c,\, \text{"L"\textasciicircum\textasciicircum\/T}\in\Lt}
+      {L:T}  
+\end{equation}
+
+The rule states that a literal value $L$ is of a type $T$ if a literal
+"L"\textasciicircum\textasciicircum\/T is an element of the set of
+literals $\Lt$. A literal "L"\textasciicircum\textasciicircum\/T
+includes a literal value $L$ and a literal type $T$ referencing a type
+from the RDF-Schema dictionary. As an example, the literal
+"365"\textasciicircum\textasciicircum\/xsd:integer includes the
+literal value 365 and its type xsd:integer.
+
+
+
+
+\subsection{Intersection and union types}
 
 The instances of the intersection type $T_1\land\/T_2$ are objects
 belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
@@ -182,7 +252,7 @@ the rule for a pair of types $T_1$ and $T_2$.
       {S\preceq\land[T_1\ldots\/T_n]}  
 \end{equation}
 
-\subsection{Union type}
+
 
 The intersection and union types are dual. This can be seen also from
 the rules that are used for each particular type.
@@ -224,45 +294,9 @@ the rule for types $T_1$ and $T_2$.
 
 
 
-\section{Typing identifiers}
-
-\notes{Introduction includes the formalization of RDF, RDF-Schema as given in Angles and Peres.}
-\notes{Typing idents without considering and info about the triples.}
-
-\notes{General.}
-\notes{At the end of section define the lub type using $\land$/$\lor$ types.}
-\notes{1. Define lub types as the closest to base types of given ground ident.}
-\notes{2. Collect all lub types using $\land$ type in a single type.}
-
-\notes{Details.}
-\notes{1. First define base type of identifiers $:_1$ and stored subtyping relationship $\preceq_1$.}
-\notes{2. From the basis define the indent typing $:$ and subtyping rel $\preceq$ among identifiers.}
-\notes{3. Include the link between subtyping and typing.}
-\notes{4. Define lub type using $\land$ type for a given ground ident.}
-
-
-
-
-\subsection{Typing literals}
-
-\notes{Literals are identifiers of atomic type!}
-
-
-
 
 
 \subsection{Stored typing and subtyping of identifiers.}\nl
-
-The individual and class entities are represented by identifiers from
-the set $\I$. The individual identifiers $\Ii$ stand for literals,
-concrete and abstract entities. The class identifiers $\Ic$ represent
-abstract entities that have an unempty interpretation. The abstract
-entities include, besides the identifiers of user-defined classes,
-the types (classes) of literals.
-
-A graph database includes stored definitions for typing the individual
-identifiers, and for representing the specialization/generalization
-hierarchies of classes and properties.
 
 Let us introduce the typing and specialization/generalization
 relationships formally. The expression $i:_\darr\/C$ states that a
@@ -431,11 +465,15 @@ by adding a typing rule called \emph{rule of subsumption}
 \notes{Are all rules covered?}
 
 \notes{Unfinished!!}
+
 \notes{Predicates should be treated in the same way as the classes.}
 \notes{They can have a rich hierarchy.}
 \notes{\emph{Note:} Where to include discussion on special role of predicates and their relations to classes?}
 \notes{Mention Cyc as the practical KB with rich hierarchy of predicates.}
 
+
+
+\subsection{Product types}
 
 
 
