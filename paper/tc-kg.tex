@@ -95,39 +95,43 @@
 
 \section{Introduction}
 
-This is intro... \cite{Hogan22KGsSurveyCsur}.
+Introduction to KGs ... \cite{Hogan2022,Ehrlinger2016}.
 
-\notes{Topic: KGs are becoming KBs...}
+\notes{KGs are becoming KBs...}
+\notes{What are the structural characteristics of KBs?}
+\notes{What KBs can represent that (classical) data models can not.}
+\notes{Relations between the knowledge bases and KGs.}
 
-\notes{Topic: Give an abstract insight into the structure of KB. Identifiers, schema, types, ...}
-\notes{Topic: Show the ground triples, poset of triples.types triples, schema graph, etc.}
-
-\notes{Put somewhere general discussion on rules.}
-\notes{What elements of rule are reasonable. Criterium: tracable elements of rule.}
-\notes{What is tracable? Looping on a "selected" set. Loop may go thruogh elements of a set, all more specific/general elements, etc.}
-\notes{They are extended to handle poset of identifiers that can form triples.}
-
-\notes{About the domains.}
+\notes{About the very (complex) KG domain.}
 \notes{We have a specific domain, i.e., a knowledge graph including nodes and triples.}
 \notes{The class identifiers are ordered in poset and, consequently, triples are also poset.}
 \notes{$\Lambda$-expressions form a domain expressing derivations of $\lambda$-expressions.}
 \notes{??}
 
-\notes{The type-checking problems???}
+On the type theory, using type theory, some keystones,
+... \cite{Pierce2002,Hindley1997}.
+On intersection and union types and their use in type-checking
+\cite{Pierce2002,Dezani2020,Pierce1991}.
+
+\notes{Problem definition.}
 \notes{Checking the types of ground triples.}
-\notes{- Errors in typing of a KG.}
+\notes{Errors in typing of a KG.}
 \notes{Typing BGP queries.}
-\notes{- Typing triple patterns!}
-\notes{- Rules? Meets points in TP joins?}
+\notes{Typing triple patterns!}
+\notes{Rules for TPs.}
 \notes{}
 
+\notes{Abstract of the method.}
+\notes{Give an abstract insight into the structure of KB. Identifiers, schema, types, ...}
+\notes{Show the ground triples, poset of triples.types triples, schema graph, etc.}
 
 
 
 
 
+\section{Preliminaries}
 
-\section{Knowledge graph}
+\subsection{Knowledge graph}
 
 This section defines a knowledge graph as a RDF graph \cite{rdf} using
 RDF-Schema \cite{rdfschema} for the representation of the structural
@@ -154,6 +158,13 @@ $g_2$.
 \notes{Define major structure of KG on the basis of the sorts of data.}
 \notes{...the set $I$ includes individual identifiers $I_i$, class identifiers $I_c$ and predicate identifiers $I_p$.}
 
+\subsection{Rule language}
+
+\notes{Put somewhere general discussion on rules.}
+\notes{What elements of rule are reasonable. Criterium: tracable elements of rule.}
+\notes{What is tracable? Looping on a "selected" set. Loop may go thruogh elements of a set, all more specific/general elements, etc.}
+\notes{They are extended to handle poset of identifiers that can form triples.}
+
 
 
 
@@ -161,13 +172,8 @@ $g_2$.
 
 \section{Typing identifiers}
 
-\notes{Introduction includes the formalization of RDF, RDF-Schema as given in Angles and Peres.}
-\notes{Typing idents without considering and info about the triples.}
-
-\notes{General.}
-\notes{At the end of section define the lub type using $\land$/$\lor$ types.}
-\notes{1. Define lub types as the closest to base types of given ground ident.}
-\notes{2. Collect all lub types using $\land$ type in a single type.}
+\notes{Intro to typing idents.}
+\notes{Typing idents without considering info about the triples.}
 
 The individual and class entities are represented by identifiers from
 the set $\I$. The individual identifiers $\Ii$ stand for literals,
@@ -180,7 +186,7 @@ A graph database includes stored definitions for typing the individual
 identifiers, and for representing the specialization/generalization
 hierarchies of classes and properties.
 
-
+\nl
 \notes{Details.}
 \notes{1. First define base type of identifiers $:_1$ and stored subtyping relationship $\preceq_1$.}
 \notes{2. From the basis define the indent typing $:$ and subtyping rel $\preceq$ among identifiers.}
@@ -223,7 +229,7 @@ The instances of the intersection type $T_1\land\/T_2$ are objects
 belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
 greatest lower bound of the types $T_1$ and $T_2$. In general,
 $\land[T_1\ldots\/T_n]$ is the greatest lower bound of types
-$T_1\ldots\/T_n$ \cite{Pierce91IntersectUnion,Pierce96IntersectionTypes}.
+$T_1\ldots\/T_n$ \cite{Pierce1991,Pierce1996}.
 
 \begin{equation}
 T_1\land\/T_2\preceq\/T_1    
@@ -261,7 +267,7 @@ The instances from the union type $T_1\lor\/T_2$ are either the
 instances of $T_1$ or $T_2$, or the instances of both types. The type
 $T_1\lor\/T_2$ is the smallest upper bound of the types $T_1$ and
 $T_2$. In general, $\lor[T_1\ldots\/T_n]$ is the smallest upper bound
-of types $T_1\ldots\/T_n$ \cite{Pierce90CalculusIntersectUnion}.
+of types $T_1\ldots\/T_n$ \cite{Pierce1991}.
 
 \begin{equation}
 T_1\preceq\/T_1\lor\/T_2    
@@ -296,7 +302,7 @@ the rule for types $T_1$ and $T_2$.
 
 
 
-\subsection{Stored typing and subtyping of identifiers.}\nl
+\subsection{Stored typing and subtyping of identifiers}
 
 Let us introduce the typing and specialization/generalization
 relationships formally. The expression $i:_\darr\/C$ states that a
@@ -347,7 +353,7 @@ $\preceq_\darr$ is based on the predicate rdfs:subPropertyOf.
 
 
 
-\subsection{Typing and subtyping identifiers.}\nl
+\subsection{Typing and subtyping identifiers}
 
 The one-step relationships $:_\darr$ and $\preceq_\darr$ are now
 extended with the reflexivity and transitivity to obtain the
@@ -416,7 +422,7 @@ The following rule states that a stored type is a type.
 
 The link between the typing relation and subtype relation is provided
 by adding a typing rule called \emph{rule of subsumption}
-\cite{Pierce02TypesProgLang}.
+\cite{Pierce2002}.
 
 \begin{equation}
 \dfrac{I\in\Ii\quad S\in\Ic\quad I:S \quad S\preceq\/T}
@@ -477,7 +483,7 @@ by adding a typing rule called \emph{rule of subsumption}
 
 
 
-\subsection{Deriving a ground type of a triple.}
+\subsection{Deriving a ground type of a triple}
 
 \noindent
 A ground type of an individual identifier $i$ is a class $C$ related
@@ -557,7 +563,7 @@ can be now gathered using the following rule.
 
 
 
-\subsection{Stored types of triples.}\nl
+\subsection{Stored types of triples}
 
 \notes{General comments.}
 \notes{Analysis tool. Show minimality of the stored types (either enumerated or gathered with $\bigvee$).}
@@ -673,7 +679,7 @@ semantically different concepts.
 
 
 
-\subsection{Typing a triple.}\nl
+\subsection{Typing a triple}
 
 \notes{Two ways of defining semantics.}
 \notes{1) enumeration style: stored types are enumerated as alternatives ($\lor$).}
@@ -709,8 +715,7 @@ i.e., $T\preceq\/S$.
 
 
 
-
-\section{Typing a graph.}\nl
+\subsection{Typing a graph}
 
 \notes{What is a type of a graph?}
 \notes{A type of a graph is a graph!}
@@ -720,21 +725,35 @@ i.e., $T\preceq\/S$.
 \notes{Checking that all the triples are of correct types.}
 
 
-\subsection{Typing a schema triple.}\nl
+
+
+\subsection{Typing schema triples}
 
 \notes{What can be checked?}
 \notes{Is a schema triple properly related to the super-classes and types of components.}
 \notes{Consistency of the placement of a class in an ontology. What is this?}
 \notes{A class or predicate component not related to other classes?}
 \notes{A class or predicate component attached to ``conflicting'' set of classes? What can be detected?}
-\notes{@kiyoshi Do you see any other examples?}
+\notes{Any other examples?}
 \notes{}
 
 
 
 
 
-\section{Empirical analysis}
+\section{Implementation of type-checking}
+
+
+\subsection{Computing LUB ground types}
+
+
+
+\subsection{Computing GLB stored types}
+
+
+\subsection{Relating LUB ground and GLB stored types}
+
+
 
 
 

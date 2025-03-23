@@ -1,6 +1,23 @@
 \begin{thebibliography}{1}
 
-\bibitem{Hogan22KGsSurveyCsur}
+\bibitem{Dezani2020}
+V.~Bono and M.~Dezani-Ciancaglini.
+\newblock A tale of intersection types.
+\newblock In {\em Proceedings of the 35th Annual ACM/IEEE Symposium on Logic in
+  Computer Science}, LICS '20, page 7–20, New York, NY, USA, 2020.
+  Association for Computing Machinery.
+
+\bibitem{Ehrlinger2016}
+L.~Ehrlinger and W.~W{\"o}{\ss}.
+\newblock Towards a definition of knowledge graphs.
+\newblock In {\em SEMANTiCS}, 2016.
+
+\bibitem{Hindley1997}
+J.~R. Hindley.
+\newblock {\em Basic simple type theory}.
+\newblock Cambridge University Press, USA, 1997.
+
+\bibitem{Hogan2022}
 A.~Hogan, E.~Blomqvist, M.~Cochez, C.~D’amato, G.~D. Melo, C.~Gutierrez,
   S.~Kirrane, J.~E.~L. Gayo, R.~Navigli, S.~Neumaier, A.-C.~N. Ngomo,
   A.~Polleres, S.~M. Rashid, A.~Rula, L.~Schmelzeisen, J.~Sequeda, S.~Staab,
@@ -8,21 +25,16 @@ A.~Hogan, E.~Blomqvist, M.~Cochez, C.~D’amato, G.~D. Melo, C.~Gutierrez,
 \newblock Knowledge graphs.
 \newblock {\em ACM Comput. Surv.}, 54(4), jul 2021.
 
-\bibitem{Pierce90CalculusIntersectUnion}
-B.~C. Pierce.
-\newblock Preliminary investigation of a calculus with intersection and union
-  types, 1990.
-
-\bibitem{Pierce91IntersectUnion}
+\bibitem{Pierce1991}
 B.~C. Pierce.
 \newblock Programming with intersection types, union types, and polymorphism,
   1991.
 
-\bibitem{Pierce96IntersectionTypes}
+\bibitem{Pierce1996}
 B.~C. Pierce.
 \newblock Intersection types and bounded polymorphism, 1996.
 
-\bibitem{Pierce02TypesProgLang}
+\bibitem{Pierce2002}
 B.~C. Pierce.
 \newblock {\em {Types and Programming Languages}}.
 \newblock MIT Press, 1 edition, Feb. 2002.

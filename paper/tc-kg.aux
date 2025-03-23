@@ -2,45 +2,54 @@
 \@writefile{toc}{\contentsline {title}{Type-checking knowledge graphs}{1}{}\protected@file@percent }
 \@writefile{toc}{\authcount {1}}
 \@writefile{toc}{\contentsline {author}{Iztok Savnik}{1}{}\protected@file@percent }
-\citation{Hogan22KGsSurveyCsur}
+\citation{Hogan2022,Ehrlinger2016}
+\citation{Pierce2002,Hindley1997}
+\citation{Pierce2002,Dezani2020,Pierce1991}
 \citation{rdf}
 \citation{rdfschema}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}Knowledge graph}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Preliminaries}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Knowledge graph}{3}{}\protected@file@percent }
 \citation{rdfschema}
-\citation{Pierce91IntersectUnion,Pierce96IntersectionTypes}
+\citation{Pierce1991,Pierce1996}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Rule language}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3}Typing identifiers}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Typing literals}{4}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Intersection and union types}{4}{}\protected@file@percent }
-\citation{Pierce90CalculusIntersectUnion}
+\citation{Pierce1991}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Intersection and union types}{5}{}\protected@file@percent }
 \newlabel{rul:intsc-gather}{{6}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Stored typing and subtyping of identifiers.}{5}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Typing and subtyping identifiers.}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Stored typing and subtyping of identifiers}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Typing and subtyping identifiers}{6}{}\protected@file@percent }
 \newlabel{rul:Ic-extended}{{15}{6}}
 \newlabel{rul:Ic-reflexivity}{{16}{6}}
 \newlabel{rul:Ic-transitivity}{{17}{6}}
-\newlabel{rul:Ic-antisymmetry}{{18}{6}}
-\citation{Pierce02TypesProgLang}
+\citation{Pierce2002}
+\newlabel{rul:Ic-antisymmetry}{{18}{7}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Typing triples}{7}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Product types}{8}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Deriving a ground type of a triple.}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Deriving a ground type of a triple}{8}{}\protected@file@percent }
 \newlabel{rul:3-ground}{{22}{8}}
 \newlabel{rul:3-ground-gather}{{23}{8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Stored types of triples.}{9}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Stored types of triples}{9}{}\protected@file@percent }
 \newlabel{rul:3-stored}{{26}{9}}
-\newlabel{rul:3-stored1}{{27}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Typing a triple.}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Typing a graph.}{11}{}\protected@file@percent }
+\newlabel{rul:3-stored1}{{27}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Typing a triple}{11}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Typing a graph}{11}{}\protected@file@percent }
 \bibstyle{abbrv}
 \bibdata{biblio}
-\bibcite{Hogan22KGsSurveyCsur}{1}
-\bibcite{Pierce90CalculusIntersectUnion}{2}
-\bibcite{Pierce91IntersectUnion}{3}
-\bibcite{Pierce96IntersectionTypes}{4}
-\bibcite{Pierce02TypesProgLang}{5}
-\bibcite{rdf}{6}
-\bibcite{rdfschema}{7}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Typing a schema triple.}{12}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Empirical analysis}{12}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusions}{12}{}\protected@file@percent }
+\bibcite{Dezani2020}{1}
+\bibcite{Ehrlinger2016}{2}
+\bibcite{Hindley1997}{3}
+\bibcite{Hogan2022}{4}
+\bibcite{Pierce1991}{5}
+\bibcite{Pierce1996}{6}
+\bibcite{Pierce2002}{7}
+\bibcite{rdf}{8}
+\bibcite{rdfschema}{9}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Typing schema triples}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Implementation of type-checking}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Computing LUB ground types}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Computing GLB stored types}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Relating LUB ground and GLB stored types}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions}{12}{}\protected@file@percent }
 \gdef \@abspage@last{12}
