@@ -782,7 +782,7 @@ i.e., $T\preceq\/S$.
 \notes{if $d_p\not=\{\}\land\/r_p\not=\{\})$ then }
 \notes{RETURN $(\lor\/d_p,p,\lor\/r_p)$}
 \notes{$ts = \{\}$}
-\notes{for $p'$ ($(p,\text{rdfs\:SubPropertyOf},p')\in\/G$)}
+\notes{for $p'$ ($(p,\text{rdfs:začnemo graditi.SubPropertyOf},p')\in\/G$)}
 \notes{BEGIN}
 \notes{$T_{p'} = typeGlbStored(p',cnt+1$)}
 \notes{$ts = ts\cup\/\{T_{p'}\}$}

@@ -19,6 +19,6 @@
 \contentsline {subsection}{\numberline {4.6}Typing schema triples}{12}{}%
 \contentsline {section}{\numberline {5}Implementation of type-checking}{12}{}%
 \contentsline {subsection}{\numberline {5.1}Computing LUB ground types}{12}{}%
-\contentsline {subsection}{\numberline {5.2}Computing GLB stored types}{12}{}%
-\contentsline {subsection}{\numberline {5.3}Relating LUB ground and GLB stored types}{12}{}%
-\contentsline {section}{\numberline {6}Conclusions}{12}{}%
+\contentsline {subsection}{\numberline {5.2}Computing GLB stored types}{13}{}%
+\contentsline {subsection}{\numberline {5.3}Relating LUB ground and GLB stored types}{13}{}%
+\contentsline {section}{\numberline {6}Conclusions}{13}{}%
