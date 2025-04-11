@@ -95,35 +95,54 @@
 
 \section{Introduction}
 
-Introduction to KGs ... \cite{Hogan2022,Ehrlinger2016}.
-
-\notes{KGs are becoming KBs...}
+%% Intro to KGs...
+\notes{Introduction to knowledge graphs (KG)... \cite{Hogan2022,Ehrlinger2016}.}
+\notes{KGs are becoming knowledge bases (KB)...}
 \notes{What are the structural characteristics of KBs?}
 \notes{What KBs can represent that (classical) data models can not.}
 \notes{Relations between the knowledge bases and KGs.}
 
-\notes{About the very (complex) KG domain.}
+%% Why types in KGs
+\notes{In KGs we have types of individual objects represented as classes.}
+\notes{Further, the types of the triples are the triples including types of individual objects.}
+\notes{Types represent a higher-level description of ground triples.}
+\notes{Types can be used to verify the correctness of the ground triples and the structures that they form.}
+\notes{Types define the context in a KG that allows placing (?) a structure of triples (sub-graph) in a KG.}
+\notes{Disambiguation of property (predicate) placement. Later, binding of methods, etc.}
+
+%% About type theory
+\notes{On the type theory... \cite{Pierce2002,Hindley1997}.}
+\notes{Classical type-checking problem in programming languages.}
+\notes{On differences of type-checking KGs to classical type-checking problem.}
+\notes{On intersection and union types and their use in type-checking KGs \cite{Pierce2002,Dezani2020,Pierce1991}.}
+
+%% KG description language (domain)
+\notes{KG domain is complex because KG is a knowledge representation (KR) language.}
 \notes{We have a specific domain, i.e., a knowledge graph including nodes and triples.}
-\notes{The class identifiers are ordered in poset and, consequently, triples are also poset.}
-\notes{$\Lambda$-expressions form a domain expressing derivations of $\lambda$-expressions.}
-\notes{??}
+\notes{Abstract insight into the structure of KG.}
+\notes{The classes form an ontology that can formally be represented as a poset.}
+\notes{Consequently, triple types are also ordered in a poset.}
+\notes{Denotational view of classes and type triples.}
+\notes{The interpretations of classes and triple types form a poset based on the subset relation.}
 
-On the type theory, using type theory, some keystones,
-... \cite{Pierce2002,Hindley1997}.
-On intersection and union types and their use in type-checking
-\cite{Pierce2002,Dezani2020,Pierce1991}.
+%% Abstract of type-checking method
+\notes{Type-checking of KGs (abstract).}
+\notes{Type-checking of ground triples from a KG.}
+\notes{Three phases of type-checking ground triples.}
+\notes{First, a lub type $T_{lub}$ of a ground triple is derived,}
+\notes{Second, a glb type $T_{glb}$ of the stored triple types is computed.}
+\notes{Finally, a sub-type relationship between the types $T_{lub}$ and $T_{glb}$ is investigated.}
+\notes{The type $T_{lub}$ restricts $T_{glb}$ in cases that the propery of $t$ has multiple different meanings.}
+\notes{Typing triple patterns and BGP queries in further work.}
+\notes{Identifying errors in typing of a KG.}
 
-\notes{Problem definition.}
-\notes{Checking the types of ground triples.}
-\notes{Errors in typing of a KG.}
-\notes{Typing BGP queries.}
-\notes{Typing triple patterns!}
-\notes{Rules for TPs.}
+%% Relations to other approaches
+\notes{The problem is in between type checking and type inference.}
+\notes{Using stored types of idents to infer the type of an object (ground triple) and then check how it relates to stored types of triples. }
+\notes{The idea is close to bideriectional typing \cite{Dunfield2021} because of inferring and checking.}
+\notes{In KGs we first infer as much as possible and then check inferred type with the stored types.}
 \notes{}
 
-\notes{Abstract of the method.}
-\notes{Give an abstract insight into the structure of KB. Identifiers, schema, types, ...}
-\notes{Show the ground triples, poset of triples.types triples, schema graph, etc.}
 
 
 
@@ -165,6 +184,17 @@ $g_2$.
 \notes{What is tracable? Looping on a "selected" set. Loop may go thruogh elements of a set, all more specific/general elements, etc.}
 \notes{They are extended to handle poset of identifiers that can form triples.}
 
+\notes{We do not have variables with types assigned in $\Gamma$ but facts that are stored in a KG.}
+\notes{Things stored in a KG are classified as identifiers and triples, and then further into individual and type objects ($\I$ and $\T$).}
+\notes{In this way we obtain individual identifiers $\I_i$ and class identifiers $\I_c$, as well as the individual triples $\T_i$ and triple types $\T_t$.}
+
+\notes{We specify the domains (sets) of \"objects\" (identifiers, triples, classes and types).}
+\notes{When we write $O\in\/S$ then we mean the existence of $O$ in a set $S$.}
+\notes{We use universal quantification $\forall\/O\in\/S, p(O)$ when we state that some property $p(O)$ holds for all objects $O$ from $S$.}
+
+\notes{Interpretation of the rules.}
+\notes{Forward: generative view of rules where rules enumerate the possible conclusions from the premises that generate objects from their domains. We are generating possible results.}
+\notes{Backward: for a selected object from a domain we check the construction by means of rule(s).}
 
 
 
@@ -254,7 +284,7 @@ the rule for a pair of types $T_1$ and $T_2$.
 
 \begin{equation}
 \label{rul:intsc-gather}
-\dfrac{\text{forall i,\ } S\preceq\/T_i}
+\dfrac{\forall i,\ S\preceq\/T_i}
       {S\preceq\land[T_1\ldots\/T_n]}  
 \end{equation}
 
@@ -291,7 +321,7 @@ the rule for types $T_1$ and $T_2$.
 \end{equation}
 
 \begin{equation}
-\dfrac{\text{forall i,\ } S_i\preceq\/T}
+\dfrac{\forall i,\ S_i\preceq\/T}
       {\lor[S_1\ldots\/S_n]\preceq\/T}  
 \end{equation}
 
@@ -724,10 +754,7 @@ i.e., $T\preceq\/S$.
 \notes{Typing a graph bottom-up?}
 \notes{Checking that all the triples are of correct types.}
 
-
-
-
-\subsection{Typing schema triples}
+\subsubsection{Typing schema triples}
 
 \notes{What can be checked?}
 \notes{Is a schema triple properly related to the super-classes and types of components.}
@@ -735,7 +762,6 @@ i.e., $T\preceq\/S$.
 \notes{A class or predicate component not related to other classes?}
 \notes{A class or predicate component attached to ``conflicting'' set of classes? What can be detected?}
 \notes{Any other examples?}
-\notes{}
 
 
 
@@ -746,8 +772,8 @@ i.e., $T\preceq\/S$.
 
 \subsection{Computing LUB ground types}
 
-\notes{The ground types of a triple $t=(s,p,o)$ are computed first as a type $(s_t,p,o_t)$ such that $(s,rdf:type,s_t)$ and $(o,rdf:type,o_t)$.}
-\notes{The set of all types $s_t$ ($o_t$) is stored in a set $g_s$ ($g_o$).}
+\notes{A ground type of a triple $t=(s,p,o)$ is a type $(s_t,p,o_t)$ such that $(s,\text{rdf:type},s_t)$ and $(o,\text{rdf:type},o_t)$.}
+\notes{The sets of types $s_t$ and $o_t$ are stored in the sets $g_s$ and $g_o$, respectively.}
 \notes{The ground type of $t$ is then $T_t=(\land\/g_s,p,\land\/g_o)$.}
 \notes{The lub of a type $T_t$ is computed as follows.}
 
@@ -775,16 +801,16 @@ i.e., $T\preceq\/S$.
 
 
 
-\notes{FUNCTION typeGlbStored ($p$: Property, $cnt$: Integer): Type}
+\notes{FUNCTION typeGlbStored ($p$: Property, $cnt$: Integer, $d_p$,$r_p$: Set): Type}
 \notes{BEGIN}
-\notes{if $d_p=\{\})$ then $d_p =  \{ c_s \mid (p,\text{rdfs:Domain},c_s)\in\/G\}$}
-\notes{if $r_p=\{\})$ then $r_p =  \{ c_o \mid (p,\text{rdfs:Range},c_o)\in\/G\}$}
-\notes{if $d_p\not=\{\}\land\/r_p\not=\{\})$ then }
+\notes{if $d_p=\{\}$ then $d_p =  \{ c_s \mid (p,\text{rdfs:Domain},c_s)\in\/G\}$}
+\notes{if $r_p=\{\}$ then $r_p =  \{ c_o \mid (p,\text{rdfs:Range},c_o)\in\/G\}$}
+\notes{if $d_p\not=\{\}\land\/r_p\not=\{\}$ then }
 \notes{RETURN $(\lor\/d_p,p,\lor\/r_p)$}
 \notes{$ts = \{\}$}
-\notes{for $p'$ ($(p,\text{rdfs\:SubPropertyOf},p')\in\/G$)}
+\notes{for $p'$ ($(p,\text{rdfs:SubPropertyOf},p')\in\/G$)}
 \notes{BEGIN}
-\notes{$T_{p'} = typeGlbStored(p',cnt+1$)}
+\notes{$T_{p'} = typeGlbStored(p',cnt+1$,$d_p$,$r_p$)}
 \notes{$ts = ts\cup\/\{T_{p'}\}$}
 \notes{END}
 \notes{RETURN $\lor\/ts$}
