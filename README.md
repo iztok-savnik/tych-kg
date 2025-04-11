@@ -1,7 +1,18 @@
 # Type-checking Knowledge Graphs
 
-We first present a formal view of a knowledge graph. On this basis, the
-type-checking rules are developed to define correct typing relationships among
-the triples of a knowledge graph. We discuss the algorithms for verifying the
-typing relationships against the given knowledge graph. Finally, we present the
-experimental results of type-checking the Yago4 knowledge graph.
+Knowledge graphs are based on the knowledge representation language,
+including some modeling constructs that are not common to programming
+languages. This makes type-checking of the knowledge graphs a
+challenge.
+
+In addition, the schema level of the knowledge graphs, as well as the
+higher meta-levels are not only rich in the expressive power of
+modeling but also in the quantity of data that represents the
+meta-levels of the knowledge graph. For example, the Yago4 knowledge
+graph includes around a half of million classes.
+
+* Logical definition of typing knowledge graphs.
+* Algorithmic definition of typing knowledge graphs.
+* Implementation and empirical results with Yago4.
+
+
