@@ -75,14 +75,8 @@
 \maketitle
 
 \begin{abstract}
-  We first present a formal view of a knowledge graph. On this basis,
-  the type-checking rules are developed to define correct typing
-  relationships among the triples of a knowledge graph. We discuss the
-  algorithms for verifying the typing relationships against the given
-  knowledge graph. Finally, we present the experimental results of
-  type-checking the Yago4 knowledge graph.
-
-\keywords{type checking \and knowledge graphs \and RDF stores \and graph databases.}
+This is an abstract...
+  \keywords{type checking \and knowledge graphs \and RDF stores \and graph databases.}
 \end{abstract}
 
 %\newpage
@@ -150,110 +144,132 @@
 
 \section{Preliminaries}
 
-\subsection{Knowledge graph}
+
+\subsection{Knowledge graph\label{section:kg}}
 
 This section defines a knowledge graph as a RDF graph \cite{rdf} using
 RDF-Schema \cite{rdfschema} for the representation of the structural
-part of a knowledge base.
+part of a knowledge base. 
 
 Let $I$ be the set of URI-s, $B$ be the set of blanks and $L$ be the
 set of literals. Let us also define sets $S = I\cup\/B$, $P = I$, and
-$O = I\cup\/B\cup\/L$.
+$O = I\cup\/B\cup\/L$. A \emph{RDF triple} is a triple
+$(s,p,o)\in\/S\times\/P\times\/O$. A \emph{RDF graph}
+$g\subseteq\/S\times\/P\times\/O$ is a set of triples. Set of all
+graphs will be denoted as $G$.
 
-Let $I$ be the set of URI-s, $B$ the set of blanks and $L$ be the set
-of literals. Let us also define sets $S = I\cup\/B$, $P = I$, and
-$O = I\cup\/B\cup\/L$.
+%We say that RDF graph $g_1$ is \emph{sub-graph} of $g_2$, denoted
+%$g_1 \sqsubseteq g_2$, if all triples in $g_1$ are also triples from
+%$g_2$. 
 
-\emph{RDF triple} is a triple $(s,p,o)\in\/S\times\/P\times\/O$.
-\emph{RDF graph} $g\subseteq\/S\times\/P\times\/O$ is a set of
-triples. Set of all graphs will be denoted as $G$. We suppose the
-existence of a set of variables $V$ and the set of \emph{terms}
-$T = O\cup\/V$. Term $t\in\/T$ is ground if $t\in\/O$.
+To abstract away the details of the RDF data model we unify the
+representation of knowledge graph by separating solely between the
+identifiers and triples. In view of the above formal representation of
+RDF triples, the complete set of identifiers is
+$\I=I\cup\/B\cup\/L$. The identifiers from $\I$ are classified into
+the sets including literals $\I_l$, individual (ground) identifiers
+$\I_i$, class identifiers $\I_c$, predicate identifiers $\I_p$.
 
-We say that RDF graph $g_1$ is \emph{sub-graph} of $g_2$, denoted
-$g_1 \sqsubseteq g_2$, if all triples in $g_1$ are also triples from
-$g_2$. 
+The complete set of triples, referred to as $\T$, is classified into
+the sets of individual (ground) triples $\T_i$, triple types $\T_t$
+and abstract triples $\T_a$. The individual triples include solely the
+individual identifiers $\I_i$ and predicates $\I_p$. The triple types
+include only class identifiers $\I_c$ and predicates. Finally, the
+abstract triples link individual and class identifiers in single
+triples.
 
-\notes{Define major structure of KG on the basis of the sorts of data.}
-\notes{...the set $I$ includes individual identifiers $I_i$, class identifiers $I_c$ and predicate identifiers $I_p$.}
 
-\subsection{Rule language}
 
-\notes{Put somewhere general discussion on rules.}
-\notes{What elements of rule are reasonable. Criterium: tracable elements of rule.}
-\notes{What is tracable? Looping on a "selected" set. Loop may go thruogh elements of a set, all more specific/general elements, etc.}
-\notes{They are extended to handle poset of identifiers that can form triples.}
+\subsection{Typing rule language}
 
-\notes{We do not have variables with types assigned in $\Gamma$ but facts that are stored in a KG.}
-\notes{Things stored in a KG are classified as identifiers and triples, and then further into individual and type objects ($\I$ and $\T$).}
-\notes{In this way we obtain individual identifiers $\I_i$ and class identifiers $\I_c$, as well as the individual triples $\T_i$ and triple types $\T_t$.}
+In this paper we define typing of a data language used to represent a
+TBOX \cite{Brachman2004KnowledgeRR} of a knowledge base given in a
+form of a knowledge graph. The data language specifys the assertions
+in the form of triples and the schema of assertions as the types of
+triples. The ground triples are the instances of the triple types that
+altogether define the schema of a KG.
 
-\notes{We specify the domains (sets) of \"objects\" (identifiers, triples, classes and types).}
-\notes{When we write $O\in\/S$ then we mean the existence of $O$ in a set $S$.}
-\notes{We use universal quantification $\forall\/O\in\/S, p(O)$ when we state that some property $p(O)$ holds for all objects $O$ from $S$.}
+In comparison to the data structures used in programming languages
+\cite{Pierce2002,Hindley1997}, the data language of a KG is more
+complex. First, a KG graph includes an ontology of classes and
+properties. Second, typing of ground identifiers is stored in a KG,
+i.e., each ground identifier has one or more types represented as
+class identifiers. Further, the properties (predicates) of a KG are
+treated as objects that are included in a classification hierarchy of
+properties. For each property we have the definition of one or more
+triple types stored in a KG. Finally, the properties (including triple
+types) are inherited through the classification hierarchy of classes
+and predicates.
 
-\notes{Interpretation of the rules.}
-\notes{Forward: generative view of rules where rules enumerate the possible conclusions from the premises that generate objects from their domains. We are generating possible results.}
-\notes{Backward: for a selected object from a domain we check the construction by means of rule(s).}
+Furthermore, the data language of a KG, which is based on RDF and
+RDF-Schema \cite{rdf,rdfschema}, does not include variables as in
+the case for the expressions of a programming language. All
+information needed for typing a ground triple is available from a KG.
 
+For the above presented reasons, we do not use standard typing rule
+language \cite{Pierce2002,Hindley1997} that includes the context
+$\Gamma$ where the types of the variables are stored. We use more
+expressive meta-language that is rooted in first order logic
+(abbr. FOL). The rules are composed of a set of premises and a
+conclusion. The premises are either typing judgements in the form
+$o:T$, or expressions in the FOL. The expressions of FOL can express
+complex premises such as the requirements for the LUB and GLB triple
+types. The conclusion part of the rule is a typing or subtyping
+jufgement.
+
+The rules are grounded in a knowledge graph through the sets of
+identifiers and triples that are defined in Section
+\ref{section:kg}. In rules we specify the domain for each symbol used.
+When we write $O\in\/S$ then we mean the \emph{existence} of $O$ in a
+set $S$. We use universal quantification $\forall\/O\in\/S,\ p(O)$
+when we state that some property $p(O)$ holds for all objects $O$ from
+$S$.
+
+Similar to \cite{Dunfield2021}, we differ between two interpretations
+of rules. First, the \emph{generator} view of rules is the forward
+interpretation where rules sythesize the types from the types derived
+by premises. The premises of the rule are treated from the left to the
+right. The quantification of the symbols binds the symbols up to the
+last premise unless defined differently by the parentheses. Second,
+the \emph{type-checking} view of the rules is the backward
+interpretation. Given the symbol and its type, the construction of a
+given type is checked by the rules.
 
 
 
 
 \section{Typing identifiers}
 
-\notes{Intro to typing idents.}
-\notes{Typing idents without considering info about the triples.}
+The set of identifiers $\I$ include ground identifiers $\I_g$, class
+identifiers $\I_c$, and the predicates (properties) $\I_p$ that are
+are both ground identifiers, since they are instances of rdf:Property,
+and similar to class identifiers, since they act as types and form an
+ontology of predicates.
 
-The individual and class entities are represented by identifiers from
-the set $\I$. The individual identifiers $\Ii$ stand for literals,
-concrete and abstract entities. The class identifiers $\Ic$ represent
-abstract entities that have an unempty interpretation. The abstract
-entities include, besides the identifiers of user-defined classes,
-the types (classes) of literals.
+In this section we present typing of ground identifiers. The types of
+ground identifiers are further used for typing ground triples in
+Section \ref{section:triples}. However, before presenting the types of
+identifiers, we introduce the intersection and union types that are
+used for the description of the types of identifiers in the following
+Section \ref{section:intsc-union}. Typing of literals is described in
+Section \ref{section:literals}. The rules for deriving the stored
+types of ground identifiers are given in Section
+\ref{section:idents-stored}. Finally, the sub-typing relation $\preceq$ is
+defined for the class identifiers and the complete types of ground
+identifiers are presented in Section \ref{section:idents-typing}.
 
-A graph database includes stored definitions for typing the individual
-identifiers, and for representing the specialization/generalization
-hierarchies of classes and properties.
-
-\nl
-\notes{Details.}
-\notes{1. First define base type of identifiers $:_1$ and stored subtyping relationship $\preceq_1$.}
-\notes{2. From the basis define the indent typing $:$ and subtyping rel $\preceq$ among identifiers.}
-\notes{3. Include the link between subtyping and typing.}
-\notes{4. Define lub type using $\land$ type for a given ground ident.}
-
-
-
-
-
-
-\subsection{Typing literals}
-
-Literals are the values of an atomic type. The atomic types are in RDF
-provided by the RDF-Schema dictionary \cite{rdfschema}. RDF-Schema
-defines a list of atomic types, such as xsd:integer, xsd:string, or
-xsd:boolean.
-
-Typing of the atomic types is determined by the following rule.
-
-\begin{equation}
-\dfrac{L\in\I_l, T\in\I_c,\, \text{"L"\textasciicircum\textasciicircum\/T}\in\Lt}
-      {L:T}  
-\end{equation}
-
-The rule states that a literal value $L$ is of a type $T$ if a literal
-"L"\textasciicircum\textasciicircum\/T is an element of the set of
-literals $\Lt$. A literal "L"\textasciicircum\textasciicircum\/T
-includes a literal value $L$ and a literal type $T$ referencing a type
-from the RDF-Schema dictionary. As an example, the literal
-"365"\textasciicircum\textasciicircum\/xsd:integer includes the
-literal value 365 and its type xsd:integer.
+%\notes{Details.}
+%\notes{1. First define base type of identifiers $:_1$ and stored subtyping relationship $\preceq_1$.}
+%\notes{2. From the basis define the indent typing $:$ and subtyping rel $\preceq$ among identifiers.}
+%\notes{3. Include the link between subtyping and typing.}
+%\notes{4. Define lub type using $\land$ type for a given ground ident.}
 
 
 
 
-\subsection{Intersection and union types}
+
+
+\subsection{Intersection and union types\label{section:intsc-union}}
 
 The instances of the intersection type $T_1\land\/T_2$ are objects
 belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
@@ -327,12 +343,33 @@ the rule for types $T_1$ and $T_2$.
 
 
 
+\subsection{Typing literals\label{section:literals}}
+
+Literals are the values of an atomic type. The atomic types are in RDF
+provided by the RDF-Schema dictionary \cite{rdfschema}. RDF-Schema
+defines a list of atomic types, such as xsd:integer, xsd:string, or
+xsd:boolean.
+
+Typing of the atomic types is determined by the following rule.
+
+\begin{equation}
+\dfrac{L\in\I_l, T\in\I_c,\, \text{"L"\textasciicircum\textasciicircum\/T}\in\Lt}
+      {L:T}  
+\end{equation}
+
+The rule states that a literal value $L$ is of a type $T$ if a literal
+"L"\textasciicircum\textasciicircum\/T is an element of the set of
+literals $\Lt$. A literal "L"\textasciicircum\textasciicircum\/T
+includes a literal value $L$ and a literal type $T$ referencing a type
+from the RDF-Schema dictionary. As an example, the literal
+"365"\textasciicircum\textasciicircum\/xsd:integer includes the
+literal value 365 and its type xsd:integer.
 
 
 
 
 
-\subsection{Stored typing and subtyping of identifiers}
+\subsection{Stored typing and subtyping of identifiers\label{section:idents-stored}}
 
 Let us introduce the typing and specialization/generalization
 relationships formally. The expression $i:_\darr\/C$ states that a
@@ -383,7 +420,7 @@ $\preceq_\darr$ is based on the predicate rdfs:subPropertyOf.
 
 
 
-\subsection{Typing and subtyping identifiers}
+\subsection{Typing and subtyping identifiers\label{section:idents-typing}}
 
 The one-step relationships $:_\darr$ and $\preceq_\darr$ are now
 extended with the reflexivity and transitivity to obtain the
@@ -392,7 +429,7 @@ partial ordering of class
 identifiers. %Further, the subtyping relation $\preceq$ is used to
 %extend typing relation $:$ with the rule of \emph{subsumption}.
 
-First, the one-step relationship $\preceq_s$ is generalized to the
+First, the one-step relationship $\preceq_\darr$ is generalized to the
 relationship $\preceq$ defined over class identifiers $\Ic$.
 
 \begin{equation}
@@ -405,16 +442,16 @@ Next, the subtyping relationship $\preceq$ is reflexive.
 
 \begin{equation}
 \label{rul:Ic-reflexivity}
-\dfrac{S\in \Ic}
-      {S\preceq\/S}
+\dfrac{I\in \Ic}
+      {I\preceq\/S}
 \end{equation}
 
 The subtype relationship is also transitive. 
 
 \begin{equation}
 \label{rul:Ic-transitivity}
-\dfrac{S,U,T\in\Ic \quad S\preceq\/U \quad U\preceq\/T}
-      {S\preceq\/T}   
+\dfrac{I_1,I_2,I_3\in\Ic \quad I_1\preceq\/I_2 \quad I_2\preceq\/I_3}
+      {I_1\preceq\/I_3}   
 \end{equation}
 
 Finally, the subtype relationship is asymmetric which is expressed
@@ -422,8 +459,8 @@ using the following rule.
 
 \begin{equation}
 \label{rul:Ic-antisymmetry}
-\dfrac{S,U\in\Ic \quad S\preceq\/U \quad U\preceq\/S}
-      {S=T}   
+\dfrac{I_1,I_2\in\Ic \quad I_1\preceq\/I_2 \quad I_2\preceq\/I_1}
+      {I_1=I_2}   
 \end{equation}
 
 As a consequence of the rules
@@ -478,7 +515,7 @@ by adding a typing rule called \emph{rule of subsumption}
 
 
 
-\section{Typing triples}
+\section{Typing triples\label{section:triples}}
 
 \notes{There are two basic aspects of a triple type.}
 \notes{First, the type is computed bottom-up: from the stored types of triple components.}
@@ -521,19 +558,19 @@ to $i$ by one-step type relationship $:_\darr$ denoting a ground
 type. In terms of the concepts of a knowledge graph, $C$ and $i$ are
 related by the relationship rdf:type.
 
-A ground type of a triple $t=(s,p,o)$ is a triple $T=T_s*p*T_o$ that
-includes the ground types of $t$'s components $s$ and $o$, and the
+A ground type of a triple $t=(I_s,p,I_o)$ is a triple $T=C_s*p*C_o$ that
+includes the ground types of $t$'s components $I_s$ and $I_o$, and the
 property $p$ which now has the role of a type. A ground type of a
 triple is defined by the following rule.
 
 \begin{equation}
 \label{rul:3-ground}
-\dfrac{t\in\/\Ti,\ t=(s,p,o)\quad I_s,I_o\in\Ic,\ s:_\darr\/I_s\land\/o:_\darr\/I_o\quad p:_\darr\text{rdf:Property}}
-      {t:_\darr\/I_s*p*I_o}
+\dfrac{\exists\/t\in\/\T_i(t=(I_s,p,I_o))\quad \Delta\vdash\/I_s:_\darr\/C_s\quad \Delta\vdash\/I_o:_\darr\/C_o\quad \Delta\vdash\/p:_\darr\text{rdf:Property}}
+      {\Delta\vdash\/t:_\darr\/C_s*p*C_o}
 \end{equation}
 
-The class $I_s$ is one of the ground types of $s$, and the type $I_o$
-is one of the ground types of $o$. The predicates are treated
+The class $C_s$ is one of the ground types of $I_s$, and the type $C_o$
+is one of the ground types of $I_o$. The predicates are treated
 differently to the subject and object components of triples. The
 predicates have the role of classes while they are instances of
 rdf:Property.
@@ -544,8 +581,8 @@ $T_1$,\ldots,$T_n$ are obtained using Rule~\ref{rul:3-ground}.
 
 \begin{equation}
 \label{rul:3-ground-gather}
-\dfrac{t\in \T_i\quad \forall\/T_i\in\T_t,\ t:_\darr\/T_i}
-      {t:_\darr\land[T_i]}
+\dfrac{\forall\/i\in[1..n](\Delta\vdash\/t:_\darr\/T_i)}
+      {\Delta\vdash\/t:_\darr\land[T_i]}
 \end{equation}
 
 
@@ -561,8 +598,8 @@ computed in two steps as before when gathering multiple ground types
 with conjunction. A single lub type is defined as follows.
 
 \begin{equation}
-\dfrac{t:_\darr\land[T_1..T_n]\quad T\in\Tt\quad \forall\/i,\ T_i\preceq\/T\quad \forall\/S\in\T_t,\ \forall\/i,\ T_i\preceq\/S\land\/T\preceq\/S}
-      {\vdash\/t:_\sqcup\/T}
+\dfrac{\Delta\vdash\/t:_\darr\land[T_1..T_n]\quad \exists\/T\in\Tt(\forall\/i(T_i\preceq\/T))\quad \forall\/S\in\T_t(\forall\/i(T_i\preceq\/S)\land\/T\preceq\/S\lor\/T\not\sim\/S)}
+      {\Delta\vdash\/t:_\sqcup\/T}
 \end{equation}
 
 The above rule states that a type $T$ is a lub type of a ground type 
@@ -572,8 +609,8 @@ all members of ground $\land$-type $T_1,\ldots\/,T_n$. The lub types
 can be now gathered using the following rule.
 
 \begin{equation}
-\dfrac{\forall i, T_i\in\Tt\quad t:_\sqcup\/T_i}
-      {t:_\sqcup\land[T_1..T_n]}
+\dfrac{\forall i\in[1..n](\Delta\vdash\/t:_\sqcup\/T_i)}
+      {\Delta\vdash\/t:_\sqcup\land[T_1..T_n]}
 \end{equation}
 
 
@@ -758,9 +795,9 @@ i.e., $T\preceq\/S$.
 
 \notes{What can be checked?}
 \notes{Is a schema triple properly related to the super-classes and types of components.}
-\notes{Consistency of the placement of a class in an ontology. What is this?}
+\notes{Consistency of the placement of a class in an ontology.}
 \notes{A class or predicate component not related to other classes?}
-\notes{A class or predicate component attached to ``conflicting'' set of classes? What can be detected?}
+\notes{A class or predicate component attached to ``conflicting'' set of classes? ?}
 \notes{Any other examples?}
 
 
@@ -827,6 +864,19 @@ i.e., $T\preceq\/S$.
 
 
 \subsection{Relating LUB ground and GLB stored types}
+
+
+
+
+
+
+\section{Related work}
+
+\notes{Comparing typing relation in an OO model with a KG \cite{Pierce2002}.}
+\notes{Include the differences between Pierce's (classical) sub-typing view of stored sub-class relationships among classes and the approach taken in this paper}
+\notes{Pierce treats classes as generators of objects that inherit methods and data members from its super-class.}
+\notes{The methods are inherited by copying the definitions in each subclass and then explicitely calling the method in the superclass.}
+\notes{List the differences: classes are identifiers, there is a sub-class relationship included in a sub-typing relationship.}
 
 
 
