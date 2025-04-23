@@ -84,8 +84,11 @@ This is an abstract...
 %\newpage
 
 \thispagestyle{headings}
-\tableofcontents
-\newpage
+%\tableofcontents
+%\newpage
+
+
+
 
 \section{Introduction}
 
@@ -145,7 +148,7 @@ This is an abstract...
 \section{Preliminaries}
 
 
-\subsection{Knowledge graph\label{section:kg}}
+\subsection{Knowledge graph\label{sec:kg}}
 
 This section defines a knowledge graph as a RDF graph \cite{rdf} using
 RDF-Schema \cite{rdfschema} for the representation of the structural
@@ -219,7 +222,7 @@ jufgement.
 
 The rules are grounded in a knowledge graph through the sets of
 identifiers and triples that are defined in Section
-\ref{section:kg}. In rules we specify the domain for each symbol used.
+\ref{sec:kg}. In rules we specify the domain for each symbol used.
 When we write $O\in\/S$ then we mean the \emph{existence} of $O$ in a
 set $S$. We use universal quantification $\forall\/O\in\/S,\ p(O)$
 when we state that some property $p(O)$ holds for all objects $O$ from
@@ -248,15 +251,15 @@ ontology of predicates.
 
 In this section we present typing of ground identifiers. The types of
 ground identifiers are further used for typing ground triples in
-Section \ref{section:triples}. However, before presenting the types of
+Section \ref{sec:triples}. However, before presenting the types of
 identifiers, we introduce the intersection and union types that are
 used for the description of the types of identifiers in the following
-Section \ref{section:intsc-union}. Typing of literals is described in
-Section \ref{section:literals}. The rules for deriving the stored
-types of ground identifiers are given in Section
-\ref{section:idents-stored}. Finally, the sub-typing relation $\preceq$ is
+Section \ref{sec:intsc-union}. Typing of literals is described in
+Section \ref{sec:literals}. The rules for deriving the stored types of
+ground identifiers are given in Section
+\ref{sec:idents-stored}. Finally, the sub-typing relation $\preceq$ is
 defined for the class identifiers and the complete types of ground
-identifiers are presented in Section \ref{section:idents-typing}.
+identifiers are presented in Section \ref{sec:idents-typing}.
 
 %\notes{Details.}
 %\notes{1. First define base type of identifiers $:_1$ and stored subtyping relationship $\preceq_1$.}
@@ -269,81 +272,8 @@ identifiers are presented in Section \ref{section:idents-typing}.
 
 
 
-\subsection{Intersection and union types\label{section:intsc-union}}
 
-The instances of the intersection type $T_1\land\/T_2$ are objects
-belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
-greatest lower bound of the types $T_1$ and $T_2$. In general,
-$\land[T_1\ldots\/T_n]$ is the greatest lower bound of types
-$T_1\ldots\/T_n$ \cite{Pierce1991,Pierce1996}.
-
-\begin{equation}
-T_1\land\/T_2\preceq\/T_1    
-\end{equation}
-
-\begin{equation}
-T_1\land\/T_2\preceq\/T_2  
-\end{equation}
-
-\begin{equation}
-\land[T_1\ldots\/T_n] \preceq\/T_i  
-\end{equation}
-
-If the type $S$ is more specific than the types $T_1\ldots\/T_n$ then
-$S$ is more specific then $\land[T_1\ldots\/T_n]$. First, we present
-the rule for a pair of types $T_1$ and $T_2$.
-
-\begin{equation}
-\dfrac{S\preceq\/T_1\quad\/S\preceq\/\/T_2}
-      {S\preceq\/T_1\land\/T_2}  
-\end{equation}
-
-\begin{equation}
-\label{rul:intsc-gather}
-\dfrac{\forall i,\ S\preceq\/T_i}
-      {S\preceq\land[T_1\ldots\/T_n]}  
-\end{equation}
-
-
-
-The intersection and union types are dual. This can be seen also from
-the rules that are used for each particular type.
-
-The instances from the union type $T_1\lor\/T_2$ are either the
-instances of $T_1$ or $T_2$, or the instances of both types. The type
-$T_1\lor\/T_2$ is the smallest upper bound of the types $T_1$ and
-$T_2$. In general, $\lor[T_1\ldots\/T_n]$ is the smallest upper bound
-of types $T_1\ldots\/T_n$ \cite{Pierce1991}.
-
-\begin{equation}
-T_1\preceq\/T_1\lor\/T_2    
-\end{equation}
-
-\begin{equation}
-T_2\preceq\/T_1\lor\/T_2  
-\end{equation}
-
-\begin{equation}
-T_i\preceq\/\lor[T_1\ldots\/T_n]  
-\end{equation}
-
-If the type $T$ is more general than the types $S_1\ldots\/S_n$ then
-$T$ is more general then $\lor[S_1\ldots\/S_n]$. First, we present
-the rule for types $T_1$ and $T_2$.
-
-\begin{equation}
-\dfrac{S_1\preceq\/T\quad\/S_2\preceq\/\/T}
-      {S_1\lor\/S_2\preceq\/T}  
-\end{equation}
-
-\begin{equation}
-\dfrac{\forall i,\ S_i\preceq\/T}
-      {\lor[S_1\ldots\/S_n]\preceq\/T}  
-\end{equation}
-
-
-
-\subsection{Typing literals\label{section:literals}}
+\subsection{Typing literals\label{sec:literals}}
 
 Literals are the values of an atomic type. The atomic types are in RDF
 provided by the RDF-Schema dictionary \cite{rdfschema}. RDF-Schema
@@ -353,7 +283,7 @@ xsd:boolean.
 Typing of the atomic types is determined by the following rule.
 
 \begin{equation}
-\dfrac{L\in\I_l, T\in\I_c,\, \text{"L"\textasciicircum\textasciicircum\/T}\in\Lt}
+\dfrac{L\in\I_l\quad T\in\I_c,\quad \text{"L"\textasciicircum\textasciicircum\/T}\in\Lt}
       {L:T}  
 \end{equation}
 
@@ -369,16 +299,17 @@ literal value 365 and its type xsd:integer.
 
 
 
-\subsection{Stored typing and subtyping of identifiers\label{section:idents-stored}}
+\subsection{Stored typing and subtyping of identifiers\label{sec:idents-stored}}
 
-Let us introduce the typing and specialization/generalization
-relationships formally. The expression $i:_\darr\/C$ states that a
-class $C$ is a type of an individual identifier $i$. The expression
-$i_1\preceq_\darr\/i_2$ defines the sub-class relationship between the
-class identifiers $i_1$ and $i_2$. The index '$\darr$' in relations
-$:_\darr$ and $\preceq_\darr$ denotes that the relationships is stored
-in a database. Such notation allows us to address differently the
-stored and the derived parts of the graph database schema.
+The expression $I:_\darr\/C$ states that a class $C$ is a type of an
+individual identifier $I$. The expression $I_1\preceq_\darr\/I_2$
+defines the subtype (sub-class) relationship between the class
+identifiers $I_1$ and $I_2$. The index '$\darr$' in relations
+$:_\darr$ and $\preceq_\darr$ denotes that the relations are stored in
+a database---we refere to them as \emph{one-step} typing and subtyping
+relations. Such notation allows us to address differently the
+\emph{stored} and the \emph{derived} types of the graph database
+schema.
 
 %\notes{Partial ordering defined with stored schema triples in a database.}
 %\notes{The relationships that poset $\preceq_1$ covers are rdfs:subClassOf and rdfs:subPropertyOf. }
@@ -387,19 +318,21 @@ stored and the derived parts of the graph database schema.
 
 \memo{Oportunity to introduce ``mixed'' objects including ground and schema components.}
 
-The rule for the one-step relationship $:_\darr$ is defined using the
-predicate rdf:type.
+The rule for the one-step typing relation $:_\darr$ is defined using
+the predicate rdf:type.
 
 \begin{equation}
+\label{rul:ident-1step-type}
 \dfrac{I\in\Ii\quad I_c\in\Ic\quad (I,\text{rdf:type},I_c)\in \D}
       {I :_\darr I_c}
 \end{equation}
 
-The individual entity $I$ can have more than one stored types, e.g.,
-$I_{c1}$ and $I_{c2}$. Therefore, $I:_\darr\/I_{c1}$ and
-$I:_\darr\/I_{c2}$ holds, and we can instead write
-$I:_\darr\/I_{c1}\land\/I_{c2}$. All existing stored typings of $I$
-can be gathered by Rule \ref{rul:3-ground-gather} presented later.
+The individual entity $I$ can have more than one stored types. By
+using a generative interpretation, Rule \ref{rul:ident-1step-type}
+synthesizes all types $I_c$ such that $I:I_c$. The rule can be used
+either in some other rule that employ it as a generator, or we can
+update above rule to generate a $\land$ type including all the types
+of $I$ as presented in Section \ref{sec:intsc-union}.
 
 A one-step subtyping relationship $\preceq_\darr$ is defined by means
 of the RDF predicate rdfs:sub\-ClassOf in the following rule.
@@ -420,21 +353,22 @@ $\preceq_\darr$ is based on the predicate rdfs:subPropertyOf.
 
 
 
-\subsection{Typing and subtyping identifiers\label{section:idents-typing}}
 
-The one-step relationships $:_\darr$ and $\preceq_\darr$ are now
-extended with the reflexivity and transitivity to obtain the
-relationships $:$ and $\preceq$. The relation $\preceq$ forms a
-partial ordering of class
-identifiers. %Further, the subtyping relation $\preceq$ is used to
-%extend typing relation $:$ with the rule of \emph{subsumption}.
+\subsection{Typing and subtyping identifiers\label{sec:idents-typing}}
+
+The one-step relationship $\preceq_\darr$ is now extended with the
+reflectivity, transitivity and asymmetry to obtain the relationship
+$\preceq$.  relation $\preceq$ forms a partial ordering of class
+identifiers. The ground typing relation $:_\darr$ is then extended
+with the \emph{rule of subsumption} \ref{rul:typing-subsumption} to
+obtain a typing relation $:$.
 
 First, the one-step relationship $\preceq_\darr$ is generalized to the
-relationship $\preceq$ defined over class identifiers $\Ic$.
+relationship $\preceq$ defined over class identifiers $\I_c$.
 
 \begin{equation}
 \label{rul:Ic-extended}
-\dfrac{I_1,I_2\in\Ic \quad I_1\preceq_\darr I_2}
+\dfrac{I_1,I_2\in\I_c \quad I_1\preceq_\darr I_2}
       {I_1 \preceq I_2}
 \end{equation}
 
@@ -442,15 +376,15 @@ Next, the subtyping relationship $\preceq$ is reflexive.
 
 \begin{equation}
 \label{rul:Ic-reflexivity}
-\dfrac{I\in \Ic}
-      {I\preceq\/S}
+\dfrac{I_c\in \I_c}
+      {I_c\preceq\/I_c}
 \end{equation}
 
 The subtype relationship is also transitive. 
 
 \begin{equation}
 \label{rul:Ic-transitivity}
-\dfrac{I_1,I_2,I_3\in\Ic \quad I_1\preceq\/I_2 \quad I_2\preceq\/I_3}
+\dfrac{I_1,I_2,I_3\in\I_c \quad I_1\preceq\/I_2 \quad I_2\preceq\/I_3}
       {I_1\preceq\/I_3}   
 \end{equation}
 
@@ -459,7 +393,7 @@ using the following rule.
 
 \begin{equation}
 \label{rul:Ic-antisymmetry}
-\dfrac{I_1,I_2\in\Ic \quad I_1\preceq\/I_2 \quad I_2\preceq\/I_1}
+\dfrac{I_1,I_2\in\I_c \quad I_1\preceq\/I_2 \quad I_2\preceq\/I_1}
       {I_1=I_2}   
 \end{equation}
 
@@ -469,11 +403,12 @@ $\preceq$ is a poset.
 
 Knowledge graphs include a special class $\top$ that represents the
 root class of the ontology. In RDF ontologies $\top$ is usually
-represented by the predicate owl:Thing. The following rule specifys
-that all class identifiers are more specific than $\top$.
+represented by the predicate owl:Thing \cite{Hoffart2013}. The
+following rule specifys that all class identifiers are more specific
+than $\top$.
 
 \begin{equation}
-\dfrac{\forall\/S\in\Ic}
+\dfrac{\forall\/S\in\I_c}
       {S\preceq\top}
 \end{equation}
 
@@ -483,7 +418,7 @@ relation $:$ that takes into account the subtyping relation $\preceq$.
 The following rule states that a stored type is a type.
 
 \begin{equation}
-\dfrac{I\in\Ii \quad C\in\Ic \quad I:_\darr\/C}
+\dfrac{I\in\I_i \quad C\in\I_c \quad I:_\darr\/C}
       {I:C}
 \end{equation}
 
@@ -492,30 +427,166 @@ by adding a typing rule called \emph{rule of subsumption}
 \cite{Pierce2002}.
 
 \begin{equation}
-\dfrac{I\in\Ii\quad S\in\Ic\quad I:S \quad S\preceq\/T}
+\label{rul:typing-subsumption}
+\dfrac{I\in\I_i\quad S\in\I_c\quad I:S \quad S\preceq\/T}
       {I:T}    
 \end{equation}
 
 
-\notes{Properties have dual role: they are instances and types at the same time.}
-\notes{Present the features of properties from this point of view.}
+\memo{Properties have dual role: they are instances and types at the same time.}
+\memo{Present the features of properties from this point of view.}
+
+
+
+
+
+
+\subsection{Intersection and union types\label{sec:intsc-union}}
+
+The instances of the intersection type $T_1\land\/T_2$ are objects
+belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
+greatest lower bound of the types $T_1$ and $T_2$. In general,
+$\land[T_1\ldots\/T_n]$ is the greatest lower bound (abbr. GLB) of
+types $T_1\ldots\/T_n$ \cite{Pierce1991,Pierce1996}. The instances of
+the type $\land[T_1\ldots\/T_n]$ form a maximal set of objects that
+belong to all types $T_i$.
+
+The rules for the $\land$ and $\lor$ types presented in this section
+are general---they apply for the identifier types $\I_c$ and triple
+types $\T_t$. The set of types $\tau=\I_c\cup\T_t$ is used to ground
+the types in the rules.
+
+The instances of a type $\land[T_1..T_n]$ are the instances of all
+particular types $T_i$. This is stated by the following rule. 
+
+\memo{\begin{equation}
+\dfrac{T_1,T_2\in\tau}
+      {T_1\land\/T_2\preceq\/T_1}
+\end{equation}
+
+\begin{equation}
+\dfrac{T_1,T_2\in\tau}
+      {T_1\land\/T_2\preceq\/T_2}
+\end{equation}}
+
+\begin{equation}
+\dfrac{\forall\/i\in[1..n],\ T_i\in\tau}
+      {\land[T_1..\/T_n] \preceq\/T_i} 
+\end{equation}
+
+Further, the following rule states that if the type $S$ is more
+specific than the types $T_1,\ldots\/,T_n$ then $S$ is more specific
+then $\land[T_1..T_n]$.
+
+\memo{\begin{equation}
+\dfrac{S,T_1,T_2\in\tau\quad S\preceq\/T_1\quad\/S\preceq\/\/T_2}
+      {S\preceq\/T_1\land\/T_2}  
+\end{equation}}
+
+\begin{equation}
+\label{rul:intsc-gather}
+\dfrac{S\in\tau\quad\forall\/i\in[1..n],\ T_i\in\tau\quad\/S\preceq\/T_i}
+      {S\preceq\land[T_1..\/T_n]}  
+\end{equation} 
+
+The intersection and union types are dual. This can be seen also from
+the duality of the rules for the $\land$ and $\lor$ types.
+
+The instances from the union type $T_1\lor\/T_2$ are either the
+instances of $T_1$ or $T_2$, or the instances of both
+types. Therefore, $\lor[T_1\ldots\/T_n]$ is the least upper bound of
+types $T_1,\ldots,\/T_n$ \cite{Pierce1991}.
+
+\memo{\begin{equation}
+\dfrac{T_1,T_2\in\tau}
+      {T_1\preceq\/T_1\lor\/T_2}
+\end{equation}
+
+\begin{equation}
+\dfrac{T_1,T_2\in\tau}
+      {T_2\preceq\/T_1\lor\/T_2}
+\end{equation}}
+
+\begin{equation}
+  \dfrac{\forall\/i\in[1..n],\ T_i\in\tau}
+        {T_i\preceq\/\lor[T_1..\/T_n]}
+\end{equation}
+
+Finally, if the type $T$ is more general than the types
+$S_1,\ldots,\/S_n$ then $T$ is more general then
+$\lor[S_1\ldots\/S_n]$.
+
+\memo{\begin{equation}
+\dfrac{T,S_1,S_2\in\tau\quad S_1\preceq\/T\quad\/S_2\preceq\/\/T}
+      {S_1\lor\/S_2\preceq\/T}  
+\end{equation}}
+
+\begin{equation}
+\dfrac{T\in\tau\quad\forall\/i\in[1..n],\ S_i\in\tau\quad\/S_i\preceq\/T}
+      {\lor[S_1\ldots\/S_n]\preceq\/T}  
+\end{equation}
+
+
+\subsubsection{Meaning of $\land$ and $\lor$ types.}
+The meaning of the $\land$ and $\lor$ types can be defined through
+their interpretations. The following definition expresses the
+denotation of a $\lor$ type with the interpretations of its component
+types. Suppose we have a set of types
+$\forall\/i\in\/[1..n],\ T_i\in\tau$.
+
+\begin{displaymath}
+  \llbracket\lor[T_1..T_n]\rrbracket_\D = \bigcup_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
+\end{displaymath}
+
+Similarly, the interpretation of a $\land$ type is the intersection of
+the interpretations of its component types.
+
+\begin{displaymath}
+\llbracket\land[T_1..T_n]\rrbracket_\D = \bigcap_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
+\end{displaymath}
+
+Note that the interpretation of a class $C$ is a set of instances
+$\llbracket\/C\rrbracket_\D=\{I\ |\ I\in\I_i\land\/I:C\}$. Further, the
+interpretation of a triple type $T$ is the set of ground triples
+$\llbracket\/T\rrbracket_\D=\{t\ |\ t\in\T_i\land\/t:T\}$\footnote{Triple
+  types are presented in the following Section
+  \ref{sec:triples}.}\cite{Savnik2025}.
 
 \memo{Put together the base types of ground identifiers using $\land$ type.}
 \memo{First, the base type of an ground identifier is the $\land$ of all base types.}
 \memo{The \emph{base type} of a ground identifier is defined explicitely!}
 
-\memo{The lub types of base types B are the smallest types related to all base types.}
-\memo{The lub types are related by $\land$ to form a (complete) type of a ground identifier.}
-\memo{The complete type of a ground identifier is defined explicitely.}
+
+
+
+
+\subsection{The join and meet typing}
+
+The $\land$ and $\lor$ types are logical types defined through the
+sets of instances. Given two types $T$ and $S$ we have a greatest
+lower bound $S\land\/T$, and a least upper bound $S\lor\/T$ types
+where $S\land\/T$ denotes a maximal set of objects that are of type
+$S$ \emph{and} $T$, and $S\lor\/T$ denotes a minimal set of objects
+that are of type $S$ \emph{or} $T$ (or both).
+
+In a KG we have a poset of (stored) types. that can be used to compute
+a join type $J=S\sqcap\/T$ which is the least type $J$ such that
+$S\preceq\/J$ and $T\preceq\/J$, and a meet type $M=S\sqcup\/T$ which is
+the greatest type $M$ such that $M\preceq\/S$ and $M\preceq\/T$. Since
+we have a top type $\top$ defined in a KG, the join of arbitrary two
+types always exists. However, the meet of two arbitrary types may not
+exist always.
+
+\notes{General rules for join and meet.}
+\notes{Join and meet as typing (implementing) of either $\land$ or $\lor$ types.}
+\notes{Application of the join on ground $\land$-types.}
+\notes{}  
 
 
 
 
 
-
-
-
-\section{Typing triples\label{section:triples}}
+\section{Typing triples\label{sec:triples}}
 
 \notes{There are two basic aspects of a triple type.}
 \notes{First, the type is computed bottom-up: from the stored types of triple components.}
@@ -565,8 +636,8 @@ triple is defined by the following rule.
 
 \begin{equation}
 \label{rul:3-ground}
-\dfrac{\exists\/t\in\/\T_i(t=(I_s,p,I_o))\quad \Delta\vdash\/I_s:_\darr\/C_s\quad \Delta\vdash\/I_o:_\darr\/C_o\quad \Delta\vdash\/p:_\darr\text{rdf:Property}}
-      {\Delta\vdash\/t:_\darr\/C_s*p*C_o}
+\dfrac{t\in\/\T_i,\ t=(I_s,p,I_o)\quad I_s:_\darr\/C_s\quad I_o:_\darr\/C_o\quad p:_\darr\text{rdf:Property}}
+      {t:_\darr\/C_s*p*C_o}
 \end{equation}
 
 The class $C_s$ is one of the ground types of $I_s$, and the type $C_o$
@@ -581,8 +652,8 @@ $T_1$,\ldots,$T_n$ are obtained using Rule~\ref{rul:3-ground}.
 
 \begin{equation}
 \label{rul:3-ground-gather}
-\dfrac{\forall\/i\in[1..n](\Delta\vdash\/t:_\darr\/T_i)}
-      {\Delta\vdash\/t:_\darr\land[T_i]}
+\dfrac{\forall\/i\in[1..n],\ t:_\darr\/T_i}
+      {t:_\darr\land[T_i]}
 \end{equation}
 
 
@@ -598,8 +669,8 @@ computed in two steps as before when gathering multiple ground types
 with conjunction. A single lub type is defined as follows.
 
 \begin{equation}
-\dfrac{\Delta\vdash\/t:_\darr\land[T_1..T_n]\quad \exists\/T\in\Tt(\forall\/i(T_i\preceq\/T))\quad \forall\/S\in\T_t(\forall\/i(T_i\preceq\/S)\land\/T\preceq\/S\lor\/T\not\sim\/S)}
-      {\Delta\vdash\/t:_\sqcup\/T}
+\dfrac{t:_\darr\land[T_1..T_n]\quad T\in\T_t,\quad \forall\/i,\ T_i\preceq\/T\quad \forall\/S\in\T_t,\ \forall\/i,\ (T_i\preceq\/S\land\/T\preceq\/S)\lor\/T\not\sim\/S}
+      {t:_\sqcup\/T}
 \end{equation}
 
 The above rule states that a type $T$ is a lub type of a ground type 
@@ -609,8 +680,8 @@ all members of ground $\land$-type $T_1,\ldots\/,T_n$. The lub types
 can be now gathered using the following rule.
 
 \begin{equation}
-\dfrac{\forall i\in[1..n](\Delta\vdash\/t:_\sqcup\/T_i)}
-      {\Delta\vdash\/t:_\sqcup\land[T_1..T_n]}
+\dfrac{\forall i\in[1..n](t:_\sqcup\/T_i)}
+      {t:_\sqcup\land[T_1..T_n]}
 \end{equation}
 
 
@@ -652,7 +723,7 @@ predicates $p'\succeq\/p$ that  the domain and range defined.
 \begin{equation}
 \label{rul:3-stored}
 \dfrac{t\in\T_i,\, t=(s,p,o)\quad p'\in\I_p, p\preceq\/p'\quad (p',\text{domain},T_s)\in\/g\quad (p',\text{range},T_o)\in\/g}
-      {t:_\uarr(T_s,p,T_o)}
+      {t:_\uarr\/T_s*p*T_o}
 \end{equation}
 
 
@@ -678,7 +749,7 @@ statement.
 \label{rul:3-stored1}
 \dfrac{t\in\Ti, t=(s,p,o)\quad p_1,p_2\in\I_p\quad p\preceq\/p_1\quad p\preceq\/p_2\quad (p_1,\text{domain},T_s)\in\/g
                 \quad (p_2,\text{range},T_o)\in\/g}
-      {t:_\uarr(T_s,p,T_o)}
+      {t:_\uarr\/T_s*p*T_o}
 \end{equation}
 
 \notes{Explanation of the rule.}
@@ -705,15 +776,15 @@ greatest lower bound (abbr. glb) of stored types generated by the rule
 \notes{Therefore, we can have more than one stored GLB types.}
 
 \begin{equation}
-\dfrac{t\in\T_i\quad T_i\in\T_t,\, t:_\uarr\/T_i\quad \forall\/S\in\T_t,\, t:_\uarr\/S\quad T_i\preceq\/S\lor\/T_i\not\sim\/S}
-      {t:_\sqcap\/T_i}
+\dfrac{t\in\T_i\quad T\in\T_t,\, t:_\uarr\/T\quad \forall\/S\in\T_t,\, t:_\uarr\/S\quad T\preceq\/S\lor\/T_i\not\sim\/S}
+      {t:_\sqcap\/T}
 \end{equation}
 
 The first premise says that $t$ is a ground triple. The second premise
-enumerates stored types $T_i$ of $t$. The third premise requires that
-$T_i$ is the most specific type of all possible types $S$ of $t$. In
+enumerates stored types $T$ of $t$. The third premise requires that
+$T$ is the most specific type of all possible types $S$ of $t$. In
 other words, there is no type $S$ of $t$ that is a subtype of
-$T_i$. Hence, $T_i$ is the glb type of the stored types of $t$.
+$T$. Hence, $T$ is the glb type of the stored types of $t$.
 
 The implementation view of the above rule is as follows. The schema
 triples are obtained from the inherited values of the predicates
