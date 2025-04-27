@@ -22,7 +22,16 @@
 \newcommand{\ol}{\overline} 
 \newcommand{\darr}{\downarrow} 
 \newcommand{\uarr}{\uparrow} 
-\newcommand{\D}{{\cal D}} 
+\newcommand{\Darr}{\Downarrow} 
+\newcommand{\Uarr}{\Uparrow} 
+\newcommand{\llb}{\llbracket}
+\newcommand{\rrb}{\rrbracket}
+\newcommand{\vdasharr}{%
+    \mathrel{%
+        \vdash\hspace*{-5pt}%
+        \raisebox{2.3pt}{\scalebox{.5}{\(\blacktriangleright\)}}%
+    }%
+}\newcommand{\D}{{\cal D}} 
 \newcommand{\U}{{\cal U}} 
 \newcommand{\B}{{\cal B}} 
 \newcommand{\Lt}{{\cal L}} 
@@ -508,8 +517,9 @@ types $T_1,\ldots,\/T_n$ \cite{Pierce1991}.
 \end{equation}}
 
 \begin{equation}
-  \dfrac{\forall\/i\in[1..n],\ T_i\in\tau}
-        {T_i\preceq\/\lor[T_1..\/T_n]}
+\label{rul:lor-1}
+\dfrac{\forall\/i\in[1..n],\ T_i\in\tau}
+      {T_i\preceq\/\lor[T_1..\/T_n]}
 \end{equation}
 
 Finally, if the type $T$ is more general than the types
@@ -522,6 +532,7 @@ $\lor[S_1\ldots\/S_n]$.
 \end{equation}}
 
 \begin{equation}
+\label{rul:lor-2}
 \dfrac{T\in\tau\quad\forall\/i\in[1..n],\ S_i\in\tau\quad\/S_i\preceq\/T}
       {\lor[S_1\ldots\/S_n]\preceq\/T}  
 \end{equation}
@@ -560,7 +571,7 @@ $\llbracket\/T\rrbracket_\D=\{t\ |\ t\in\T_i\land\/t:T\}$\footnote{Triple
 
 
 
-\subsection{The join and meet typing}
+\subsection{The join and meet types}
 
 The $\land$ and $\lor$ types are logical types defined through the
 sets of instances. Given two types $T$ and $S$ we have a greatest
@@ -569,18 +580,58 @@ where $S\land\/T$ denotes a maximal set of objects that are of type
 $S$ \emph{and} $T$, and $S\lor\/T$ denotes a minimal set of objects
 that are of type $S$ \emph{or} $T$ (or both).
 
-In a KG we have a poset of (stored) types. that can be used to compute
-a join type $J=S\sqcap\/T$ which is the least type $J$ such that
-$S\preceq\/J$ and $T\preceq\/J$, and a meet type $M=S\sqcup\/T$ which is
-the greatest type $M$ such that $M\preceq\/S$ and $M\preceq\/T$. Since
-we have a top type $\top$ defined in a KG, the join of arbitrary two
-types always exists. However, the meet of two arbitrary types may not
-exist always.
+A KG includes a stored poset of classes that represent types of the
+individual objects. The poset can be used to compute a join type
+$S\sqcap\/T$ and a meet type $S\sqcup\/T$ \cite{Pierce2002}. The join
+type $J=S\sqcap\/T$ is the least type such that $S\preceq\/J$,
+$T\preceq\/J$, i.e., for all types $U$, if $S\preceq\/U$ and
+$T\preceq\/U$, then $J\preceq\/U$.
 
-\notes{General rules for join and meet.}
-\notes{Join and meet as typing (implementing) of either $\land$ or $\lor$ types.}
-\notes{Application of the join on ground $\land$-types.}
-\notes{}  
+The meet type $M=S\sqcup\/T$ is the greatest type such that
+$S\preceq\/M$, $T\preceq\/M$ and there is no such $L$ where
+$S\preceq\/L$ and $T\preceq\/L$ without also having $L\preceq\/M$.
+Since we have a top type $\top$ defined in a KG, the join of arbitrary
+two types always exists. However, the meet of two arbitrary types may
+not exist always. 
+
+The join type is related to the $\lor$-type. Given a set of types
+$\{T_1\ldots\/T_n\}$, the join type $T=\sqcup[T_1..T_n]$ represents a
+LUB type such that $T_i\preceq\/T$ for all $i$. On the other hand,
+Rule \ref{rul:lor-1} for the $\lor$-types states
+$T_i\preceq\lor[T_1..T_n]$. However, the join type and $\lor$-type
+differ in the interpretation. 
+$$\llb\lor[T_1..T_n]\rrb_\D\subseteq\llb\/T\rrb_\D=\llb\sqcup[T_1..T_n]\rrb_\D$$
+
+While the interpretation of the type $\lor[T_1..T_n]$ includes
+precisely the instances of all $T_i$, the type $T$ is a LUB class and
+the interpretation of $T=\sqcup[T_1..T_n]$ can include interpretations
+of many classes not among $[T_1..T_n]$.
+
+A meet type of $[T_1..T_n]$ may not exist in a poset of classes from a
+KG. In general, a meet type $M=\sqcap[T_1..T_n]$ exists in a class
+ontology if the types $T_1..T_n$ are \emph{bounded below} which means
+that there exists a type $L$ such that $L\preceq\/T_i$ for all
+$i$. The bounded meet types \cite{Pierce2002} are not very frequent on
+the lower levels of a class ontology from a KG.
+
+Similarly to the $\lor$-type and the join type, the semantics of the
+$\land$-type is similar to the semantics of meet type. Both of them
+define a GLB type. The type $\land[T_1..T_n]$ denotes the intersection
+$\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a meet type
+$M=\sqcap[T_1..T_n]$ includes solely the interpretation of $M$. The
+set $\bigcap\/\llb\/T_i\rrb_\D$ can also include objects that are not
+instances of $M$. Hence,
+$\llb\/M\rrb_\D\subseteq\bigcap\/\llb\/T_i\rrb_\D$.
+
+In type-checking the ground triples, the join types are used in the
+procedure for checking the types derived bottom-up against the stored
+schema of a KG as presented in Section \ref{sec:3-ground-types}. The
+join as well as meet types are very useful for type-checking of the
+basic graph patterns \cite{Savnik2025a}. The $\lor$ and $\land$-types
+are logical types that can be simplified in the typing positions of a
+graph pattern by using typing rules, and can be approximated by
+using join and meet types to obtain a more precise type of a GP
+variable.
 
 
 
@@ -601,14 +652,11 @@ exist always.
 \notes{The glb types of all types obtained using $:_\uarr$ obtaining a glb type $:_\sqcap$.}
 \notes{Finally, the type $:$ of $t$ is deterimned by summing alternative $:_\uarr$ types.}
 
-\notes{Unfinished!!}
 \notes{Interactions between the $\land/\lor$ types of triple components and triples must be added.}
 \notes{Analogy between the types of functions in LC and types of triples.}
 \notes{Show rules relating $\land/\lor$ types and triple types. Example.}
 \notes{E.g., $(S_1\land\/S_2)*p*R = S_1*p*R\land\/S_2*p*R$.}
 \notes{Are all rules covered?}
-
-\notes{Unfinished!!}
 
 \notes{Predicates should be treated in the same way as the classes.}
 \notes{They can have a rich hierarchy.}
@@ -621,7 +669,7 @@ exist always.
 
 
 
-\subsection{Deriving a ground type of a triple}
+\subsection{Deriving a ground type of a triple\label{sec:3-ground-types}}
 
 \noindent
 A ground type of an individual identifier $i$ is a class $C$ related
@@ -671,6 +719,16 @@ with conjunction. A single lub type is defined as follows.
 \begin{equation}
 \dfrac{t:_\darr\land[T_1..T_n]\quad T\in\T_t,\quad \forall\/i,\ T_i\preceq\/T\quad \forall\/S\in\T_t,\ \forall\/i,\ (T_i\preceq\/S\land\/T\preceq\/S)\lor\/T\not\sim\/S}
       {t:_\sqcup\/T}
+\end{equation}
+
+\begin{equation}
+\dfrac{t:_\darr\land[T_1..T_n]\quad \vdasharr\/T=\sqcup[T_1..T_n]}
+      {t:_{\darr\sqcup}\/T}
+\end{equation}
+
+\begin{equation}
+\dfrac{t:_\darr\land[T_1..T_n]\quad \vdasharr\forall\/i\in[1..m],\ S_i=\sqcup[T_1..T_n]}
+      {t:_{\darr\sqcup}\land[S_1..S_m]}
 \end{equation}
 
 The above rule states that a type $T$ is a lub type of a ground type 
@@ -777,7 +835,7 @@ greatest lower bound (abbr. glb) of stored types generated by the rule
 
 \begin{equation}
 \dfrac{t\in\T_i\quad T\in\T_t,\, t:_\uarr\/T\quad \forall\/S\in\T_t,\, t:_\uarr\/S\quad T\preceq\/S\lor\/T_i\not\sim\/S}
-      {t:_\sqcap\/T}
+      {t:_\uarr^\_\/T}
 \end{equation}
 
 The first premise says that $t$ is a ground triple. The second premise
@@ -796,8 +854,8 @@ The glb types are now gathered in a $\lor$-type. Hence, the resulting
 $\lor$-type includes all glb types of $t$.
 
 \begin{equation}
-\dfrac{\forall\/T_i\in\T_t,\, t:_\sqcap\/T_i}
-      {t:_\sqcap\lor[T_i]}
+\dfrac{\forall\/T_i\in\T_t,\, t:_\Darr\/T_i}
+      {t:_\Darr\lor[T_i]}
 \end{equation}
 
 The premise says that we identify all triple types $T_i$ that
