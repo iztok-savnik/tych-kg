@@ -59,6 +59,7 @@
 \newcommand{\lub}{l}
 \newcommand{\memo}[1]{}
 \newcommand{\notes}[1]{\noindent\begin{small}-- \emph{#1}\\\end{small}}
+\newcommand{\nnotes}[1]{\indent\begin{small}-- \emph{#1}\\\end{small}}
  
 \def\ojoin{\setbox0=\hbox{$\bowtie$}%
   \rule[-.02ex]{.25em}{.4pt}\llap{\rule[\ht0]{.25em}{.4pt}}}
@@ -88,9 +89,9 @@ This is an abstract...
   \keywords{type checking \and knowledge graphs \and RDF stores \and graph databases.}
 \end{abstract}
 
-%\newpage
-%\tableofcontents
-%\newpage
+\newpage
+\tableofcontents
+\newpage
 
 \thispagestyle{headings}
 %\tableofcontents
@@ -367,10 +368,10 @@ $\preceq_\darr$ is based on the predicate rdfs:subPropertyOf.
 
 The one-step relationship $\preceq_\darr$ is now extended with the
 reflectivity, transitivity and asymmetry to obtain the relationship
-$\preceq$.  relation $\preceq$ forms a partial ordering of class
+$\preceq$. Relation $\preceq$ forms a partial ordering of class
 identifiers. The ground typing relation $:_\darr$ is then extended
-with the \emph{rule of subsumption} \ref{rul:typing-subsumption} to
-obtain a typing relation $:$.
+with the \emph{rule of subsumption}, presented as Rule
+\ref{rul:typing-subsumption}, to obtain a typing relation $:$.
 
 First, the one-step relationship $\preceq_\darr$ is generalized to the
 relationship $\preceq$ defined over class identifiers $\I_c$.
@@ -538,7 +539,8 @@ $\lor[S_1\ldots\/S_n]$.
 \end{equation}
 
 
-\subsubsection{Meaning of $\land$ and $\lor$ types.}
+\subsection{Semantics of $\land$ and $\lor$ types in KGs.}
+
 The meaning of the $\land$ and $\lor$ types can be defined through
 their interpretations. The following definition expresses the
 denotation of a $\lor$ type with the interpretations of its component
@@ -600,19 +602,19 @@ LUB type such that $T_i\preceq\/T$ for all $i$. On the other hand,
 Rule \ref{rul:lor-1} for the $\lor$-types states
 $T_i\preceq\lor[T_1..T_n]$. However, the join type and $\lor$-type
 differ in the interpretation. 
-$$\llb\lor[T_1..T_n]\rrb_\D\subseteq\llb\/T\rrb_\D=\llb\sqcup[T_1..T_n]\rrb_\D$$
+$$\llb\lor[T_1..T_n]\rrb_\D=\bigcup_{i\in[1..n]}\rrb\/T_i\rrb_\D\subseteq\llb\/T\rrb_\D=\llb\sqcup[T_1..T_n]\rrb_\D$$
 
 While the interpretation of the type $\lor[T_1..T_n]$ includes
 precisely the instances of all $T_i$, the type $T$ is a LUB class and
 the interpretation of $T=\sqcup[T_1..T_n]$ can include interpretations
-of many classes not among $[T_1..T_n]$.
+of classes that are not among $[T_1..T_n]$.
 
 A meet type of $[T_1..T_n]$ may not exist in a poset of classes from a
 KG. In general, a meet type $M=\sqcap[T_1..T_n]$ exists in a class
 ontology if the types $T_1..T_n$ are \emph{bounded below} which means
 that there exists a type $L$ such that $L\preceq\/T_i$ for all
-$i$. The bounded meet types \cite{Pierce2002} are not very frequent on
-the lower levels of a class ontology from a KG.
+$i$. The bounded meet types \cite{Pierce2002} are not frequent on the
+lower levels of a class ontology from a KG.
 
 Similarly to the $\lor$-type and the join type, the semantics of the
 $\land$-type is similar to the semantics of meet type. Both of them
@@ -621,17 +623,38 @@ $\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a meet type
 $M=\sqcap[T_1..T_n]$ includes solely the interpretation of $M$. The
 set $\bigcap\/\llb\/T_i\rrb_\D$ can also include objects that are not
 instances of $M$. Hence,
-$\llb\/M\rrb_\D\subseteq\bigcap\/\llb\/T_i\rrb_\D$.
-
+$$\llb\sqcap[T_1..T_n]\rrb_\D=\llb\/M\rrb_\D\subseteq\llb\land[T_1..T_n]\rrb_\D=\bigcap_{i\in[1..n]}\/\llb\/T_i\rrb_\D.$$
 In type-checking the ground triples, the join types are used in the
 procedure for checking the types derived bottom-up against the stored
 schema of a KG as presented in Section \ref{sec:3-ground-types}. The
-join as well as meet types are very useful for type-checking of the
-basic graph patterns \cite{Savnik2025a}. The $\lor$ and $\land$-types
-are logical types that can be simplified in the typing positions of a
-graph pattern by using typing rules, and can be approximated by
-using join and meet types to obtain a more precise type of a GP
-variable.
+join as well as meet types are very useful in the procedure for
+type-checking basic graph patterns \cite{Savnik2025a}. The $\lor$ and
+$\land$-types are logical types that can be simplified in the typing
+positions of a graph pattern by using typing rules, and can be
+approximated by using join and meet types to obtain a more precise
+type of a GP variable.
+
+\medskip
+\notes{The use of $\land$ and $\lor$ types to describe identifiers.}
+\notes{For $I\in\I_i$ gather ground types of identifiers with $\land$-type as $I:\land[S_1..S_n]$.}
+\notes{For $I\in\I_i$ compute a join type of $S_1..S_n$ as $I:\sqcup[S_1..S_n]$.}
+\nnotes{A join type $S_g=\sqcup[S_1..S_n]$ is the LUB type of $[S_1..S_n]$.}
+\nnotes{$\bigcup_{i\in[1..n]}\llb\/S_i\rrb\subseteq\llb\/S_g\rrb$}
+\nnotes{In a class poset we can have more than one LUB types for a given set of types.}
+
+\notes{Why computing a join type $S_g=\sqcup[S_1..S_n]$ for $\land[S_1..S_n]$?}
+\nnotes{We would like to check typing of a triple $t\in\T_i$.}
+\nnotes{We compute first the ground type $T_g=\land[T_1..T_m]$ and a stored type $T_s$ of $t$.}
+\nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
+\nnotes{The subtype relation should hold $T_g\preceq\/T_s$.}
+
+\notes{Why computing a LUB type of $T_g=\land[T_1..T_m]$?}
+\nnotes{To get a LUB type of ground types $T_g$ of $t$, i.e., one representative type...}
+\nnotes{we compute the ground types $S_g$ of $T_g$'s components.}
+\nnotes{$T_g$ should be close to the level of stored triple types $T_s$ of $t$.}
+\nnotes{As such, $T$ is an approprite point to start searching stored types of $t$.}
+
+
 
 
 
@@ -914,23 +937,22 @@ i.e., $T\preceq\/S$.
 \subsection{Typing a graph}
 
 \notes{What is a type of a graph?}
-\notes{A type of a graph is a graph!}
-\notes{It includes a set of schema triples forming a schema graph.}
+\nnotes{A type of a graph is a graph!}
+\nnotes{It includes a set of triple types forming a schema graph.}
 
-\notes{Typing a graph bottom-up?}
-\notes{Checking that all the triples are of correct types.}
+\notes{Typing schema triples?}
+\nnotes{What can be checked?}
+\nnotes{Is a schema triple properly related to the super-classes and types of components.}
+\nnotes{Consistency of the placement of a class in an ontology.}
+\nnotes{A class or predicate component not related to other classes?}
+\nnotes{A class or predicate component attached to ``conflicting'' set of classes? ?}
+\nnotes{Any other examples?}
 
-\subsubsection{Typing schema triples}
-
-\notes{What can be checked?}
-\notes{Is a schema triple properly related to the super-classes and types of components.}
-\notes{Consistency of the placement of a class in an ontology.}
-\notes{A class or predicate component not related to other classes?}
-\notes{A class or predicate component attached to ``conflicting'' set of classes? ?}
-\notes{Any other examples?}
-
-
-
+\notes{Typing a graph.}
+\nnotes{Checking whether triple types match in the meeting points.}
+\nnotes{What is the type in meeting points of two triple types?}
+\nnotes{Since a tye of a graph should present any legal triple in $\D$}
+\nnotes{}
 
 
 \section{Implementation of type-checking}
