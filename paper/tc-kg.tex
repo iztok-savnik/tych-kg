@@ -539,8 +539,8 @@ $\lor[S_1\ldots\/S_n]$.
 \end{equation}
 
 
-\subsection{Semantics of $\land$ and $\lor$ types in KGs.}
-
+\medskip\noindent
+\textbf{Semantics of $\land$ and $\lor$ types in KGs.$\ \ $}
 The meaning of the $\land$ and $\lor$ types can be defined through
 their interpretations. The following definition expresses the
 denotation of a $\lor$ type with the interpretations of its component
@@ -561,8 +561,8 @@ the interpretations of its component types.
 Note that the interpretation of a class $C$ is a set of instances
 $\llbracket\/C\rrbracket_\D=\{I\ |\ I\in\I_i\land\/I:C\}$. Further, the
 interpretation of a triple type $T$ is the set of ground triples
-$\llbracket\/T\rrbracket_\D=\{t\ |\ t\in\T_i\land\/t:T\}$\footnote{Triple
-  types are presented in the following Section
+$\llbracket\/T\rrbracket_\D=\{t\ |\ t\in\T_t\land\/t:T\}$\footnote{Triple
+  types $\T_t$ are presented in the following Section
   \ref{sec:triples}.}\cite{Savnik2025}.
 
 \memo{Put together the base types of ground identifiers using $\land$ type.}
@@ -634,33 +634,58 @@ positions of a graph pattern by using typing rules, and can be
 approximated by using join and meet types to obtain a more precise
 type of a GP variable.
 
+
+
+
+\subsection{Typing identifiers with $\land$ and $\lor$ types}
+
 \medskip
 \notes{The use of $\land$ and $\lor$ types to describe identifiers.}
-\notes{For $I\in\I_i$ gather ground types of identifiers with $\land$-type as $I:\land[S_1..S_n]$.}
+
+\notes{For $I\in\I_i$ gather ground types of identifiers with $\land$-type as $I:_{\darr}\land[S_1..S_n]$.}
+\nnotes{$I\in\I_i\quad\forall\/S_i\in\I_c,\ t:_{\darr}S_i$.}
+\nnotes{The ground type of $I$ is a type $S_g=\land[S_1..S_n]$.}
+
+\begin{equation}
+\label{rul:land-1}
+\dfrac{I\in\I_i\quad\forall\/i\in[1..n],\ I:_{\darr}S_i}
+      {I:_{\darr}\land[S_1..S_n]}
+\end{equation}
+
+
 \notes{For $I\in\I_i$ compute a join type of $S_1..S_n$ as $I:\sqcup[S_1..S_n]$.}
-\nnotes{A join type $S_g=\sqcup[S_1..S_n]$ is the LUB type of $[S_1..S_n]$.}
-\nnotes{$\bigcup_{i\in[1..n]}\llb\/S_i\rrb\subseteq\llb\/S_g\rrb$}
+\nnotes{A join type $S=\sqcup[S_1..S_n]$ is the LUB type of $[S_1..S_n]$.}
+\nnotes{$\llb\land[S_1..S_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/S_i\rrb\subseteq\llb\/S\rrb$.}
 \nnotes{In a class poset we can have more than one LUB types for a given set of types.}
 
-\notes{Why computing a join type $S_g=\sqcup[S_1..S_n]$ for $\land[S_1..S_n]$?}
-\nnotes{We would like to check typing of a triple $t\in\T_i$.}
-\nnotes{We compute first the ground type $T_g=\land[T_1..T_m]$ and a stored type $T_s$ of $t$.}
-\nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
-\nnotes{The subtype relation should hold $T_g\preceq\/T_s$.}
+\begin{equation}
+\label{rul:lcup-1}
+\dfrac{I\in\I_i\quad\forall\/i\in[1..n],\ I:_\darr\/S_i\quad\/S=\sqcup[S_1..S_n]}
+      {I:_\sqcup\/S}
+\end{equation}
 
-\notes{Why computing a LUB type of $T_g=\land[T_1..T_m]$?}
-\nnotes{To get a LUB type of ground types $T_g$ of $t$, i.e., one representative type...}
-\nnotes{we compute the ground types $S_g$ of $T_g$'s components.}
-\nnotes{$T_g$ should be close to the level of stored triple types $T_s$ of $t$.}
-\nnotes{As such, $T$ is an approprite point to start searching stored types of $t$.}
+\notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
+\nnotes{Show how the $\land$ and $\sqcup$ types of $I$ are used to compute a type of $I$.}
+\nnotes{$S$ should be close to class components of a stored triple type.}
+\nnotes{... details about the above statement.}
+\nnotes{As such, $S$ is an approprite point to start searching stored types of $t$.}
 
-
+\notes{Show how all join types can be gathered into one $\lor$ or $\land$ type.}
+\nnotes{Show how join types of a $\land$ type are gathered with $\land$ type of join types.}
+\nnotes{... the same for $\lor$ types.}
 
 
 
 
 
 \section{Typing triples\label{sec:triples}}
+
+\notes{We would like to type of a triple $t\in\T_i$.}
+\nnotes{Abstract of the procedure.}
+\nnotes{We compute first the ground type $T_g=\land[T_1..T_m]$ and a stored type $T_s$ of $t$.}
+\nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
+\nnotes{The subtype relation should hold $T_g\preceq\/T_s$.}
+
 
 \notes{There are two basic aspects of a triple type.}
 \notes{First, the type is computed bottom-up: from the stored types of triple components.}
@@ -900,13 +925,19 @@ semantically different concepts.
 
 \subsection{Typing a triple}
 
+\notes{Why using $\land$ and $\sqcap$ types for typing a triple $t$?}
+\nnotes{We would like to check typing of a triple $t\in\T_i$.}
+\nnotes{We compute first the ground type $T_g=\land[T_1..T_m]$ and a stored type $T_s$ of $t$.}
+\nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
+\nnotes{The subtype relation should hold $T_g\preceq\/T_s$.}
+
 \notes{Two ways of defining semantics.}
 \notes{1) enumeration style: stored types are enumerated as alternatives ($\lor$).}
 \notes{2) packed together: alternative types are packed in one $\bigvee$ type.}
 \notes{One advantage of (1) is that individual glb types can be processed further individually.}
 \notes{Advantage of (2) is the higer-level semantics without going in implementation.}
 
-\notes{Now stored types have to be related to all lub base types to represent the correct type of a triple.}
+\notes{Stored types have to be related to all join ground types to represent the correct type of a triple.}
 \notes{It seems it would be easier to check the pairs one-by-one using (1) in algorithms.}
 \notes{In case of using complete types in the phases, types would further have to be processed by $\land,\lor$ rules.}
 
