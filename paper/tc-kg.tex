@@ -58,8 +58,9 @@
 \newcommand{\vb}[1]{\begin{small}\texttt{#1}\end{small}}
 \newcommand{\lub}{l}
 \newcommand{\memo}[1]{}
-\newcommand{\notes}[1]{\noindent\begin{small}-- \emph{#1}\\\end{small}}
-\newcommand{\nnotes}[1]{\indent\begin{small}-- \emph{#1}\\\end{small}}
+\newcommand{\notes}[1]{\noindent\begin{small}-- \emph{#1}\hfill\break\end{small}}
+\newcommand{\nnotes}[1]{\indent\begin{small}-- \emph{#1}\hfill\break\end{small}}
+\newcommand{\ennotes}[1]{\indent\begin{small}-- \emph{#1}\hfill\end{small}}
  
 \def\ojoin{\setbox0=\hbox{$\bowtie$}%
   \rule[-.02ex]{.25em}{.4pt}\llap{\rule[\ht0]{.25em}{.4pt}}}
@@ -645,6 +646,7 @@ type of a GP variable.
 \notes{For $I\in\I_i$ gather ground types of identifiers with $\land$-type as $I:_{\darr}\land[S_1..S_n]$.}
 \nnotes{$I\in\I_i\quad\forall\/S_i\in\I_c,\ t:_{\darr}S_i$.}
 \nnotes{The ground type of $I$ is a type $S_g=\land[S_1..S_n]$.}
+\ennotes{The following rule geathers all ground types of $I\in\I_i$.}
 
 \begin{equation}
 \label{rul:land-1}
@@ -652,11 +654,21 @@ type of a GP variable.
       {I:_{\darr}\land[S_1..S_n]}
 \end{equation}
 
+\notes{Let's have a look at $\land$ types of $I$'s ground types $S_1..S_n$ from a KG. }
+\nnotes{Often $I$ has a set of very specific classes $C_s$ but also some general classes $C_g$.}
+\nnotes{The general classes $C_g$ are close to the classes used in the stored triple types.}
+\nnotes{If stored typing of $I$ is correct, then $s_s$ have to include subclasses of $s_g$.}
+\ennotes{Rule for filtering $\land[S_1..S_n]$ all $S_i\preceq\/S_k$ by using algorithmic typing.}
+
+\begin{equation}
+\label{rul:land-2}
+\dfrac{I\in\I_i\quad\/I:_\darr\land[S_1..S_n]\quad\/\forall\/i\in[1,n],\ R_j\in\/\{S_k^{k\in[1,n]}\},\ S_i\preceq\/R_j}
+      {I:_{\darr}\land[R_1..R_m]}
+\end{equation}
 
 \notes{For $I\in\I_i$ compute a join type of $S_1..S_n$ as $I:\sqcup[S_1..S_n]$.}
 \nnotes{A join type $S=\sqcup[S_1..S_n]$ is the LUB type of $[S_1..S_n]$.}
-\nnotes{$\llb\land[S_1..S_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/S_i\rrb\subseteq\llb\/S\rrb$.}
-\nnotes{In a class poset we can have more than one LUB types for a given set of types.}
+\ennotes{$\llb\land[S_1..S_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/S_i\rrb\subseteq\llb\/S\rrb$.}
 
 \begin{equation}
 \label{rul:lcup-1}
@@ -664,14 +676,23 @@ type of a GP variable.
       {I:_\sqcup\/S}
 \end{equation}
 
+\notes{Let's have a look at $\sqcup$ types of $I$'s ground types $S_1..S_n$ from a KG. }
+\nnotes{In many cases $I$ has a single type $S_1$ which is the same as the join type $S$.}
+\nnotes{The super-classes of the join type $S$ have to be included in the stored triple types $\T_t$}
+\nnotes{to be defined as the types of subject or object.}
+\nnotes{Often join type $S$ is close to the classes that are components of stored triple types.}
+
 \notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
 \nnotes{Show how the $\land$ and $\sqcup$ types of $I$ are used to compute a type of $I$.}
-\nnotes{$S$ should be close to class components of a stored triple type.}
+\nnotes{$t:_\sqcup\/S$ and there should be a path from $S$ to class components of stored triple types $T$.}
 \nnotes{... details about the above statement.}
 \nnotes{As such, $S$ is an approprite point to start searching stored types of $t$.}
+\nnotes{}
 
-\notes{Show how all join types can be gathered into one $\lor$ or $\land$ type.}
-\nnotes{Show how join types of a $\land$ type are gathered with $\land$ type of join types.}
+\notes{In a class poset we can have more than one $\sqcup$ types of $[S_1..S_n]$.}
+\nnotes{All $\sqcup$ types of a given set of types $\{S_1,...,S_n\}$.}
+\nnotes{Show how all $\sqcup$ types can be gathered into one $\land$ or $\lor$ type.}
+\nnotes{Show how join types of $\land$ type are gathered with $\land$ type of join types.}
 \nnotes{... the same for $\lor$ types.}
 
 
