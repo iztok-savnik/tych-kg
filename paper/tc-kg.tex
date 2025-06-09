@@ -60,6 +60,7 @@
 \newcommand{\memo}[1]{}
 \newcommand{\notes}[1]{\noindent\begin{small}-- \emph{#1}\hfill\break\end{small}}
 \newcommand{\nnotes}[1]{\indent\begin{small}-- \emph{#1}\hfill\break\end{small}}
+\newcommand{\anotes}[1]{\indent\begin{small}\phantom{-- }\emph{#1}\hfill\break\end{small}}
 \newcommand{\ennotes}[1]{\indent\begin{small}-- \emph{#1}\hfill\end{small}}
  
 \def\ojoin{\setbox0=\hbox{$\bowtie$}%
@@ -138,9 +139,9 @@ This is an abstract...
 \notes{Type-checking of ground triples from a KG.}
 \notes{Three phases of type-checking ground triples.}
 \notes{First, a lub type $T_{lub}$ of a ground triple is derived,}
-\notes{Second, a glb type $T_{glb}$ of the stored triple types is computed.}
-\notes{Finally, a sub-type relationship between the types $T_{lub}$ and $T_{glb}$ is investigated.}
-\notes{The type $T_{lub}$ restricts $T_{glb}$ in cases that the propery of $t$ has multiple different meanings.}
+\notes{Second, a MIN type $T_{min}$ of the stored triple types is computed.}
+\notes{Finally, a sub-type relationship between the types $T_{lub}$ and $T_{min}$ is investigated.}
+\notes{The type $T_{lub}$ restricts $T_{min}$ in cases that the propery of $t$ has multiple different meanings.}
 \notes{Typing triple patterns and BGP queries in further work.}
 \notes{Identifying errors in typing of a KG.}
 
@@ -658,7 +659,8 @@ type of a GP variable.
 \nnotes{Often $I$ has a set of very specific classes $C_s$ but also some general classes $C_g$.}
 \nnotes{The general classes $C_g$ are close to the classes used in the stored triple types.}
 \nnotes{If stored typing of $I$ is correct, then $s_s$ have to include subclasses of $s_g$.}
-\ennotes{Rule for filtering $\land[S_1..S_n]$ all $S_i\preceq\/S_k$ by using algorithmic typing.}
+\nnotes{Rule for filtering $\land[S_1..S_n]$ all $S_i\preceq\/S_k$ by using algorithmic typing.}
+\ennotes{We will suppose that there is no subtype relations among $S_i$.}
 
 \begin{equation}
 \label{rul:land-2}
@@ -667,8 +669,11 @@ type of a GP variable.
 \end{equation}
 
 \notes{For $I\in\I_i$ compute a join type of $S_1..S_n$ as $I:\sqcup[S_1..S_n]$.}
-\nnotes{A join type $S=\sqcup[S_1..S_n]$ is the LUB type of $[S_1..S_n]$.}
-\ennotes{$\llb\land[S_1..S_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/S_i\rrb\subseteq\llb\/S\rrb$.}
+\nnotes{A join type is defined on the set of types $\{S_i^{i\in[1,n]}\}$.}
+\nnotes{A join type $S=\sqcup[S_1..S_n]$ is the LUB type of $\{S_i^{i\in[1,n]}\}$.}
+\nnotes{$\llb\land[S_1..S_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/S_i\rrb\subseteq\llb\/S\rrb$.}
+\nnotes{Let's write here $\sqcup$-type of $\land[S_1..S_m]$!!!}
+\ennotes{It can be seen as the operation to compute final type of $I$.}
 
 \begin{equation}
 \label{rul:lcup-1}
@@ -676,18 +681,17 @@ type of a GP variable.
       {I:_\sqcup\/S}
 \end{equation}
 
-\notes{Let's have a look at $\sqcup$ types of $I$'s ground types $S_1..S_n$ from a KG. }
-\nnotes{In many cases $I$ has a single type $S_1$ which is the same as the join type $S$.}
-\nnotes{The super-classes of the join type $S$ have to be included in the stored triple types $\T_t$}
-\nnotes{to be defined as the types of subject or object.}
-\nnotes{Often join type $S$ is close to the classes that are components of stored triple types.}
-
 \notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
 \nnotes{Show how the $\land$ and $\sqcup$ types of $I$ are used to compute a type of $I$.}
 \nnotes{$t:_\sqcup\/S$ and there should be a path from $S$ to class components of stored triple types $T$.}
 \nnotes{... details about the above statement.}
 \nnotes{As such, $S$ is an approprite point to start searching stored types of $t$.}
-\nnotes{}
+
+\notes{Let's have a look at $\sqcup$ types of $I$'s ground types $S_1..S_n$ from a KG. }
+\nnotes{In many cases $I$ has a single type $S_1$ which is the same as the join type $S$.}
+\nnotes{The super-classes of the join type $S$ have to be included in the stored triple types $\T_t$}
+\nnotes{to be defined as the types of subject or object.}
+\nnotes{Often join type $S$ is close to the classes that are components of stored triple types.}
 
 \notes{In a class poset we can have more than one $\sqcup$ types of $[S_1..S_n]$.}
 \nnotes{All $\sqcup$ types of a given set of types $\{S_1,...,S_n\}$.}
@@ -701,36 +705,46 @@ type of a GP variable.
 
 \section{Typing triples\label{sec:triples}}
 
+
 \notes{We would like to type of a triple $t\in\T_i$.}
-\nnotes{Abstract of the procedure.}
-\nnotes{We compute first the ground type $T_g=\land[T_1..T_m]$ and a stored type $T_s$ of $t$.}
-\nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
-\nnotes{The subtype relation should hold $T_g\preceq\/T_s$.}
-
-
 \notes{There are two basic aspects of a triple type.}
-\notes{First, the type is computed bottom-up: from the stored types of triple components.}
-\notes{Second, the type can be computed top-down: from the user-defined domain/range types of properties.}
+\nnotes{1. type $t:T_g$ is computed bottom-up: from the stored types of triple components.}
+\nnotes{2. type $t:T_u$ can be computed top-down: from the user-defined types of properties.}
+\nnotes{The relation $T_g\preceq\/T_u$ must hold if the typing of KG is correct.}
+\nnotes{If the predicate $p$ of type $T_u$ is defined in multiple contexts some of disjunctively}
+\nnotes{linked components of $T_u$ may not be related to $T_g$.}
+\nnotes{The filtering of $T_u$ is done by Rule \ref{rul:3-typing}.}
 
 \notes{About the types that are computed bottom-up.}
-\notes{Ground type of a triple is computed first using $:_\darr$.}
-\notes{Next, the lub type of a triple is derived using $:_\sqcup$.}
+\nnotes{Ground type of a triple is computed first by extending $:_\darr$ to triples.}
+\nnotes{A triple can have multiple ground types $T_g=(\land[S_i^{i\in[1,k]}],p,\land[O_j^{j\in[1,m]}])$.}
+\nnotes{Next, the join type $\sqcup[T_g]$ of ground type $T_g$ is derived.}
+\nnotes{The type $\sqcup[T_g]$ is used as a stepping stone to determine the final type of $t$.}
 
-\notes{About the stored types that are computed as glb of valid stored types.}
-\notes{From the top side of the ontology, the stored type $:_\uarr$ is determined based on $p$.}
-\notes{The glb types of all types obtained using $:_\uarr$ obtaining a glb type $:_\sqcap$.}
-\notes{Finally, the type $:$ of $t$ is deterimned by summing alternative $:_\uarr$ types.}
+\notes{Stored triple types are user-defined types.}
+\nnotes{Stored types for a predicate $p$ are defined via the predicates rdfs:domain and rdfs:range.}
+\nnotes{From the top side of the ontology, the stored type $:_\uarr$ is determined based on $p$.}
+\nnotes{However, given $p$ we can have a triple type $(t_s,p,t_o)$ such that $t_s$ or $t_o$ are}
+\anotes{defined for some $p'\succeq\/p$.}
+\nnotes{Special case: $p'$ has two domains $t_s^1$ and $t_s^2$---type is then}
+\anotes{$(t_s^1\lor\/t_s^2,p,\_)\equiv\/(t_s^1,p,\_)\lor(t_s^2,p,\_)$.}
+\nnotes{Stored triple types for a given predicate $p$ are computed as MIN of valid stored types for $p$.}
+\nnotes{The MIN types of all types obtained from $:_\uarr$ are minimized by using MIN type $:_\Darr$.}
+\nnotes{Why type have to be minimal? To have minimal interpretaton.}
+\nnotes{Finally, the type $:$ of $t$ is deterimned by summing alternative $:_\Darr$ types.}
+\nnotes{Note there can be more than one $\Darr$-type.}
+\nnotes{This happens when triple types include property that is defined in two different contexts.}
 
 \notes{Interactions between the $\land/\lor$ types of triple components and triples must be added.}
-\notes{Analogy between the types of functions in LC and types of triples.}
-\notes{Show rules relating $\land/\lor$ types and triple types. Example.}
-\notes{E.g., $(S_1\land\/S_2)*p*R = S_1*p*R\land\/S_2*p*R$.}
-\notes{Are all rules covered?}
+\nnotes{Analogy between the types of functions in LC and types of triples.}
+\nnotes{Show rules relating $\land/\lor$ types and triple types. Example.}
+\nnotes{E.g., $(S_1\land\/S_2)*p*R = S_1*p*R\land\/S_2*p*R$.}
+\nnotes{Are all rules covered?}
 
 \notes{Predicates should be treated in the same way as the classes.}
-\notes{They can have a rich hierarchy.}
-\notes{\emph{Note:} Where to include discussion on special role of predicates and their relations to classes?}
-\notes{Mention Cyc as the practical KB with rich hierarchy of predicates.}
+\nnotes{They can have a rich hierarchy.}
+\nnotes{\emph{Note:} Discussion on special role of predicates and their relations to classes?}
+\nnotes{Mention Cyc as the practical KB with rich hierarchy of predicates.}
 
 
 
@@ -830,35 +844,23 @@ can be now gathered using the following rule.
 
 \subsection{Stored types of triples}
 
-\notes{General comments.}
-\notes{Analysis tool. Show minimality of the stored types (either enumerated or gathered with $\bigvee$).}
-\notes{\emph{Reminder:} when a complete stored (user-defined) type is related to the base type of a triple, some of GLB types may be eliminated.}
-
-\notes{Present the complete story.}
 \notes{Computing the minimal and valid stored type of a triple $t=(s,p,o)\in\T_i$.}
-\notes{Stored types are defined by linking a predicate $p$ to a domain and range classes.}
-\notes{Only types (domains and ranges) defined for $p'\succeq\/p$ are valid stored types.}
-\notes{There are no other valid types below, i.e., for $p'\prec\/p$.}
-\notes{Among the valid stored types the most specific and unrelated stored types are selected.}
-\notes{In other words, only glb types of valid stored types are selected.}
-\notes{Finally, the minimal and complete type of $t$ is an $\lor$-type including all previously selected glb types.}
+\nnotes{Stored types are defined by linking a predicate $p$ to a domain and range classes.}
+\nnotes{Only types (domains and ranges) defined for $p'\succeq\/p$ are valid stored types.}
+\nnotes{There are no other valid types below, i.e., for $p'\prec\/p$.}
+\nnotes{Among the valid stored types the most specific and unrelated stored types are selected.}
+\nnotes{In other words, only glb types of valid stored types are selected.}
+\nnotes{Finally, the minimal and complete type of $t$ is an $\lor$-type including all previously selected glb types.}
 
 We first find stored triple types for a given triple $t=(s,p,o)$. A
-stored schema triple is constructed by selecting types including a
-predicates $p'\succeq\/p$ that  the domain and range defined.
+stored type is constructed by selecting types including a predicates
+$p'\succeq\/p$ as the domains and ranges.
 
 \begin{equation}
 \label{rul:3-stored}
 \dfrac{t\in\T_i,\, t=(s,p,o)\quad p'\in\I_p, p\preceq\/p'\quad (p',\text{domain},T_s)\in\/g\quad (p',\text{range},T_o)\in\/g}
       {t:_\uarr\/T_s*p*T_o}
 \end{equation}
-
-
-\medskip
-%\notes{Generator view of rules: Just describe the properties of pre-conditions and conclusions for a particular lub type of triple.}
-\notes{Comments and description of the above rule.}
-\notes{Note p is used for all types. p shoud be in most specific type -}
-\notes{It makes no sense to generate types with p'.} 
 
 The domain and range of a predicate $p$ can be defined for any
 super-predicate, they do not need to be defined particulary for
@@ -867,10 +869,12 @@ be defined for the same predicate; they can be defined for any of the
 super-predicates separately. The following rule captures also the last
 statement.
 
+\memo{
 \medskip
 \notes{Somewhere here, the inheritance should be noted.}
 \notes{Inheritance should be treated in knowledge graphs!}
 \notes{Predicates inherit in the same way as the classes.}
+}
 
 \begin{equation}
 \label{rul:3-stored1}
@@ -879,10 +883,9 @@ statement.
       {t:_\uarr\/T_s*p*T_o}
 \end{equation}
 
-\notes{Explanation of the rule.}
 \notes{If $p$ inherits from multiple $p'\succeq\/p$, then the above rule generates multiple types. Explain.}
-\notes{Note that the type is determined only if the domain and range of $p$ or some $p'\succeq\/p$ is defined.}
-\notes{Otherwise, the domain and range shoud be $\top$. This should be included.}
+\nnotes{The type is determined only if the domain and range of $p'\succeq\/p$ is defined.}
+\nnotes{Otherwise, the domain and range shoud be $\top$. This should be included.}
 
 The following rule is a judgment for a (user-defined) type of a
 concrete triple $t=(s,p,o)$. A user-defined type of $t$ is the
@@ -890,28 +893,29 @@ greatest lower bound (abbr. glb) of stored types generated by the rule
 \ref{rul:3-stored}.
 
 \medskip
-\notes{Valid stored types of t: the smallest valid glb types of all stored types.}
-\notes{Justification: smallest interpretation - smallest search space for queries.}
-\notes{Valid stored types are solely those defined "above" p.}
-\notes{The glb types of valid stored types "above" p is selected!}
-\notes{The rule generates one glb type by one.}
-\notes{These (glb types) are collected in a $\lor$-type including all GLB types.}
-
-\notes{The meaning of $\not\sim$ is "\emph{not related}".}
-\notes{This can be either that we have two $p$ roots with unrelated glb schema triples (trees up).}
-\notes{Or, two $p$-rooted but unrelated stored types through multiple inheritance.}
-\notes{Therefore, we can have more than one stored GLB types.}
+\notes{Valid stored types of $t$: the smallest valid types of all stored types for $p$.}
+\nnotes{Justification: smallest interpretation - smallest search space for queries.}
+\nnotes{Valid stored types are solely those defined "above" $p$.}
+\nnotes{The MIN types of valid stored types "above" $p$ are selected!}
+\nnotes{The rule generates one MIN type by one.}
+\nnotes{These (MIN types) are collected in a $\lor$-type including all MIN types.}
 
 \begin{equation}
-\dfrac{t\in\T_i\quad T\in\T_t,\, t:_\uarr\/T\quad \forall\/S\in\T_t,\, t:_\uarr\/S\quad T\preceq\/S\lor\/T_i\not\sim\/S}
-      {t:_\uarr^\_\/T}
+\dfrac{t\in\T_i\quad T\in\T_t,\, t:_\uarr\/T\quad \forall\/S\in\T_t,\, t:_\uarr\/S\quad T\preceq\/S\lor\/T\not\sim\/S}
+      {t:_{\Darr}\/T}
 \end{equation}
 
 The first premise says that $t$ is a ground triple. The second premise
 enumerates stored types $T$ of $t$. The third premise requires that
 $T$ is the most specific type of all possible types $S$ of $t$. In
 other words, there is no type $S$ of $t$ that is a subtype of
-$T$. Hence, $T$ is the glb type of the stored types of $t$.
+$T$. Hence, $T$ is the MIN type of the stored types of $t$.
+
+\notes{What is the meaning of triple types that are \emph{not related} ($\not\sim$).}
+\nnotes{1. This can be either that we have two $p$ roots with unrelated MIN triple types.}
+\nnotes{This is possible only if $p$ is defined for semantically different concepts.}
+\nnotes{2. Two $p$-rooted but unrelated stored types through multiple inheritance.}
+\nnotes{Therefore, we can have more than one stored MIN types.}
 
 The implementation view of the above rule is as follows. The schema
 triples are obtained from the inherited values of the predicates
@@ -919,26 +923,17 @@ rdfs:domain and rdfs:range. The inherited values have to be the
 closest when traveling from property $p$ towards the more general
 properties.
 
-The glb types are now gathered in a $\lor$-type. Hence, the resulting
-$\lor$-type includes all glb types of $t$.
+The MIN types are now gathered in a $\lor$-type. Hence, the resulting
+$\lor$-type includes all MIN types of $t$.
 
 \begin{equation}
 \dfrac{\forall\/T_i\in\T_t,\, t:_\Darr\/T_i}
       {t:_\Darr\lor[T_i]}
 \end{equation}
 
-The premise says that we identify all triple types $T_i$ that
-are the individual (glb) $\sqcap$-types of $t$. 
-
-\medskip
-\notes{What is the reason that we have multiple glb types?}
-
-Multiple different stored types of $t$ are possible only in
-the case of multiple inheritance, in the case of the definition of the
-disjunctive domain/range types, or if predicate is defined for
-semantically different concepts.
-
-\notes{Describe each possibility in more detail.}
+The premise says that we identify all triple types $T_i$ that are the
+MIN types $t:_\Darr\/T_i$. The MIN types are gathered in a triple type
+$\lor[T_i]$.
 
 
 
@@ -968,6 +963,7 @@ reachable from $T$ through the sub-class and sub-property hierarchies,
 i.e., $T\preceq\/S$.
 
 \begin{equation}
+\label{rul:3-typing}
 \dfrac{t\in\T_i\quad T\in\T_t,\, t:_{\darr}T\quad S\in\T_t,\, t:_\uarr\/S\quad T\preceq\/S}
       {t:S}
 \end{equation}
@@ -985,7 +981,7 @@ i.e., $T\preceq\/S$.
 
 
 
-
+\memo{
 \subsection{Typing a graph}
 
 \notes{What is a type of a graph?}
@@ -1004,7 +1000,7 @@ i.e., $T\preceq\/S$.
 \nnotes{Checking whether triple types match in the meeting points.}
 \nnotes{What is the type in meeting points of two triple types?}
 \nnotes{Since a tye of a graph should present any legal triple in $\D$}
-\nnotes{}
+}
 
 
 \section{Implementation of type-checking}
@@ -1032,19 +1028,19 @@ i.e., $T\preceq\/S$.
 \notes{The class with the smallest number of steps is taken. Then, it is deleted from the set together with all its super-classes.}
 \notes{If set is not empty the previous step is repeated.}
 
-\subsection{Computing GLB stored types}
+\subsection{Computing stored MIN types}
 
 
 \notes{We have a tuple $t=(s,p,o)$.}
-\notes{The task is to compute glb of $t$'s stored types.}
-\notes{The algorithm is using the predicates $p'\preceq\/p$ to obtain all domains and ranges of $p$.}
+\nnotes{The task is to compute MIN type of $t$'s stored types.}
+\nnotes{The algorithm is using the predicates $p'\preceq\/p$ to obtain all domains and ranges of $p$.}
 
 
 
 \notes{FUNCTION typeGlbStored ($p$: Property, $cnt$: Integer, $d_p$,$r_p$: Set): Type}
 \notes{BEGIN}
-\notes{if $d_p=\{\}$ then $d_p =  \{ c_s \mid (p,\text{rdfs:Domain},c_s)\in\/G\}$}
-\notes{if $r_p=\{\}$ then $r_p =  \{ c_o \mid (p,\text{rdfs:Range},c_o)\in\/G\}$}
+\notes{if $d_p=\{\}$ then $d_p =  \{ c_s \mid (p,\text{rdfs:domain},c_s)\in\/G\}$}
+\notes{if $r_p=\{\}$ then $r_p =  \{ c_o \mid (p,\text{rdfs:range},c_o)\in\/G\}$}
 \notes{if $d_p\not=\{\}\land\/r_p\not=\{\}$ then }
 \notes{RETURN $(\lor\/d_p,p,\lor\/r_p)$}
 \notes{$ts = \{\}$}
@@ -1059,10 +1055,10 @@ i.e., $T\preceq\/S$.
 
 
 
-%\notes{Start with a set $\{p\}$ and close the set by using rdfs:superPropertyOf marking them with the ``distance'' from $p$.}
-%\notes{Gather all domain and range types of $p'\preceq\/p$ in $d_p$ and $r_p$, respectively, marking each domain and range class with the distance of the related $p'$.}
-%\notes{Generate types $\lor(s_t,p,o_t)$ where $s_t\in\/d_p$, $o_t\in\/r_p$ and both $s_t$ and $o_t$ are marked with the minimal values.}
-%\notes{Note that there can be more than one element $s_t$ (and $o_t$) marked with a minimal value in $d_p$ (and $r_p$). Hence Cartesian product of the selected domains and ranges are used to generate types $(s_t,p,o_t)$. }
+\notes{Start with a set $\{p\}$ and close the set by using rdfs:superPropertyOf marking them with the ``distance'' from $p$.}
+\nnotes{Gather all domain and range types of $p'\preceq\/p$ in $d_p$ and $r_p$, respectively, marking each domain and range class with the distance of the related $p'$.}
+\nnotes{Generate types $\lor(s_t,p,o_t)$ where $s_t\in\/d_p$, $o_t\in\/r_p$ and both $s_t$ and $o_t$ are marked with the minimal values.}
+\nnotes{Note that there can be more than one element $s_t$ (and $o_t$) marked with a minimal value in $d_p$ (and $r_p$). Hence Cartesian product of the selected domains and ranges are used to generate types $(s_t,p,o_t)$. }
 
 
 
