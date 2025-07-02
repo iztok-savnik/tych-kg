@@ -60,6 +60,7 @@
 \newcommand{\memo}[1]{}
 \newcommand{\notes}[1]{\noindent\begin{small}-- \emph{#1}\hfill\break\end{small}}
 \newcommand{\nnotes}[1]{\indent\begin{small}-- \emph{#1}\hfill\break\end{small}}
+\newcommand{\nnnotes}[1]{\indent\indent\begin{small}-- \emph{#1}\hfill\break\end{small}}
 \newcommand{\anotes}[1]{\indent\begin{small}\phantom{-- }\emph{#1}\hfill\break\end{small}}
 \newcommand{\ennotes}[1]{\indent\begin{small}-- \emph{#1}\hfill\end{small}}
  
@@ -150,7 +151,7 @@ This is an abstract...
 \notes{Using stored types of idents to infer the type of an object (ground triple) and then check how it relates to stored types of triples. }
 \notes{The idea is close to bideriectional typing \cite{Dunfield2021} because of inferring and checking.}
 \notes{In KGs we first infer as much as possible and then check inferred type with the stored types.}
-\notes{}
+\notes{...}
 
 
 
@@ -659,26 +660,69 @@ type of a GP variable.
 \nnotes{Often $I$ has a set of very specific classes $C_s$ but also some general classes $C_g$.}
 \nnotes{The general classes $C_g$ are close to the classes used in the stored triple types.}
 \nnotes{If stored typing of $I$ is correct, then $s_s$ have to include subclasses of $s_g$.}
-\nnotes{Rule for filtering $\land[S_1..S_n]$ all $S_i\preceq\/S_k$ by using algorithmic typing.}
-\ennotes{We will suppose that there is no subtype relations among $S_i$.}
+
+\notes{The ground type $\land[S_1..S_n]$ can include pairs of types $S_i\preceq\/S_k$.}
+\nnotes{It makes sense either to compute MIN or MAX of $\land[S_1..S_n]$ yielding $\land[U_1..U_m]$.}
+\nnnotes{$m\le\/n$ and $U_j^{j\in[1,m]}\in\{S_i^{i\in[1,n]}\}$.}
+
+\notes{The operator MIN retains from $\land[S_1..S_n]$ only the most specific classes.}
+\nnotes{The following is teh definition of the operation MIN.}
+\nnotes{The MIN operation is applied to $\land[S_1..S_n]$ obtaining $\land[U_1..U_m]$.}
+\nnnotes{$\land[U_1..U_m]$ includes types $U_j^{j\in[1,m]}\in\{S_k^{k\in[1,n]}\}$ such that $\not\exists\/S_i^{i\in[1,n]}(S_i\prec\/U_j)$.}
+\nnnotes{All pairs of classes $C_1,C_2\in\{U_j^{j\in[1,m]}\}$ are \emph{incomparable},}
+\nnnotes{i.e., $C_1\not\sim\/C_2\equiv\/C_1\not\preceq\/C_2\land\/C_1\not\succeq\/C_2$.}
+\ennotes{The logical rule for the operation MIN is as follows.}
 
 \begin{equation}
-\label{rul:land-2}
-\dfrac{I\in\I_i\quad\/I:_\darr\land[S_1..S_n]\quad\/\forall\/i\in[1,n],\ R_j\in\/\{S_k^{k\in[1,n]}\},\ S_i\preceq\/R_j}
-      {I:_{\darr}\land[R_1..R_m]}
+\label{rul:min}
+\dfrac{I\in\I_i\quad\/I:_\darr\land[S_1..S_n]\quad\/U\in\/\{S_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ U\preceq\/S_i\lor\/U\not\sim\/S_i}
+      {I:_{\Darr}U}
+\end{equation}
+
+The rule says that $U$ is a minimal type of a ground type
+$\land[S_1..S_n]$. $U$ is minimal since all other $S_i$ types are
+either more general or equal ($\succeq$), or not related to $U$. The
+rule generates all MIN types of $\land[S_1..S_n]$. The rule for
+filtering $\land[S_1..S_n]$ all $S_i\succeq\/S_k$ by using algorithmic
+typing is defined as follows.
+
+\begin{equation}
+\label{rul:min-alg}
+\dfrac{I\in\I_i\quad\vdasharr\/I:_\darr\land[S_1..S_n]\quad\vdasharr\/U=\,\Darr\kern -3pt[S_1..S_n]}
+      {\vdasharr\/I:_{\Darr}U}
+\end{equation}
+
+The following rule is used for gathering all MIN types of
+$\land[S_1..S_n]$. The result is a conjunction of minimal types
+$\land[U_1..U_m]$. The interpretation of a minimal ground type
+$\llbracket\land[U_1..U_m]\rrbracket$ of $t$ is minimal since
+$\land[U_1..U_m]$ includes a set of minimal and unrelated types of
+$t$. Therefore,
+$\llbracket\land[U_1..U_m]\rrbracket\subseteq\llbracket\land[S_1..S_n]\rrbracket$.
+
+\begin{equation}
+\label{rul:min-gather}
+\dfrac{I\in\I_i\quad\forall\/i\in[1,m],\ I:_\Darr\/U_i}
+      {I:_{\Darr}\land[U_1..U_m]}
 \end{equation}
 
 \notes{For $I\in\I_i$ compute a join type of $S_1..S_n$ as $I:\sqcup[S_1..S_n]$.}
 \nnotes{A join type is defined on the set of types $\{S_i^{i\in[1,n]}\}$.}
-\nnotes{A join type $S=\sqcup[S_1..S_n]$ is the LUB type of $\{S_i^{i\in[1,n]}\}$.}
+\nnotes{A join type $S=\sqcup[S_1..S_n]$ is the LUB type of $\{S_i^{i\in[1,n]}\}$ with respect to the relation $\preceq$.}
+\nnotes{$\sqcup[S_1..S_n]$ is a minimal type $S$ that is related to all types $S_i^{i\in[1,n]}$ via $\preceq$.}
 \nnotes{$\llb\land[S_1..S_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/S_i\rrb\subseteq\llb\/S\rrb$.}
-\nnotes{Let's write here $\sqcup$-type of $\land[S_1..S_m]$!!!}
-\ennotes{It can be seen as the operation to compute final type of $I$.}
+\ennotes{A join type is used when we want to determine the user-defined type of a triple $t$.}
 
 \begin{equation}
-\label{rul:lcup-1}
-\dfrac{I\in\I_i\quad\forall\/i\in[1..n],\ I:_\darr\/S_i\quad\/S=\sqcup[S_1..S_n]}
+\label{rul:lub-logic}
+\dfrac{I\in\I_i\quad\/I:_\darr\land[S_1..S_n]\quad\/S\in\I_c\quad\forall\/T\in\I_c,\ \forall\/i\in[1..n],\ (S_i\preceq\/T\land\/S\preceq\/T)\lor\/S\not\sim\/T}
       {I:_\sqcup\/S}
+\end{equation}
+
+\begin{equation}
+\label{rul:lub-alg}
+\dfrac{I\in\I_i\quad\/I\in\I_i\quad\vdasharr\/I:_\darr\land[S_1..S_n]\quad\/\vdasharr\/S=\sqcup[S_1..S_n]}
+      {\vdasharr\/I:_\sqcup\/S}
 \end{equation}
 
 \notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
@@ -708,8 +752,8 @@ type of a GP variable.
 
 \notes{We would like to type of a triple $t\in\T_i$.}
 \notes{There are two basic aspects of a triple type.}
-\nnotes{1. type $t:T_g$ is computed bottom-up: from the stored types of triple components.}
-\nnotes{2. type $t:T_u$ can be computed top-down: from the user-defined types of properties.}
+\nnotes{1. $t:T_g$ is computed bottom-up: from the stored types of triple components.}
+\nnotes{2. $t:T_u$ can be computed from the user-defined types of properties.}
 \nnotes{The relation $T_g\preceq\/T_u$ must hold if the typing of KG is correct.}
 \nnotes{If the predicate $p$ of type $T_u$ is defined in multiple contexts some of disjunctively}
 \nnotes{linked components of $T_u$ may not be related to $T_g$.}
@@ -723,14 +767,19 @@ type of a GP variable.
 
 \notes{Stored triple types are user-defined types.}
 \nnotes{Stored types for a predicate $p$ are defined via the predicates rdfs:domain and rdfs:range.}
-\nnotes{From the top side of the ontology, the stored type $:_\uarr$ is determined based on $p$.}
-\nnotes{However, given $p$ we can have a triple type $(t_s,p,t_o)$ such that $t_s$ or $t_o$ are}
+\nnotes{From the top of the ontology, the stored type $:_\uarr$ is determined based on $p$.}
+\nnotes{However, given $p$ we can have a triple type $(T_s,p,T_o)$ such that $T_s$ or $T_o$ are}
 \anotes{defined for some $p'\succeq\/p$.}
-\nnotes{Special case: $p'$ has two domains $t_s^1$ and $t_s^2$---type is then}
-\anotes{$(t_s^1\lor\/t_s^2,p,\_)\equiv\/(t_s^1,p,\_)\lor(t_s^2,p,\_)$.}
-\nnotes{Stored triple types for a given predicate $p$ are computed as MIN of valid stored types for $p$.}
-\nnotes{The MIN types of all types obtained from $:_\uarr$ are minimized by using MIN type $:_\Darr$.}
-\nnotes{Why type have to be minimal? To have minimal interpretaton.}
+\nnotes{Special case: $p'$ has two domains $T_s^1$ and $T_s^2$---type is then}
+\anotes{$(T_s^1\lor\/T_s^2,p,\_)\equiv\/(T_s^1,p,\_)\lor(T_s^2,p,\_)$.}
+\nnotes{$\T_\uarr=\{(T_s,p,T_o)| p\in\I_p\land(p,\text{rdfs:domain},T_s)\in\Delta\land(p,\text{rdfs:range},T_o)\in\Delta\}$} 
+\nnotes{Derived types of the stored types are computed using Rule \ref{rul:typing-subsumption}.}
+\nnotes{Derived types of $\T_\uarr$ include the complete top of the ontology }
+
+\notes{Stored triple types for a given predicate $p$ are computed as MIN of valid stored types for $p$.}
+\nnotes{The MIN types of types obtained using $:_\uarr$ are the smallest triple types}
+\nnotes{including MIN classes as components.}
+\nnotes{Stored type have to be minimal to have minimal interpretaton (e.g., type of a triple pattern).}
 \nnotes{Finally, the type $:$ of $t$ is deterimned by summing alternative $:_\Darr$ types.}
 \nnotes{Note there can be more than one $\Darr$-type.}
 \nnotes{This happens when triple types include property that is defined in two different contexts.}
