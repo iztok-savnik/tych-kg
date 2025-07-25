@@ -105,46 +105,86 @@ This is an abstract...
 
 \section{Introduction}
 
-%% Intro to KGs...
+%% Intro to KGs... what kind of language is it?
 \notes{Introduction to knowledge graphs (KG)... \cite{Hogan2022,Ehrlinger2016}.}
 \notes{KGs are becoming knowledge bases (KB)...}
 \notes{What are the structural characteristics of KBs?}
 \notes{What KBs can represent that (classical) data models can not.}
 \notes{Relations between the knowledge bases and KGs.}
 
-%% Why types in KGs
-\notes{In KGs we have types of individual objects represented as classes.}
-\notes{Further, the types of the triples are the triples including types of individual objects.}
-\notes{Types represent a higher-level description of ground triples.}
-\notes{Types can be used to verify the correctness of the ground triples and the structures that they form.}
-\notes{Types define the context in a KG that allows placing (?) a structure of triples (sub-graph) in a KG.}
-\notes{Disambiguation of property (predicate) placement. Later, binding of methods, etc.}
-
-%% About type theory
-\notes{On the type theory... \cite{Pierce2002,Hindley1997}.}
-\notes{Classical type-checking problem in programming languages.}
-\notes{On differences of type-checking KGs to classical type-checking problem.}
-\notes{On intersection and union types and their use in type-checking KGs \cite{Pierce2002,Dezani2020,Pierce1991}.}
-
-%% KG description language (domain)
+%% KG data model - representation language
 \notes{KG domain is complex because KG is a knowledge representation (KR) language.}
 \notes{We have a specific domain, i.e., a knowledge graph including nodes and triples.}
-\notes{Abstract insight into the structure of KG.}
+\notes{Insight into the structure of KG.}
 \notes{The classes form an ontology that can formally be represented as a poset.}
 \notes{Consequently, triple types are also ordered in a poset.}
 \notes{Denotational view of classes and type triples.}
 \notes{The interpretations of classes and triple types form a poset based on the subset relation.}
 
+%% Why types in KGs
+\notes{In KGs we have types of individual objects represented as classes.}
+\notes{Further, the types of the triples are the triples including types of triple components.}
+\notes{Types represent a higher-level description of ground triples.}
+\notes{Types can be used to verify the correctness of the ground triples and the structures that they form.}
+\notes{Types define the context in a KG that allows placing (?) a structure of triples (sub-graph) in a KG.}
+\notes{Disambiguation of property (predicate) placement. Later, binding of methods, etc.}
+
+%% About type checking in type theory
+\notes{What is type checking. How it works...}
+In type theory, types represent concepts that are used to classify the
+values from a given language \cite{Pierce2002,Hindley1997}. Correct
+typing assures that the functions are applied to correct parameters in
+a program. The type-checking problem \\
+\nnotes{Having a program verify that it conforms with the typing rules.}
+\nnotes{In this process the rules can be applied in two directions.}
+\nnotes{Type-assignment derives a type to an expression in a bottom-up manner.}
+\nnotes{Here we use typing rules in the forward direction, hance type inference.}
+\nnotes{Verifying that an expression adheres a given type uses typing rules in a backward direction.}
+\nnotes{Here the rules decompose expressions into syntactic components and verifies recursively the types of comonents.}
+
+% on static structure of a KG
+\notes{What is structural part of KG? Describe briefly.}
+\notes{The values of KG are complex because of the rich modelling contructs of a data and knowledge representation language.}
+\notes{The static structure of a KG is built from the identifiers that are bound into triples.}
+\notes{The identifiers and triples represent the basic structures of a KG, i.e., the values from languages that work with KGs (basic graph-patterns, SparQL, ...).}
+\nnotes{The structures can be comared to OO world of classes and objects, or in some respect also to record (class) types and records.}
+\notes{A KG includes triples that represent the values and user-defined types that form the schema of a KG \cite{Savnik2022}.}
+\nnotes{All ground triples are typed (?). However, the user-defined type of a triple is not linked directly to a triple.}
+\nnotes{Types of triples are in a KG defined by specifying the types of identifiers that form triples.}
+\nnotes{However, stored types of identifiers do not need to be those that appear in user-defined stored triple types.}
+\notes{Hence, the types of ground triples must be derived from a KG by selecting the appropriate user-defined triple types from the types of components.}
+\nnotes{The typing errors can appear in a KG if types of identifiers are specified incorrectly.}
+\nnotes{Typing the triple patterns is similar to typing ground triples \cite{Savnik2025}.}
+\notes{As a consequence, before we can define typing of languages that work with a KG, we have to be able to type a triple.}
+
+% abstract of type checking KG ground triples
+\notes{We divide triples from a KG into ground triples and triples that represent triple types.}
+\notes{In order to check the types of a KG, the type of each ground triple has to be checked.}
+\notes{There are two way of computing the type of a triple.}
+\notes{First, we can use types of identifiers representing the components of a triple.}
+\nnotes{We call this type a \emph{ground type} since the types of identifiers classes from the bottom of the class ontology.}
+\nnotes{Note that, because of the rule of subsumption \cite{Pierce}, the type of a ground triple is any triple type that is a supertype of a ground triple type.}
+\notes{Second, we can select appropriate user-defined triple type $T$ such that the components of $T$ are the types of the components of the ground triple we are checking.}
+\nnotes{The components of the user-defined triple types are noramlly from the top of the class ontology.}
+\notes{Type checking of a ground triple is converted to checking the relationships between the ground type and user-defined type of a triple.} 
+
+% differences to classical TC and tying data (structures)
+\notes{On differences of type-checking KGs to classical type-checking problem.}
+\notes{On intersection and union types and their use in type-checking KGs \cite{Pierce2002,Dezani2020,Pierce1991}.}
+\notes{TC is search in the KG space.}
+\notes{TC is an algorithm for selecting the appropriate type of a triple.}
+\notes{TC does not need variables as in TC of computer languages.}
+  
 %% Abstract of type-checking method
-\notes{Type-checking of KGs (abstract).}
-\notes{Type-checking of ground triples from a KG.}
-\notes{Three phases of type-checking ground triples.}
-\notes{First, a lub type $T_{lub}$ of a ground triple is derived,}
-\notes{Second, a MIN type $T_{min}$ of the stored triple types is computed.}
-\notes{Finally, a sub-type relationship between the types $T_{lub}$ and $T_{min}$ is investigated.}
-\notes{The type $T_{lub}$ restricts $T_{min}$ in cases that the propery of $t$ has multiple different meanings.}
-\notes{Typing triple patterns and BGP queries in further work.}
-\notes{Identifying errors in typing of a KG.}
+%\notes{Type-checking of KGs (abstract).}
+%\notes{Type-checking of ground triples from a KG.}
+%\notes{Three phases of type-checking ground triples.}
+%\notes{First, a lub type $T_{lub}$ of a ground triple is derived,}
+%\notes{Second, a MIN type $T_{min}$ of the stored triple types is computed.}
+%\notes{Finally, a sub-type relationship between the types $T_{lub}$ and $T_{min}$ is investigated.}
+%\notes{The type $T_{lub}$ restricts $T_{min}$ in cases that the propery of $t$ has multiple different meanings.}
+%\notes{Typing triple patterns and BGP queries in further work.}
+%\notes{Identifying errors in typing of a KG.}
 
 %% Relations to other approaches
 \notes{The problem is in between type checking and type inference.}
@@ -454,7 +494,7 @@ by adding a typing rule called \emph{rule of subsumption}
 
 
 
-\subsection{Intersection and union types\label{sec:intsc-union}}
+\section{Intersection and union types\label{sec:intsc-union}}
 
 The instances of the intersection type $T_1\land\/T_2$ are objects
 belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
@@ -644,85 +684,88 @@ type of a GP variable.
 
 \medskip
 \notes{The use of $\land$ and $\lor$ types to describe identifiers.}
+\nnotes{$\upsilon=\I_i\cup\T_i$ and $\tau=\I_c\cup\T_t$}
+\nnotes{General rules are defined to work with identifiers and triples.}
+\nnotes{Hence typing rules can be used to type idents and triples.}
 
-\notes{For $I\in\I_i$ gather ground types of identifiers with $\land$-type as $I:_{\darr}\land[S_1..S_n]$.}
-\nnotes{$I\in\I_i\quad\forall\/S_i\in\I_c,\ t:_{\darr}S_i$.}
-\nnotes{The ground type of $I$ is a type $S_g=\land[S_1..S_n]$.}
-\ennotes{The following rule geathers all ground types of $I\in\I_i$.}
+\notes{For $V\in\upsilon$ gather ground types of identifiers with $\land$-type as $V:_{\darr}\land[T_1..T_n]$.}
+\nnotes{$V\in\upsilon\quad\forall\/T_i\in\tau,\ t:_{\darr}T_i$.}
+\nnotes{The ground type of $V$ is a type $T_g=\land[T_1..T_n]$.}
+\ennotes{The following rule geathers all ground types of $V\in\upsilon$.}
 
 \begin{equation}
 \label{rul:land-1}
-\dfrac{I\in\I_i\quad\forall\/i\in[1..n],\ I:_{\darr}S_i}
-      {I:_{\darr}\land[S_1..S_n]}
+\dfrac{V\in\upsilon\quad\/T_i^{i\in[1,n]}\in\tau\quad\/V:_{\darr}T_i^{i\in[1,n]}}
+      {V:_{\darr}\land[T_1..T_n]}
 \end{equation}
 
-\notes{Let's have a look at $\land$ types of $I$'s ground types $S_1..S_n$ from a KG. }
-\nnotes{Often $I$ has a set of very specific classes $C_s$ but also some general classes $C_g$.}
+\notes{Let's have a look at $\land$ types of $V$'s ground types $T_1..T_n$ from a KG. }
+\nnotes{Often $V$ has a set of very specific classes $C_s$ but also some general classes $C_g$.}
 \nnotes{The general classes $C_g$ are close to the classes used in the stored triple types.}
-\nnotes{If stored typing of $I$ is correct, then $s_s$ have to include subclasses of $s_g$.}
+\nnotes{If stored typing of $V$ is correct, then $s_s$ have to include subclasses of $s_g$.}
 
-\notes{The ground type $\land[S_1..S_n]$ can include pairs of types $S_i\preceq\/S_k$.}
-\nnotes{It makes sense either to compute MIN or MAX of $\land[S_1..S_n]$ yielding $\land[U_1..U_m]$.}
-\nnnotes{$m\le\/n$ and $U_j^{j\in[1,m]}\in\{S_i^{i\in[1,n]}\}$.}
+\notes{The ground type $\land[T_1..T_n]$ can include pairs of types $S_i\preceq\/S_k$.}
+\nnotes{It makes sense either to compute MIN or MAX of $\land[T_1..T_n]$ yielding $\land[U_1..U_m]$.}
+\nnnotes{$m\le\/n$ and $U_j^{j\in[1,m]}\in\{T_i^{i\in[1,n]}\}$.}
 
-\notes{The operator MIN retains from $\land[S_1..S_n]$ only the most specific classes.}
+\notes{The operator MIN retains from $\land[T_1..T_n]$ only the most specific classes.}
 \nnotes{The following is teh definition of the operation MIN.}
-\nnotes{The MIN operation is applied to $\land[S_1..S_n]$ obtaining $\land[U_1..U_m]$.}
-\nnnotes{$\land[U_1..U_m]$ includes types $U_j^{j\in[1,m]}\in\{S_k^{k\in[1,n]}\}$ such that $\not\exists\/S_i^{i\in[1,n]}(S_i\prec\/U_j)$.}
-\nnnotes{All pairs of classes $C_1,C_2\in\{U_j^{j\in[1,m]}\}$ are \emph{incomparable},}
-\nnnotes{i.e., $C_1\not\sim\/C_2\equiv\/C_1\not\preceq\/C_2\land\/C_1\not\succeq\/C_2$.}
+\nnotes{The MIN operation is applied to $\land[T_1..T_n]$ obtaining $\land[U_1..U_m]$.}
+\nnnotes{$\land[U_1..U_m]$ includes types $U_j^{j\in[1,m]}\in\{T_k^{k\in[1,n]}\}$ such that $\not\exists\/T_i^{i\in[1,n]}(T_i\prec\/U_j)$.}
+\nnnotes{All pairs of types $S_1,S_2\in\{U_j^{j\in[1,m]}\}$ are \emph{incomparable},}
+\nnnotes{i.e., $S_1\not\sim\/S_2\equiv\/S_1\not\preceq\/S_2\land\/S_1\not\succeq\/S_2$.}
 \ennotes{The logical rule for the operation MIN is as follows.}
 
 \begin{equation}
 \label{rul:min}
-\dfrac{I\in\I_i\quad\/I:_\darr\land[S_1..S_n]\quad\/U\in\/\{S_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ U\preceq\/S_i\lor\/U\not\sim\/S_i}
-      {I:_{\Darr}U}
+\dfrac{V\in\upsilon\quad\/V:_\darr\land[T_1..T_n]\quad\/U\in\/\{T_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ U\preceq\/T_i\lor\/U\not\sim\/T_i}
+      {V:_{\Darr}U}
 \end{equation}
 
 The rule says that $U$ is a minimal type of a ground type
-$\land[S_1..S_n]$. $U$ is minimal since all other $S_i$ types are
+$\land[T_1..T_n]$. $U$ is minimal since all other $T_i$ types are
 either more general or equal ($\succeq$), or not related to $U$. The
-rule generates all MIN types of $\land[S_1..S_n]$. The rule for
-filtering $\land[S_1..S_n]$ all $S_i\succeq\/S_k$ by using algorithmic
+rule generates all MIN types of $\land[T_1..T_n]$. The rule for
+filtering $\land[T_1..T_n]$ all $T_i\succeq\/T_k$ by using algorithmic
 typing is defined as follows.
 
 \begin{equation}
 \label{rul:min-alg}
-\dfrac{I\in\I_i\quad\vdasharr\/I:_\darr\land[S_1..S_n]\quad\vdasharr\/U=\,\Darr\kern -3pt[S_1..S_n]}
-      {\vdasharr\/I:_{\Darr}U}
+\dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_1..T_n]\quad\vdasharr\/U=\,\Darr\kern -3pt[T_1..T_n]}
+      {\vdasharr\/V:_{\Darr}U}
 \end{equation}
 
 The following rule is used for gathering all MIN types of
-$\land[S_1..S_n]$. The result is a conjunction of minimal types
+$\land[T_1..T_n]$. The result is a conjunction of minimal types
 $\land[U_1..U_m]$. The interpretation of a minimal ground type
 $\llbracket\land[U_1..U_m]\rrbracket$ of $t$ is minimal since
 $\land[U_1..U_m]$ includes a set of minimal and unrelated types of
 $t$. Therefore,
-$\llbracket\land[U_1..U_m]\rrbracket\subseteq\llbracket\land[S_1..S_n]\rrbracket$.
+$\llbracket\land[U_1..U_m]\rrbracket\subseteq\llbracket\land[T_1..T_n]\rrbracket$.
 
 \begin{equation}
 \label{rul:min-gather}
-\dfrac{I\in\I_i\quad\forall\/i\in[1,m],\ I:_\Darr\/U_i}
-      {I:_{\Darr}\land[U_1..U_m]}
+\dfrac{V\in\upsilon\quad\forall\/i\in[1,m],\ V:_\Darr\/U_i}
+      {V:_{\Darr}\land[U_1..U_m]}
 \end{equation}
 
-\notes{For $I\in\I_i$ compute a join type of $S_1..S_n$ as $I:\sqcup[S_1..S_n]$.}
-\nnotes{A join type is defined on the set of types $\{S_i^{i\in[1,n]}\}$.}
-\nnotes{A join type $S=\sqcup[S_1..S_n]$ is the LUB type of $\{S_i^{i\in[1,n]}\}$ with respect to the relation $\preceq$.}
-\nnotes{$\sqcup[S_1..S_n]$ is a minimal type $S$ that is related to all types $S_i^{i\in[1,n]}$ via $\preceq$.}
-\nnotes{$\llb\land[S_1..S_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/S_i\rrb\subseteq\llb\/S\rrb$.}
+\notes{For $V\in\upsilon$ compute a join type of $T_1..T_n$ as $V:\sqcup[T_1..T_n]$.}
+\nnotes{A join type is defined on the set of types $\{T_i^{i\in[1,n]}\}$.}
+\nnotes{A join type $T=\sqcup[T_1..T_n]$ is the LUB type of $\{T_i^{i\in[1,n]}\}$ with respect to the relation $\preceq$.}
+\nnotes{$\sqcup[T_1..T_n]$ is a minimal type $T$ that is related to all types $T_i^{i\in[1,n]}$ via $\preceq$.}
+\nnotes{$\llb\land[T_1..T_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/T_i\rrb\subseteq\llb\/T\rrb$.}
 \ennotes{A join type is used when we want to determine the user-defined type of a triple $t$.}
 
 \begin{equation}
 \label{rul:lub-logic}
-\dfrac{I\in\I_i\quad\/I:_\darr\land[S_1..S_n]\quad\/S\in\I_c\quad\forall\/T\in\I_c,\ \forall\/i\in[1..n],\ (S_i\preceq\/T\land\/S\preceq\/T)\lor\/S\not\sim\/T}
-      {I:_\sqcup\/S}
+\dfrac{V\in\upsilon,\, \/V:_\darr\land[T_1..T_n]\quad\/T\in\tau,\, T_i^{i\in[1,n]}\preceq\/T\quad\forall\/S\in\tau,\, (S_i^{i\in[1,n]}\preceq\/S\land\/T\preceq\/S)\lor\/S\not\sim\/T}
+      {V:_\sqcup\/T}
 \end{equation}
 
 \begin{equation}
 \label{rul:lub-alg}
-\dfrac{I\in\I_i\quad\/I\in\I_i\quad\vdasharr\/I:_\darr\land[S_1..S_n]\quad\/\vdasharr\/S=\sqcup[S_1..S_n]}
-      {\vdasharr\/I:_\sqcup\/S}
+\dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_1..T_n]\quad\/\vdasharr\/T=\sqcup[T_1..T_n]}
+      {\vdasharr\/V:_\sqcup\/T}
 \end{equation}
 
 \notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
@@ -797,7 +840,7 @@ $\llbracket\land[U_1..U_m]\rrbracket\subseteq\llbracket\land[S_1..S_n]\rrbracket
 
 
 
-\subsection{Product types}
+
 
 
 
