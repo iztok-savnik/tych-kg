@@ -113,24 +113,45 @@ This is an abstract...
 \notes{Relations between the knowledge bases and KGs.}
 
 %% KG data model - representation language
-\notes{KG domain is complex because KG is a knowledge representation (KR) language.}
-\notes{We have a specific domain, i.e., a knowledge graph including nodes and triples.}
+\notes{What is structural part of KG?}
+\notes{KG domain is complex because of the rich modelling constructs of a KR language.}
+\notes{The static structure of a KG is built from the identifiers that are bound into triples.}
+\notes{The identifiers and triples represent the basic structures of a KG, i.e., the values stored in a KG.}
+\notes{They are the values of languages defined on top of KGs, such as the basic graph-patterns, SparQL queries, and if-then rules.}
 \notes{Insight into the structure of KG.}
 \notes{The classes form an ontology that can formally be represented as a poset.}
 \notes{Consequently, triple types are also ordered in a poset.}
+\notes{A KG includes triples that represent the values and triples that represent user-defined types that form the schema of a KG \cite{Savnik2022}.}
 \notes{Denotational view of classes and type triples.}
 \notes{The interpretations of classes and triple types form a poset based on the subset relation.}
 
+% on static structure of a KG (merge with the above)
+\notes{The values from KGs have similar structure to the values of object-oriented models.}
+\notes{However, the predicates of a KG are more expressive than the data members of the classes.}
+\notes{Similarly, the record types form a lattice under subtype relationship with least upper bound and greatest lower bound based on sets of record attributes.}
+
 %% Why types in KGs
+\notes{Facts about the stored typings of the triples.}
 \notes{In KGs we have types of individual objects represented as classes.}
 \notes{Further, the types of the triples are the triples including types of triple components.}
-\notes{Types represent a higher-level description of ground triples.}
+\notes{What types can be used for in a KG?}
 \notes{Types can be used to verify the correctness of the ground triples and the structures that they form.}
 \notes{Types define the context in a KG that allows placing (?) a structure of triples (sub-graph) in a KG.}
 \notes{Disambiguation of property (predicate) placement. Later, binding of methods, etc.}
 
+% Types stored in a KG (user-defined types) (merge with the above)
+\notes{Is this part of the type-checking method presented below?}
+\notes{A user-defined type of a triple is not linked directly to a triple.}
+\nnotes{Types of triples are in a KG defined by specifying the types of identifiers that form triples.}
+\nnotes{However, stored types of identifiers do not need to be those that appear in user-defined stored triple types.}
+\nnotes{Hence, the types of ground triples must be derived from a KG by selecting the appropriate user-defined triple types from the types of components.}
+\nnotes{The typing errors can appear in a KG if types of identifiers are specified incorrectly.}
+\nnotes{Typing the triple patterns is similar to typing ground triples \cite{Savnik2025}.}
+\notes{Before we can define typing of languages that work with a KG, we have to be able to type a triple.}
+
 %% About type checking in type theory
-\notes{What is type checking. How it works...}
+\notes{What is type checking? How it works...}
+\notes{Types represent a higher-level description of ground triples.}
 In type theory, types represent concepts that are used to classify the
 values from a given language \cite{Pierce2002,Hindley1997}. Correct
 typing assures that the functions are applied to correct parameters in
@@ -142,39 +163,30 @@ a program. The type-checking problem \\
 \nnotes{Verifying that an expression adheres a given type uses typing rules in a backward direction.}
 \nnotes{Here the rules decompose expressions into syntactic components and verifies recursively the types of comonents.}
 
-% on static structure of a KG
-\notes{What is structural part of KG? Describe briefly.}
-\notes{The values of KG are complex because of the rich modelling contructs of a data and knowledge representation language.}
-\notes{The static structure of a KG is built from the identifiers that are bound into triples.}
-\notes{The identifiers and triples represent the basic structures of a KG, i.e., the values from languages that work with KGs (basic graph-patterns, SparQL, ...).}
-\nnotes{The structures can be comared to OO world of classes and objects, or in some respect also to record (class) types and records.}
-\notes{A KG includes triples that represent the values and user-defined types that form the schema of a KG \cite{Savnik2022}.}
-\nnotes{All ground triples are typed (?). However, the user-defined type of a triple is not linked directly to a triple.}
-\nnotes{Types of triples are in a KG defined by specifying the types of identifiers that form triples.}
-\nnotes{However, stored types of identifiers do not need to be those that appear in user-defined stored triple types.}
-\notes{Hence, the types of ground triples must be derived from a KG by selecting the appropriate user-defined triple types from the types of components.}
-\nnotes{The typing errors can appear in a KG if types of identifiers are specified incorrectly.}
-\nnotes{Typing the triple patterns is similar to typing ground triples \cite{Savnik2025}.}
-\notes{As a consequence, before we can define typing of languages that work with a KG, we have to be able to type a triple.}
-
 % abstract of type checking KG ground triples
-\notes{We divide triples from a KG into ground triples and triples that represent triple types.}
 \notes{In order to check the types of a KG, the type of each ground triple has to be checked.}
-\notes{There are two way of computing the type of a triple.}
+\notes{There are two ways of computing the type of a triple.}
 \notes{First, we can use types of identifiers representing the components of a triple.}
 \nnotes{We call this type a \emph{ground type} since the types of identifiers classes from the bottom of the class ontology.}
 \nnotes{Note that, because of the rule of subsumption \cite{Pierce}, the type of a ground triple is any triple type that is a supertype of a ground triple type.}
 \notes{Second, we can select appropriate user-defined triple type $T$ such that the components of $T$ are the types of the components of the ground triple we are checking.}
 \nnotes{The components of the user-defined triple types are noramlly from the top of the class ontology.}
-\notes{Type checking of a ground triple is converted to checking the relationships between the ground type and user-defined type of a triple.} 
+\nnotes{Type checking of a ground triple is converted to checking the relationships between the ground type and user-defined type of a triple.} 
 
 % differences to classical TC and tying data (structures)
-\notes{On differences of type-checking KGs to classical type-checking problem.}
-\notes{On intersection and union types and their use in type-checking KGs \cite{Pierce2002,Dezani2020,Pierce1991}.}
-\notes{TC is search in the KG space.}
-\notes{TC is an algorithm for selecting the appropriate type of a triple.}
-\notes{TC does not need variables as in TC of computer languages.}
+%\notes{On differences of type-checking KGs to classical type-checking problem.}
+%\notes{On intersection and union types and their use in type-checking KGs \cite{Pierce2002,Dezani2020,Pierce1991}.}
+%\notes{TC is search in the KG space.}
+%\notes{TC is an algorithm for selecting the appropriate type of a triple.}
+%\notes{TC does not need variables as in TC of computer languages.}
   
+%% Relations to other approaches
+\notes{The problem is in between type checking and type inference.}
+\notes{Using stored types of idents to infer the type of an object (ground triple) and then check how it relates to stored types of triples. }
+\notes{The idea is close to bideriectional typing \cite{Dunfield2021} because of inferring and checking.}
+\notes{In KGs we first infer as much as possible and then check inferred type with the stored types.}
+\notes{...}
+
 %% Abstract of type-checking method
 %\notes{Type-checking of KGs (abstract).}
 %\notes{Type-checking of ground triples from a KG.}
@@ -186,12 +198,6 @@ a program. The type-checking problem \\
 %\notes{Typing triple patterns and BGP queries in further work.}
 %\notes{Identifying errors in typing of a KG.}
 
-%% Relations to other approaches
-\notes{The problem is in between type checking and type inference.}
-\notes{Using stored types of idents to infer the type of an object (ground triple) and then check how it relates to stored types of triples. }
-\notes{The idea is close to bideriectional typing \cite{Dunfield2021} because of inferring and checking.}
-\notes{In KGs we first infer as much as possible and then check inferred type with the stored types.}
-\notes{...}
 
 
 
