@@ -112,7 +112,7 @@ This is an abstract...
 \notes{What KBs can represent that (classical) data models can not.}
 \notes{Relations between the knowledge bases and KGs.}
 
-%% KG data model - representation language
+%% KG data model - knowledge representation language
 \notes{What is structural part of KG?}
 \notes{KG domain is complex because of the rich modelling constructs of a KR language.}
 \notes{The static structure of a KG is built from the identifiers that are bound into triples.}
@@ -125,27 +125,21 @@ This is an abstract...
 \notes{Denotational view of classes and type triples.}
 \notes{The interpretations of classes and triple types form a poset based on the subset relation.}
 
-% on static structure of a KG (merge with the above)
-\notes{The values from KGs have similar structure to the values of object-oriented models.}
-\notes{However, the predicates of a KG are more expressive than the data members of the classes.}
-\notes{Similarly, the record types form a lattice under subtype relationship with least upper bound and greatest lower bound based on sets of record attributes.}
-
-%% Why types in KGs
+% On stored or user-define typings of KG
 \notes{Facts about the stored typings of the triples.}
 \notes{In KGs we have types of individual objects represented as classes.}
 \notes{Further, the types of the triples are the triples including types of triple components.}
-\notes{What types can be used for in a KG?}
-\notes{Types can be used to verify the correctness of the ground triples and the structures that they form.}
-\notes{Types define the context in a KG that allows placing (?) a structure of triples (sub-graph) in a KG.}
-\notes{Disambiguation of property (predicate) placement. Later, binding of methods, etc.}
-
-% Types stored in a KG (user-defined types) (merge with the above)
-\notes{Is this part of the type-checking method presented below?}
 \notes{A user-defined type of a triple is not linked directly to a triple.}
 \nnotes{Types of triples are in a KG defined by specifying the types of identifiers that form triples.}
 \nnotes{However, stored types of identifiers do not need to be those that appear in user-defined stored triple types.}
 \nnotes{Hence, the types of ground triples must be derived from a KG by selecting the appropriate user-defined triple types from the types of components.}
+
+%% Why types in KGs
+\notes{What types are used for in a KG?}
+\notes{Types can be used to verify the correctness of the ground triples and the structures that they form.}
 \nnotes{The typing errors can appear in a KG if types of identifiers are specified incorrectly.}
+\notes{Types define the context in a KG that allows placing (?) a structure of triples (sub-graph) in a KG.}
+\notes{Disambiguation of property (predicate) placement. Later, binding of methods, etc.}
 \nnotes{Typing the triple patterns is similar to typing ground triples \cite{Savnik2025}.}
 \notes{Before we can define typing of languages that work with a KG, we have to be able to type a triple.}
 
@@ -172,6 +166,7 @@ a program. The type-checking problem \\
 \notes{Second, we can select appropriate user-defined triple type $T$ such that the components of $T$ are the types of the components of the ground triple we are checking.}
 \nnotes{The components of the user-defined triple types are noramlly from the top of the class ontology.}
 \nnotes{Type checking of a ground triple is converted to checking the relationships between the ground type and user-defined type of a triple.} 
+\notes{In all contexts we want to determine \emph{minimal type} of a triple, having the smallest interpretation.}
 
 % differences to classical TC and tying data (structures)
 %\notes{On differences of type-checking KGs to classical type-checking problem.}
@@ -181,11 +176,11 @@ a program. The type-checking problem \\
 %\notes{TC does not need variables as in TC of computer languages.}
   
 %% Relations to other approaches
-\notes{The problem is in between type checking and type inference.}
-\notes{Using stored types of idents to infer the type of an object (ground triple) and then check how it relates to stored types of triples. }
-\notes{The idea is close to bideriectional typing \cite{Dunfield2021} because of inferring and checking.}
-\notes{In KGs we first infer as much as possible and then check inferred type with the stored types.}
-\notes{...}
+%\notes{The problem is in between type checking and type inference.}
+%\notes{Using stored types of idents to infer the type of an object (ground triple) and then check how it relates to stored types of triples. }
+%\notes{The idea is close to bideriectional typing \cite{Dunfield2021} because of inferring and checking.}
+%\notes{In KGs we first infer as much as possible and then check inferred type with the stored types.}
+%\notes{...}
 
 %% Abstract of type-checking method
 %\notes{Type-checking of KGs (abstract).}
@@ -505,9 +500,9 @@ by adding a typing rule called \emph{rule of subsumption}
 The instances of the intersection type $T_1\land\/T_2$ are objects
 belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
 greatest lower bound of the types $T_1$ and $T_2$. In general,
-$\land[T_1\ldots\/T_n]$ is the greatest lower bound (abbr. GLB) of
-types $T_1\ldots\/T_n$ \cite{Pierce1991,Pierce1996}. The instances of
-the type $\land[T_1\ldots\/T_n]$ form a maximal set of objects that
+$\land[T_1..\/T_n]$ is the greatest lower bound (abbr. GLB) of
+types $T_1..\/T_n$ \cite{Pierce1991,Pierce1996}. The instances of
+the type $\land[T_1..\/T_n]$ form a maximal set of objects that
 belong to all types $T_i$.
 
 The rules for the $\land$ and $\lor$ types presented in this section
@@ -553,8 +548,8 @@ the duality of the rules for the $\land$ and $\lor$ types.
 
 The instances from the union type $T_1\lor\/T_2$ are either the
 instances of $T_1$ or $T_2$, or the instances of both
-types. Therefore, $\lor[T_1\ldots\/T_n]$ is the least upper bound of
-types $T_1,\ldots,\/T_n$ \cite{Pierce1991}.
+types. Therefore, $\lor[T_1..\/T_n]$ is the least upper bound of
+types $T_1..\/T_n$ \cite{Pierce1991}.
 
 \memo{\begin{equation}
 \dfrac{T_1,T_2\in\tau}
@@ -572,9 +567,8 @@ types $T_1,\ldots,\/T_n$ \cite{Pierce1991}.
       {T_i\preceq\/\lor[T_1..\/T_n]}
 \end{equation}
 
-Finally, if the type $T$ is more general than the types
-$S_1,\ldots,\/S_n$ then $T$ is more general then
-$\lor[S_1\ldots\/S_n]$.
+Finally, if the type $T$ is more general than the types $S_1..\/S_n$
+then $T$ is more general then $\lor[S_1..\/S_n]$.
 
 \memo{\begin{equation}
 \dfrac{T,S_1,S_2\in\tau\quad S_1\preceq\/T\quad\/S_2\preceq\/\/T}
@@ -584,7 +578,7 @@ $\lor[S_1\ldots\/S_n]$.
 \begin{equation}
 \label{rul:lor-2}
 \dfrac{T\in\tau\quad\forall\/i\in[1..n],\ S_i\in\tau\quad\/S_i\preceq\/T}
-      {\lor[S_1\ldots\/S_n]\preceq\/T}  
+      {\lor[S_1..\/S_n]\preceq\/T}  
 \end{equation}
 
 
@@ -612,7 +606,8 @@ $\llbracket\/C\rrbracket_\D=\{I\ |\ I\in\I_i\land\/I:C\}$. Further, the
 interpretation of a triple type $T$ is the set of ground triples
 $\llbracket\/T\rrbracket_\D=\{t\ |\ t\in\T_t\land\/t:T\}$\footnote{Triple
   types $\T_t$ are presented in the following Section
-  \ref{sec:triples}.}\cite{Savnik2025}.
+  \ref{sec:triples}.}\cite{Savnik2025}.\\
+\notes{What about subtyping?}
 
 \memo{Put together the base types of ground identifiers using $\land$ type.}
 \memo{First, the base type of an ground identifier is the $\land$ of all base types.}
@@ -631,57 +626,58 @@ where $S\land\/T$ denotes a maximal set of objects that are of type
 $S$ \emph{and} $T$, and $S\lor\/T$ denotes a minimal set of objects
 that are of type $S$ \emph{or} $T$ (or both).
 
-A KG includes a stored poset of classes that represent types of the
-individual objects. The poset can be used to compute a join type
-$S\sqcap\/T$ and a meet type $S\sqcup\/T$ \cite{Pierce2002}. The join
-type $J=S\sqcap\/T$ is the least type such that $S\preceq\/J$,
-$T\preceq\/J$, i.e., for all types $U$, if $S\preceq\/U$ and
-$T\preceq\/U$, then $J\preceq\/U$.
+A KG includes a stored poset of classes and triple types that
+represent types of the individual objects and ground triples. The
+poset can be used to compute a meet type $S\sqcap\/T$ and a join type
+$S\sqcup\/T$ \cite{Pierce2002}. The join type $J=S\sqcap\/T$ is the
+greatest type such that $J\preceq\/S$, $J\preceq\/T$, i.e., for all types
+$U$, if $U\preceq\/S$ and $U\preceq\/T$, then $U\preceq\/J$.
 
-The meet type $M=S\sqcup\/T$ is the greatest type such that
-$S\preceq\/M$, $T\preceq\/M$ and there is no such $L$ where
-$S\preceq\/L$ and $T\preceq\/L$ without also having $L\preceq\/M$.
-Since we have a top type $\top$ defined in a KG, the join of arbitrary
-two types always exists. However, the meet of two arbitrary types may
-not exist always. 
+The meet type $M=S\sqcup\/T$ is the least type such that
+$S\preceq\/M$, $T\preceq\/M$, i.e., there is no such $L$ where
+$S\preceq\/L$ and $T\preceq\/L$ without also having $M\preceq\/L$.
+Since we have a top type $\top$ defined in a KG, the meet of arbitrary
+two types always exists. However, the join of two arbitrary types may
+not exist always.
 
-The join type is related to the $\lor$-type. Given a set of types
-$\{T_1\ldots\/T_n\}$, the join type $T=\sqcup[T_1..T_n]$ represents a
+The meet type is related to the $\lor$-type. Given a set of types
+$\{T_1..\/T_n\}$, the meet type $T=\sqcup[T_1..T_n]$ represents a
 LUB type such that $T_i\preceq\/T$ for all $i$. On the other hand,
 Rule \ref{rul:lor-1} for the $\lor$-types states
-$T_i\preceq\lor[T_1..T_n]$. However, the join type and $\lor$-type
+$T_i\preceq\lor[T_1..T_n]$. However, the meet type and $\lor$-type
 differ in the interpretation. 
-$$\llb\lor[T_1..T_n]\rrb_\D=\bigcup_{i\in[1..n]}\rrb\/T_i\rrb_\D\subseteq\llb\/T\rrb_\D=\llb\sqcup[T_1..T_n]\rrb_\D$$
+$$\llb\lor[T_1..T_n]\rrb_\D=\bigcup_{i\in[1..n]}\llb\/T_i\rrb_\D\subseteq\llb\/T\rrb_\D=\llb\sqcup[T_1..T_n]\rrb_\D$$
 
 While the interpretation of the type $\lor[T_1..T_n]$ includes
-precisely the instances of all $T_i$, the type $T$ is a LUB class and
+precisely the instances of all $T_i$, the type $T$ is a LUB type and
 the interpretation of $T=\sqcup[T_1..T_n]$ can include interpretations
-of classes that are not among $[T_1..T_n]$.
+of classes that are not among $T_1..T_n$.
 
-A meet type of $[T_1..T_n]$ may not exist in a poset of classes from a
-KG. In general, a meet type $M=\sqcap[T_1..T_n]$ exists in a class
+A join type of $T_1..T_n$ may not exist in a poset of types from a
+KG. In general, a join type $J=\sqcap[T_1..T_n]$ exists in a class
 ontology if the types $T_1..T_n$ are \emph{bounded below} which means
 that there exists a type $L$ such that $L\preceq\/T_i$ for all
-$i$. The bounded meet types \cite{Pierce2002} are not frequent on the
+$i$. The bounded join types \cite{Pierce2002} are not frequent on the
 lower levels of a class ontology from a KG.
 
-Similarly to the $\lor$-type and the join type, the semantics of the
-$\land$-type is similar to the semantics of meet type. Both of them
+Similarly to the $\lor$-type and the meet type, the semantics of the
+$\land$-type is similar to the semantics of join type. Both of them
 define a GLB type. The type $\land[T_1..T_n]$ denotes the intersection
-$\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a meet type
-$M=\sqcap[T_1..T_n]$ includes solely the interpretation of $M$. The
+$\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a join type
+$J=\sqcap[T_1..T_n]$ includes solely the interpretation of $J$. The
 set $\bigcap\/\llb\/T_i\rrb_\D$ can also include objects that are not
-instances of $M$. Hence,
-$$\llb\sqcap[T_1..T_n]\rrb_\D=\llb\/M\rrb_\D\subseteq\llb\land[T_1..T_n]\rrb_\D=\bigcap_{i\in[1..n]}\/\llb\/T_i\rrb_\D.$$
-In type-checking the ground triples, the join types are used in the
+instances of $J$. Hence,
+$$\llb\sqcap[T_1..T_n]\rrb_\D=\llb\/J\rrb_\D\subseteq\llb\land[T_1..T_n]\rrb_\D=\bigcap_{i\in[1..n]}\/\llb\/T_i\rrb_\D.$$
+
+In type-checking the ground triples, the meet types are used in the
 procedure for checking the types derived bottom-up against the stored
 schema of a KG as presented in Section \ref{sec:3-ground-types}. The
-join as well as meet types are very useful in the procedure for
+meet as well as join types are useful in the procedure for
 type-checking basic graph patterns \cite{Savnik2025a}. The $\lor$ and
 $\land$-types are logical types that can be simplified in the typing
 positions of a graph pattern by using typing rules, and can be
-approximated by using join and meet types to obtain a more precise
-type of a GP variable.
+approximated by using meet and join types to obtain a more precise
+type of a graph pattern variable.
 
 
 
@@ -706,16 +702,19 @@ type of a GP variable.
 \end{equation}
 
 \notes{Let's have a look at $\land$ types of $V$'s ground types $T_1..T_n$ from a KG. }
-\nnotes{Often $V$ has a set of very specific classes $C_s$ but also some general classes $C_g$.}
+\nnotes{In Yago, often $V$ has a set of very specific classes $C_s$ but also some general classes $C_g$.}
 \nnotes{The general classes $C_g$ are close to the classes used in the stored triple types.}
-\nnotes{If stored typing of $V$ is correct, then $s_s$ have to include subclasses of $s_g$.}
+\nnotes{If stored typing of $V$ is correct, then $C_s$ have to include subclasses of $C_g$.}
 
 \notes{The ground type $\land[T_1..T_n]$ can include pairs of types $S_i\preceq\/S_k$.}
 \nnotes{It makes sense either to compute MIN or MAX of $\land[T_1..T_n]$ yielding $\land[U_1..U_m]$.}
 \nnnotes{$m\le\/n$ and $U_j^{j\in[1,m]}\in\{T_i^{i\in[1,n]}\}$.}
+\nnnotes{MIN computes $U_j^{j\in[1,n]}$ such that each $U_j$ is minimal among $T_i^{i\in[1,n]}$.}
+\nnnotes{MAX computes $U_j^{j\in[1,n]}$ such that each $U_j$ is maximal among $T_i^{i\in[1,n]}$.}
+\nnnotes{Note that in both cases there are no pairs among $U_j^{j\in[1,n]}$ related by $\preceq$.}
 
 \notes{The operator MIN retains from $\land[T_1..T_n]$ only the most specific classes.}
-\nnotes{The following is teh definition of the operation MIN.}
+\nnotes{The following is the definition of the operation MIN.}
 \nnotes{The MIN operation is applied to $\land[T_1..T_n]$ obtaining $\land[U_1..U_m]$.}
 \nnnotes{$\land[U_1..U_m]$ includes types $U_j^{j\in[1,m]}\in\{T_k^{k\in[1,n]}\}$ such that $\not\exists\/T_i^{i\in[1,n]}(T_i\prec\/U_j)$.}
 \nnnotes{All pairs of types $S_1,S_2\in\{U_j^{j\in[1,m]}\}$ are \emph{incomparable},}
@@ -755,12 +754,26 @@ $\llbracket\land[U_1..U_m]\rrbracket\subseteq\llbracket\land[T_1..T_n]\rrbracket
       {V:_{\Darr}\land[U_1..U_m]}
 \end{equation}
 
-\notes{For $V\in\upsilon$ compute a join type of $T_1..T_n$ as $V:\sqcup[T_1..T_n]$.}
-\nnotes{A join type is defined on the set of types $\{T_i^{i\in[1,n]}\}$.}
-\nnotes{A join type $T=\sqcup[T_1..T_n]$ is the LUB type of $\{T_i^{i\in[1,n]}\}$ with respect to the relation $\preceq$.}
+Now we have a minimal type of a value $V$ in the form of a conjunction
+of minimal types $U_i$ of $V$. The types that are important from the
+perspective of typing languages defined on values from a KG are the
+user-defined types of triples. The definition of a triple type
+requires the knowledge about the meaning of the binary relationship
+defined by a predicate.
+
+The first step in verifying the relations between the ground type and
+user-defined types is the computation of a LUB type of a ground
+type. The LUB type of a ground type should be more specific than the
+user-defined types that describe the value $V$. If the LUB type is not
+more specific than user-defined types then there is an error in stored
+types of a value $V$. 
+
+\notes{For $V\in\upsilon$ compute a meet type of $T_1..T_n$ as $V:\sqcup[T_1..T_n]$.}
+\nnotes{A meet type is defined on the set of types $\{T_i^{i\in[1,n]}\}$.}
+\nnotes{A meet type $T=\sqcup[T_1..T_n]$ is the LUB type of $\{T_i^{i\in[1,n]}\}$ with respect to the relation $\preceq$.}
 \nnotes{$\sqcup[T_1..T_n]$ is a minimal type $T$ that is related to all types $T_i^{i\in[1,n]}$ via $\preceq$.}
 \nnotes{$\llb\land[T_1..T_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/T_i\rrb\subseteq\llb\/T\rrb$.}
-\ennotes{A join type is used when we want to determine the user-defined type of a triple $t$.}
+\ennotes{A meet type is used when we want to determine the user-defined type of $V$.}
 
 \begin{equation}
 \label{rul:lub-logic}
@@ -1160,7 +1173,7 @@ i.e., $T\preceq\/S$.
 
 
 
-\subsection{Relating LUB ground and GLB stored types}
+\subsection{Relating LUB ground and MIN stored types}
 
 
 
@@ -1170,11 +1183,14 @@ i.e., $T\preceq\/S$.
 \section{Related work}
 
 \notes{Comparing typing relation in an OO model with a KG \cite{Pierce2002}.}
+\notes{The values from KGs have similar structure to the values of object-oriented models.}
+\notes{However, the predicates of a KG are more expressive than the data members of the classes.}
+\notes{Similarly, the record types form a lattice under subtype relationship with least upper bound and greatest lower bound based on sets of record attributes.}
+
 \notes{Include the differences between Pierce's (classical) sub-typing view of stored sub-class relationships among classes and the approach taken in this paper}
 \notes{Pierce treats classes as generators of objects that inherit methods and data members from its super-class.}
 \notes{The methods are inherited by copying the definitions in each subclass and then explicitely calling the method in the superclass.}
 \notes{List the differences: classes are identifiers, there is a sub-class relationship included in a sub-typing relationship.}
-
 
 
 
