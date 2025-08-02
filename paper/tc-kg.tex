@@ -500,9 +500,9 @@ by adding a typing rule called \emph{rule of subsumption}
 The instances of the intersection type $T_1\land\/T_2$ are objects
 belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
 greatest lower bound of the types $T_1$ and $T_2$. In general,
-$\land[T_1..\/T_n]$ is the greatest lower bound (abbr. GLB) of
-types $T_1..\/T_n$ \cite{Pierce1991,Pierce1996}. The instances of
-the type $\land[T_1..\/T_n]$ form a maximal set of objects that
+$\land[T_i^{i\in[1,n]}]$ is the greatest lower bound (abbr. GLB) of
+types $T_i^{i\in[1,n]}$ \cite{Pierce1991,Pierce1996}. The instances of
+the type $\land[T_i^{i\in[1,n]}]$ form a maximal set of objects that
 belong to all types $T_i$.
 
 The rules for the $\land$ and $\lor$ types presented in this section
@@ -510,7 +510,7 @@ are general---they apply for the identifier types $\I_c$ and triple
 types $\T_t$. The set of types $\tau=\I_c\cup\T_t$ is used to ground
 the types in the rules.
 
-The instances of a type $\land[T_1..T_n]$ are the instances of all
+The instances of a type $\land[T_i^{i\in[1,n]}]$ are the instances of all
 particular types $T_i$. This is stated by the following rule. 
 
 \memo{\begin{equation}
@@ -525,12 +525,12 @@ particular types $T_i$. This is stated by the following rule.
 
 \begin{equation}
 \dfrac{\forall\/i\in[1..n],\ T_i\in\tau}
-      {\land[T_1..\/T_n] \preceq\/T_i} 
+      {\land[T_i^{i\in[1,n]}] \preceq\/T_i} 
 \end{equation}
 
 Further, the following rule states that if the type $S$ is more
 specific than the types $T_1,\ldots\/,T_n$ then $S$ is more specific
-then $\land[T_1..T_n]$.
+then $\land[T_i^{i\in[1,n]}]$.
 
 \memo{\begin{equation}
 \dfrac{S,T_1,T_2\in\tau\quad S\preceq\/T_1\quad\/S\preceq\/\/T_2}
@@ -540,7 +540,7 @@ then $\land[T_1..T_n]$.
 \begin{equation}
 \label{rul:intsc-gather}
 \dfrac{S\in\tau\quad\forall\/i\in[1..n],\ T_i\in\tau\quad\/S\preceq\/T_i}
-      {S\preceq\land[T_1..\/T_n]}  
+      {S\preceq\land[T_i^{i\in[1,n]}]}  
 \end{equation} 
 
 The intersection and union types are dual. This can be seen also from
@@ -548,8 +548,8 @@ the duality of the rules for the $\land$ and $\lor$ types.
 
 The instances from the union type $T_1\lor\/T_2$ are either the
 instances of $T_1$ or $T_2$, or the instances of both
-types. Therefore, $\lor[T_1..\/T_n]$ is the least upper bound of
-types $T_1..\/T_n$ \cite{Pierce1991}.
+types. Therefore, $\lor[T_i^{i\in[1,n]}]$ is the least upper bound of
+types $T_i^{i\in[1,n]}$ \cite{Pierce1991}.
 
 \memo{\begin{equation}
 \dfrac{T_1,T_2\in\tau}
@@ -564,7 +564,7 @@ types $T_1..\/T_n$ \cite{Pierce1991}.
 \begin{equation}
 \label{rul:lor-1}
 \dfrac{\forall\/i\in[1..n],\ T_i\in\tau}
-      {T_i\preceq\/\lor[T_1..\/T_n]}
+      {T_i\preceq\/\lor[T_i^{i\in[1,n]}]}
 \end{equation}
 
 Finally, if the type $T$ is more general than the types $S_1..\/S_n$
@@ -591,14 +591,14 @@ types. Suppose we have a set of types
 $\forall\/i\in\/[1..n],\ T_i\in\tau$.
 
 \begin{displaymath}
-  \llbracket\lor[T_1..T_n]\rrbracket_\D = \bigcup_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
+  \llbracket\lor[T_i^{i\in[1,n]}]\rrbracket_\D = \bigcup_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
 \end{displaymath}
 
 Similarly, the interpretation of a $\land$ type is the intersection of
 the interpretations of its component types.
 
 \begin{displaymath}
-\llbracket\land[T_1..T_n]\rrbracket_\D = \bigcap_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
+\llbracket\land[T_i^{i\in[1,n]}]\rrbracket_\D = \bigcap_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
 \end{displaymath}
 
 Note that the interpretation of a class $C$ is a set of instances
@@ -641,33 +641,33 @@ two types always exists. However, the join of two arbitrary types may
 not exist always.
 
 The meet type is related to the $\lor$-type. Given a set of types
-$\{T_1..\/T_n\}$, the meet type $T=\sqcup[T_1..T_n]$ represents a
+$\{T_i^{i\in[1,n]}\}$, the meet type $T=\sqcup[T_i^{i\in[1,n]}]$ represents a
 LUB type such that $T_i\preceq\/T$ for all $i$. On the other hand,
 Rule \ref{rul:lor-1} for the $\lor$-types states
-$T_i\preceq\lor[T_1..T_n]$. However, the meet type and $\lor$-type
+$T_i\preceq\lor[T_i^{i\in[1,n]}]$. However, the meet type and $\lor$-type
 differ in the interpretation. 
-$$\llb\lor[T_1..T_n]\rrb_\D=\bigcup_{i\in[1..n]}\llb\/T_i\rrb_\D\subseteq\llb\/T\rrb_\D=\llb\sqcup[T_1..T_n]\rrb_\D$$
+$$\llb\lor[T_i^{i\in[1,n]}]\rrb_\D=\bigcup_{i\in[1..n]}\llb\/T_i\rrb_\D\subseteq\llb\/T\rrb_\D=\llb\sqcup[T_i^{i\in[1,n]}]\rrb_\D$$
 
-While the interpretation of the type $\lor[T_1..T_n]$ includes
+While the interpretation of the type $\lor[T_i^{i\in[1,n]}]$ includes
 precisely the instances of all $T_i$, the type $T$ is a LUB type and
-the interpretation of $T=\sqcup[T_1..T_n]$ can include interpretations
-of classes that are not among $T_1..T_n$.
+the interpretation of $T=\sqcup[T_i^{i\in[1,n]}]$ can include interpretations
+of classes that are not among $T_i^{i\in[1,n]}$.
 
-A join type of $T_1..T_n$ may not exist in a poset of types from a
-KG. In general, a join type $J=\sqcap[T_1..T_n]$ exists in a class
-ontology if the types $T_1..T_n$ are \emph{bounded below} which means
+A join type of $T_i^{i\in[1,n]}$ may not exist in a poset of types from a
+KG. In general, a join type $J=\sqcap[T_i^{i\in[1,n]}]$ exists in a class
+ontology if the types $T_i^{i\in[1,n]}$ are \emph{bounded below} which means
 that there exists a type $L$ such that $L\preceq\/T_i$ for all
 $i$. The bounded join types \cite{Pierce2002} are not frequent on the
 lower levels of a class ontology from a KG.
 
 Similarly to the $\lor$-type and the meet type, the semantics of the
 $\land$-type is similar to the semantics of join type. Both of them
-define a GLB type. The type $\land[T_1..T_n]$ denotes the intersection
+define a GLB type. The type $\land[T_i^{i\in[1,n]}]$ denotes the intersection
 $\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a join type
-$J=\sqcap[T_1..T_n]$ includes solely the interpretation of $J$. The
+$J=\sqcap[T_i^{i\in[1,n]}]$ includes solely the interpretation of $J$. The
 set $\bigcap\/\llb\/T_i\rrb_\D$ can also include objects that are not
 instances of $J$. Hence,
-$$\llb\sqcap[T_1..T_n]\rrb_\D=\llb\/J\rrb_\D\subseteq\llb\land[T_1..T_n]\rrb_\D=\bigcap_{i\in[1..n]}\/\llb\/T_i\rrb_\D.$$
+$$\llb\sqcap[T_i^{i\in[1,n]}]\rrb_\D=\llb\/J\rrb_\D\subseteq\llb\land[T_i^{i\in[1,n]}]\rrb_\D=\bigcap_{i\in[1..n]}\/\llb\/T_i\rrb_\D.$$
 
 In type-checking the ground triples, the meet types are used in the
 procedure for checking the types derived bottom-up against the stored
@@ -690,106 +690,151 @@ type of a graph pattern variable.
 \nnotes{General rules are defined to work with identifiers and triples.}
 \nnotes{Hence typing rules can be used to type idents and triples.}
 
-\notes{For $V\in\upsilon$ gather ground types of identifiers with $\land$-type as $V:_{\darr}\land[T_1..T_n]$.}
+\notes{For $V\in\upsilon$ gather ground types of identifiers with $\land$-type as $V:_{\darr}\land[T_i^{i\in[1,n]}]$.}
 \nnotes{$V\in\upsilon\quad\forall\/T_i\in\tau,\ t:_{\darr}T_i$.}
-\nnotes{The ground type of $V$ is a type $T_g=\land[T_1..T_n]$.}
+\nnotes{The ground type of $V$ is a type $T_g=\land[T_i^{i\in[1,n]}]$.}
 \ennotes{The following rule geathers all ground types of $V\in\upsilon$.}
 
 \begin{equation}
 \label{rul:land-1}
 \dfrac{V\in\upsilon\quad\/T_i^{i\in[1,n]}\in\tau\quad\/V:_{\darr}T_i^{i\in[1,n]}}
-      {V:_{\darr}\land[T_1..T_n]}
+      {V:_{\darr}\land[T_i^{i\in[1,n]}]}
 \end{equation}
 
-\notes{Let's have a look at $\land$ types of $V$'s ground types $T_1..T_n$ from a KG. }
-\nnotes{In Yago, often $V$ has a set of very specific classes $C_s$ but also some general classes $C_g$.}
-\nnotes{The general classes $C_g$ are close to the classes used in the stored triple types.}
-\nnotes{If stored typing of $V$ is correct, then $C_s$ have to include subclasses of $C_g$.}
+Let's have a look at $\land$ type composed of $V$'s ground types
+$T_i^{i\in[1,n]}$ in the case $V\in\I_i$.  In Yago \cite{Hoffart2013}, often
+$V$ has a set of very specific classes $C_s$ but also some general
+classes $C_g$.  The general classes $C_g$ are close to the classes
+used in the stored triple types.  If stored typing of $V$ is correct,
+then $C_s$ have to include subclasses of $C_g$.
 
-\notes{The ground type $\land[T_1..T_n]$ can include pairs of types $S_i\preceq\/S_k$.}
-\nnotes{It makes sense either to compute MIN or MAX of $\land[T_1..T_n]$ yielding $\land[U_1..U_m]$.}
-\nnnotes{$m\le\/n$ and $U_j^{j\in[1,m]}\in\{T_i^{i\in[1,n]}\}$.}
-\nnnotes{MIN computes $U_j^{j\in[1,n]}$ such that each $U_j$ is minimal among $T_i^{i\in[1,n]}$.}
-\nnnotes{MAX computes $U_j^{j\in[1,n]}$ such that each $U_j$ is maximal among $T_i^{i\in[1,n]}$.}
-\nnnotes{Note that in both cases there are no pairs among $U_j^{j\in[1,n]}$ related by $\preceq$.}
+The ground type $\land[T_i^{i\in[1,n]}]$ can include pairs of types
+$T_i\preceq\/T_k$ with $i\not=k$. Depending on the further use, we can
+either compute the minimal or the maximal elements from the set
+$\{T_i^{i\in[1,n]}\}$ with respect to $\preceq$. The super-types of the
+minimal elements of $\{T_i^{i\in[1,n]}\}$ include all valid types of $V$. We
+use the set of minimal elements from $\{T_i^{i\in[1,n]}\}$ as the starting
+point to explore the relations between the ground type and the
+user-defined type of $V$.
 
-\notes{The operator MIN retains from $\land[T_1..T_n]$ only the most specific classes.}
-\nnotes{The following is the definition of the operation MIN.}
-\nnotes{The MIN operation is applied to $\land[T_1..T_n]$ obtaining $\land[U_1..U_m]$.}
-\nnnotes{$\land[U_1..U_m]$ includes types $U_j^{j\in[1,m]}\in\{T_k^{k\in[1,n]}\}$ such that $\not\exists\/T_i^{i\in[1,n]}(T_i\prec\/U_j)$.}
-\nnnotes{All pairs of types $S_1,S_2\in\{U_j^{j\in[1,m]}\}$ are \emph{incomparable},}
-\nnnotes{i.e., $S_1\not\sim\/S_2\equiv\/S_1\not\preceq\/S_2\land\/S_1\not\succeq\/S_2$.}
-\ennotes{The logical rule for the operation MIN is as follows.}
+\memo{the type $\land[T_i^{i\in[1,n]}]$ It makes sense
+either to compute MIN or MAX of $\land[T_i^{i\in[1,n]}]$ yielding
+$\land[S_1..S_m]$ where $m\le\/n$ and
+$S_j^{j\in[1,m]}\in\{T_i^{i\in[1,n]}\}$. The operator MIN computes
+$S_j^{j\in[1,m]}$ such that each $S_j$ is minimal among
+$T_i^{i\in[1,n]}$. The operator MAX computes $S_j^{j\in[1,m]}$ such
+that each $S_j$ is maximal among $T_i^{i\in[1,n]}$. Note that in both
+cases there are no pairs among $S_j^{j\in[1,m]}$ related by $\preceq$.}
+
+The operator MIN is defined on a poset of types
+$(\{T_i^{i\in[1,n]}\},\preceq)$. Given a set of types $\{T_i^{i\in[1..n]}\}$
+the MIN operator retains types $S_j^{j\in[1,m]}\in\{T_i^{i\in[1,n]}\}$
+such that $\not\exists\/T_k^{k\in[1,n]}(T_k\prec\/S_j)$. All pairs of
+types $S_k,S_l\in\{S_j^{j\in[1,m]}\}$ with $k\not=l$ are
+\emph{incomparable}, i.e.,
+$S_1\not\sim\/S_2\equiv\/S_1\not\preceq\/S_2\land\/S_1\not\succeq\/S_2$.
+The logical rule for the operation MIN is as follows.
 
 \begin{equation}
 \label{rul:min}
-\dfrac{V\in\upsilon\quad\/V:_\darr\land[T_1..T_n]\quad\/U\in\/\{T_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ U\preceq\/T_i\lor\/U\not\sim\/T_i}
-      {V:_{\Darr}U}
+\dfrac{V\in\upsilon\quad\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/S\in\/\{T_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ S\preceq\/T_i\lor\/S\not\sim\/T_i}
+      {V:_{\Darr}S}
 \end{equation}
 
-The rule says that $U$ is a minimal type of a ground type
-$\land[T_1..T_n]$. $U$ is minimal since all other $T_i$ types are
-either more general or equal ($\succeq$), or not related to $U$. The
-rule generates all MIN types of $\land[T_1..T_n]$. The rule for
-filtering $\land[T_1..T_n]$ all $T_i\succeq\/T_k$ by using algorithmic
-typing is defined as follows.
-
-\begin{equation}
-\label{rul:min-alg}
-\dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_1..T_n]\quad\vdasharr\/U=\,\Darr\kern -3pt[T_1..T_n]}
-      {\vdasharr\/V:_{\Darr}U}
-\end{equation}
+The rule says that $S$ is a minimal type of a ground type
+$\land[T_i^{i\in[1,n]}]$. $S$ is minimal since all other $T_i$ types are
+either more general or equal ($\succeq$), or not related to $S$. The
+rule generates all MIN types of $\land[T_i^{i\in[1,n]}]$.
 
 The following rule is used for gathering all MIN types of
-$\land[T_1..T_n]$. The result is a conjunction of minimal types
-$\land[U_1..U_m]$. The interpretation of a minimal ground type
-$\llbracket\land[U_1..U_m]\rrbracket$ of $t$ is minimal since
-$\land[U_1..U_m]$ includes a set of minimal and unrelated types of
-$t$. Therefore,
-$\llbracket\land[U_1..U_m]\rrbracket\subseteq\llbracket\land[T_1..T_n]\rrbracket$.
+$\land[T_i^{i\in[1,n]}]$. The result is a conjunction of minimal types
+$\land[S_1..S_m]$. The interpretation of a minimal ground type
+$\llbracket\land[S_1..S_m]\rrbracket$ of $V$ is minimal since
+$\land[S_1..S_m]$ includes a set of minimal and unrelated types of
+$V$. Therefore,
+$\llbracket\land[S_1..S_m]\rrbracket\subseteq\llbracket\land[T_i^{i\in[1,n]}]\rrbracket$.
 
 \begin{equation}
 \label{rul:min-gather}
-\dfrac{V\in\upsilon\quad\forall\/i\in[1,m],\ V:_\Darr\/U_i}
-      {V:_{\Darr}\land[U_1..U_m]}
+\dfrac{V\in\upsilon\quad\forall\/i\in[1,m],\ V:_\Darr\/S_i}
+      {V:_{\Darr}\land[S_j^{j\in[1,m]}]}
+\end{equation}
+
+
+The rule for filtering $\land[T_i^{i\in[1,n]}]$ of all $T_i\succeq\/T_j$
+where $i\not=j$ by using algorithmic typing is defined as
+follows. Note that $M$ is a set of minimal types. The algorithm
+implementing the operation meet is presented in Section
+\ref{sec:alg-MIN}.
+
+\begin{equation}
+\label{rul:alg-min}
+\dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
+      {\vdasharr\/V:_{\Darr}\land\/[S_j^{j\in[1,m]}]}
 \end{equation}
 
 Now we have a minimal type of a value $V$ in the form of a conjunction
-of minimal types $U_i$ of $V$. The types that are important from the
+of minimal types $S_i$ of $V$. The types that are important from the
 perspective of typing languages defined on values from a KG are the
 user-defined types of triples. The definition of a triple type
 requires the knowledge about the meaning of the binary relationship
 defined by a predicate.
 
 The first step in verifying the relations between the ground type and
-user-defined types is the computation of a LUB type of a ground
-type. The LUB type of a ground type should be more specific than the
-user-defined types that describe the value $V$. If the LUB type is not
-more specific than user-defined types then there is an error in stored
-types of a value $V$. 
+user-defined types is the computation of a meet type of a ground
+type. The meet type of a ground type should be more specific than the
+user-defined types that describe the value $V$. If the meet type is
+not more specific than user-defined types then there is an error in
+stored types of a value $V$.
 
-\notes{For $V\in\upsilon$ compute a meet type of $T_1..T_n$ as $V:\sqcup[T_1..T_n]$.}
-\nnotes{A meet type is defined on the set of types $\{T_i^{i\in[1,n]}\}$.}
-\nnotes{A meet type $T=\sqcup[T_1..T_n]$ is the LUB type of $\{T_i^{i\in[1,n]}\}$ with respect to the relation $\preceq$.}
-\nnotes{$\sqcup[T_1..T_n]$ is a minimal type $T$ that is related to all types $T_i^{i\in[1,n]}$ via $\preceq$.}
-\nnotes{$\llb\land[T_1..T_n]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/T_i\rrb\subseteq\llb\/T\rrb$.}
-\ennotes{A meet type is used when we want to determine the user-defined type of $V$.}
+Let us now present the typing rules that, given $V\in\upsilon$,
+compute a meet type of $T_i^{i\in[1,n]}$ as
+$V:\sqcup[T_i^{i\in[1,n]}]$. A meet type $\sqcup[T_i^{i\in[1,n]}]$ is
+defined on the set of types $\{T_i^{i\in[1,n]}\}$. Note that since the
+types form a poset we may have more than one meet types. A meet type
+$\sqcup[T_i^{i\in[1,n]}]$ is a set of minimal types $S_j^{j\in[1,m]}$
+that are related to all types $T_i^{i\in[1,n]}$ via $\preceq$. More
+precisely, is a set of the least upper bound types of
+$\{T_i^{i\in[1,n]}\}$ with respect to the relation $\preceq$.
+
+%\nnotes{$\llb\land[T_i^{i\in[1,n]}]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/T_i\rrb\subseteq\llb\/T\rrb$.}
+%\ennotes{A meet type is used when we want to determine the user-defined type of $V$.}
+
+Rules \ref{rul:meet-logic}-\ref{rul:meet-gather} present the logical
+definition of the meet type. The following Rule \ref{rul:meet-logic}
+determines one meet type but can be used to generate all different
+meet types.
+
 
 \begin{equation}
-\label{rul:lub-logic}
-\dfrac{V\in\upsilon,\, \/V:_\darr\land[T_1..T_n]\quad\/T\in\tau,\, T_i^{i\in[1,n]}\preceq\/T\quad\forall\/S\in\tau,\, (S_i^{i\in[1,n]}\preceq\/S\land\/T\preceq\/S)\lor\/S\not\sim\/T}
+\label{rul:meet-logic}
+\dfrac{V\in\upsilon,\, \/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/T\in\tau,\, T_i^{i\in[1,n]}\preceq\/T\quad\forall\/S\in\tau,\, (S_i^{i\in[1,n]}\preceq\/S\land\/T\preceq\/S)\lor\/S\not\sim\/T}
       {V:_\sqcup\/T}
 \end{equation}
 
+The individual meet types derived by the above rule are gathered
+into one $\land$ type by using the following rule.
+
 \begin{equation}
-\label{rul:lub-alg}
-\dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_1..T_n]\quad\/\vdasharr\/T=\sqcup[T_1..T_n]}
-      {\vdasharr\/V:_\sqcup\/T}
+\label{rul:meet-gather}
+\dfrac{V\in\upsilon\quad\/S_i^{i\in[1,m]}\in\tau\quad\forall\/i\in[1,m],\ V:_\sqcup\/S_i}
+{V:_{\sqcup}\land[S_i^{i\in[1,m]}]}
 \end{equation}
 
-\notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
-\nnotes{Show how the $\land$ and $\sqcup$ types of $I$ are used to compute a type of $I$.}
-\nnotes{$t:_\sqcup\/S$ and there should be a path from $S$ to class components of stored triple types $T$.}
+The following Rule \ref{rul:meet-alg} derives the complete meet type
+in one step. The operator $\sqcup[T_i^{i\in[1,n]}]$ returns as a
+result a set of LUB types of $T_i^{i\in[1,n]}$. Since all the meet types
+are valid types of $V$, we can group them into one $\land$ type.
+
+\begin{equation}
+\label{rul:meet-alg} 
+\dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/\vdasharr\{S_j^{j\in[1,m]}\}=\sqcup[T_i^{i\in[1,n]}]}
+      {\vdasharr\/V:_\sqcup\land[S_j^{j\in[1,m]}]}
+\end{equation}
+
+\notes{Why computing a meet type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
+\nnotes{Show how the $\land$ and $\sqcup$ types of $V$ are used to compute a type of $V$.}
+\nnotes{$V:_\sqcup\/S$ and there should be a path from $S$ to class components of stored triple types $T$.}
 \nnotes{... details about the above statement.}
 \nnotes{As such, $S$ is an approprite point to start searching stored types of $t$.}
 
@@ -899,41 +944,41 @@ $T_1$,\ldots,$T_n$ are obtained using Rule~\ref{rul:3-ground}.
 \end{equation}
 
 
-\notes{Typing using lub types of $T_1..T_n$. Explain why this is needed?}
+\notes{Typing using lub types of $T_i^{i\in[1,n]}$. Explain why this is needed?}
 
 Let us now define the least upper bound types (abbr. \emph{lub}) of
 ground types derived by Rule \ref{rul:3-ground-gather}. Since a
 partialy ordered set is not a lattice, we can have more than one lub
 type for a given set of ground types.
 
-The lub types of a given list of triple types $T_1..T_n$ are
+The lub types of a given list of triple types $T_i^{i\in[1,n]}$ are
 computed in two steps as before when gathering multiple ground types
 with conjunction. A single lub type is defined as follows.
 
 \begin{equation}
-\dfrac{t:_\darr\land[T_1..T_n]\quad T\in\T_t,\quad \forall\/i,\ T_i\preceq\/T\quad \forall\/S\in\T_t,\ \forall\/i,\ (T_i\preceq\/S\land\/T\preceq\/S)\lor\/T\not\sim\/S}
+\dfrac{t:_\darr\land[T_i^{i\in[1,n]}]\quad T\in\T_t,\quad \forall\/i,\ T_i\preceq\/T\quad \forall\/S\in\T_t,\ \forall\/i,\ (T_i\preceq\/S\land\/T\preceq\/S)\lor\/T\not\sim\/S}
       {t:_\sqcup\/T}
 \end{equation}
 
 \begin{equation}
-\dfrac{t:_\darr\land[T_1..T_n]\quad \vdasharr\/T=\sqcup[T_1..T_n]}
+\dfrac{t:_\darr\land[T_i^{i\in[1,n]}]\quad \vdasharr\/T=\sqcup[T_i^{i\in[1,n]}]}
       {t:_{\darr\sqcup}\/T}
 \end{equation}
 
 \begin{equation}
-\dfrac{t:_\darr\land[T_1..T_n]\quad \vdasharr\forall\/i\in[1..m],\ S_i=\sqcup[T_1..T_n]}
+\dfrac{t:_\darr\land[T_i^{i\in[1,n]}]\quad \vdasharr\forall\/i\in[1..m],\ S_i=\sqcup[T_i^{i\in[1,n]}]}
       {t:_{\darr\sqcup}\land[S_1..S_m]}
 \end{equation}
 
 The above rule states that a type $T$ is a lub type of a ground type 
-$\land[T_1..T_n]$ if all ground types $T_i$ are subtypes of
+$\land[T_i^{i\in[1,n]}]$ if all ground types $T_i$ are subtypes of
 $T$. Furthermore, the lub type $T$ is the least (closest) supertype of
 all members of ground $\land$-type $T_1,\ldots\/,T_n$. The lub types
 can be now gathered using the following rule.
 
 \begin{equation}
 \dfrac{\forall i\in[1..n](t:_\sqcup\/T_i)}
-      {t:_\sqcup\land[T_1..T_n]}
+      {t:_\sqcup\land[T_i^{i\in[1,n]}]}
 \end{equation}
 
 
@@ -1054,7 +1099,7 @@ $\lor[T_i]$.
 
 \notes{Why using $\land$ and $\sqcap$ types for typing a triple $t$?}
 \nnotes{We would like to check typing of a triple $t\in\T_i$.}
-\nnotes{We compute first the ground type $T_g=\land[T_1..T_m]$ and a stored type $T_s$ of $t$.}
+\nnotes{We compute first the ground type $T_g=\land[T_i^{i\in[1,n]}]$ and a stored type $T_s$ of $t$.}
 \nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
 \nnotes{The subtype relation should hold $T_g\preceq\/T_s$.}
 
@@ -1117,29 +1162,7 @@ i.e., $T\preceq\/S$.
 \section{Implementation of type-checking}
 
 
-\subsection{Computing LUB ground types}
-
-\notes{A ground type of a triple $t=(s,p,o)$ is a type $(s_t,p,o_t)$ such that $(s,\text{rdf:type},s_t)$ and $(o,\text{rdf:type},o_t)$.}
-\notes{The sets of types $s_t$ and $o_t$ are stored in the sets $g_s$ and $g_o$, respectively.}
-\notes{The ground type of $t$ is then $T_t=(\land\/g_s,p,\land\/g_o)$.}
-\notes{The lub of a type $T_t$ is computed as follows.}
-
-\notes{For each $s_t\in\/g_s$ ($o_t\in\/g_o$) compute a closure of a set $\{s_t\}$ ($\{o_t\}$) with respect to the relationship rdfs:superClassOf obtaining the sets $c_s$ and $c_o$.}
-\notes{Each step of the closure newly obtained classes are marked with the number of steps if new in the set, and the maximum of both numbers of steps otherwise.}
-\notes{The maximum guaranties the monotonicity: $s_t\prec_\darr\/s_t'\Rightarrow\/m(s_t)>m(s_t')$.}
-\notes{Proof: Assume $m(s_t)<=m(s_t')$. Since $s_t\prec_\darr\/s_t'$ then $m(s_t')+1$ is maximum of $s_t$. Contradiction.}
-
-\notes{The lub of $T_t$ is computed by intersecting all sets $c_s$ ($c_o$) obtained for each $s_t$ ($o_t$), yielding a lub type of $g_s$ ($g_o$).}
-\notes{The intersection of sets is computed step-by-step. Initially, intersection is the first set $c_s$ ($c_o$) of some $s_t$ ($o_t$).}
-\notes{In each step, a new set $c_s$ ($c_o$) for another $s_t$ ($o_t$) is intersected with previous result.}
-\notes{The classes that are in the result (intersection) are merged by selecting the maximum number of closure steps for each class in the intersection.}
-\notes{The reason for this is to obtain the number of steps within which all ground classes reach a given lub class.}
-
-\notes{Finally, the lub classes are selected from the resulted intersection of all $c_s$ ($c_o$).}
-\notes{The class with the smallest number of steps is taken. Then, it is deleted from the set together with all its super-classes.}
-\notes{If set is not empty the previous step is repeated.}
-
-\subsection{Computing stored MIN types}
+\subsection{Computing MIN type\label{sec:alg-MIN}}
 
 
 \notes{We have a tuple $t=(s,p,o)$.}
@@ -1173,7 +1196,37 @@ i.e., $T\preceq\/S$.
 
 
 
+
+
+
+\subsection{Computing meet type\label{sec:alg-meet}}
+
+\notes{A ground type of a triple $t=(s,p,o)$ is a type $(s_t,p,o_t)$ such that $(s,\text{rdf:type},s_t)$ and $(o,\text{rdf:type},o_t)$.}
+\notes{The sets of types $s_t$ and $o_t$ are stored in the sets $g_s$ and $g_o$, respectively.}
+\notes{The ground type of $t$ is then $T_t=(\land\/g_s,p,\land\/g_o)$.}
+\notes{The lub of a type $T_t$ is computed as follows.}
+
+\notes{For each $s_t\in\/g_s$ ($o_t\in\/g_o$) compute a closure of a set $\{s_t\}$ ($\{o_t\}$) with respect to the relationship rdfs:superClassOf obtaining the sets $c_s$ and $c_o$.}
+\notes{Each step of the closure newly obtained classes are marked with the number of steps if new in the set, and the maximum of both numbers of steps otherwise.}
+\notes{The maximum guaranties the monotonicity: $s_t\prec_\darr\/s_t'\Rightarrow\/m(s_t)>m(s_t')$.}
+\notes{Proof: Assume $m(s_t)<=m(s_t')$. Since $s_t\prec_\darr\/s_t'$ then $m(s_t')+1$ is maximum of $s_t$. Contradiction.}
+
+\notes{The lub of $T_t$ is computed by intersecting all sets $c_s$ ($c_o$) obtained for each $s_t$ ($o_t$), yielding a lub type of $g_s$ ($g_o$).}
+\notes{The intersection of sets is computed step-by-step. Initially, intersection is the first set $c_s$ ($c_o$) of some $s_t$ ($o_t$).}
+\notes{In each step, a new set $c_s$ ($c_o$) for another $s_t$ ($o_t$) is intersected with previous result.}
+\notes{The classes that are in the result (intersection) are merged by selecting the maximum number of closure steps for each class in the intersection.}
+\notes{The reason for this is to obtain the number of steps within which all ground classes reach a given lub class.}
+
+\notes{Finally, the lub classes are selected from the resulted intersection of all $c_s$ ($c_o$).}
+\notes{The class with the smallest number of steps is taken. Then, it is deleted from the set together with all its super-classes.}
+\notes{If set is not empty the previous step is repeated.}
+
+
+
 \subsection{Relating LUB ground and MIN stored types}
+
+
+
 
 
 
