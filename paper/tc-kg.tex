@@ -629,60 +629,60 @@ that are of type $S$ \emph{or} $T$ (or both).
 A KG includes a stored poset of classes and triple types that
 represent types of the individual objects and ground triples. The
 poset can be used to compute a meet type $S\sqcap\/T$ and a join type
-$S\sqcup\/T$ \cite{Pierce2002}. The join type $J=S\sqcap\/T$ is the
-greatest type such that $J\preceq\/S$, $J\preceq\/T$, i.e., for all types
-$U$, if $U\preceq\/S$ and $U\preceq\/T$, then $U\preceq\/J$.
+$S\sqcup\/T$ \cite{Pierce2002}. The meet type $M=S\sqcap\/T$ is the
+greatest type such that $M\preceq\/S$, $M\preceq\/T$, i.e., for all types
+$U$, if $U\preceq\/S$ and $U\preceq\/T$, then $U\preceq\/M$.
 
-The meet type $M=S\sqcup\/T$ is the least type such that
-$S\preceq\/M$, $T\preceq\/M$, i.e., there is no such $L$ where
-$S\preceq\/L$ and $T\preceq\/L$ without also having $M\preceq\/L$.
-Since we have a top type $\top$ defined in a KG, the meet of arbitrary
-two types always exists. However, the join of two arbitrary types may
+The join type $J=S\sqcup\/T$ is the least type such that
+$S\preceq\/J$, $T\preceq\/J$, i.e., there is no such $L$ where
+$S\preceq\/L$ and $T\preceq\/L$ without also having $J\preceq\/L$.
+Since we have a top type $\top$ defined in a KG, the join of arbitrary
+two types always exists. However, the meet of two arbitrary types may
 not exist always.
 
-The meet type is related to the $\lor$-type. Given a set of types
-$\{T_i^{i\in[1,n]}\}$, the meet type $T=\sqcup[T_i^{i\in[1,n]}]$ represents a
-LUB type such that $T_i\preceq\/T$ for all $i$. On the other hand,
+The join type is related to the $\lor$-type. Given a set of types
+$\{T_i^{i\in[1,n]}\}$, the join type $J=\sqcup[T_i^{i\in[1,n]}]$ represents a
+least upper bound type such that $T_i\preceq\/J$ for all $i$. On the other hand,
 Rule \ref{rul:lor-1} for the $\lor$-types states
-$T_i\preceq\lor[T_i^{i\in[1,n]}]$. However, the meet type and $\lor$-type
+$T_i\preceq\lor[T_i^{i\in[1,n]}]$. However, the join type and $\lor$-type
 differ in the interpretation. 
-$$\llb\lor[T_i^{i\in[1,n]}]\rrb_\D=\bigcup_{i\in[1..n]}\llb\/T_i\rrb_\D\subseteq\llb\/T\rrb_\D=\llb\sqcup[T_i^{i\in[1,n]}]\rrb_\D$$
+$$\llb\lor[T_i^{i\in[1,n]}]\rrb_\D=\bigcup_{i\in[1..n]}\llb\/T_i\rrb_\D\subseteq\llb\/J\rrb_\D=\llb\sqcup[T_i^{i\in[1,n]}]\rrb_\D$$
 
 While the interpretation of the type $\lor[T_i^{i\in[1,n]}]$ includes
-precisely the instances of all $T_i$, the type $T$ is a LUB type and
-the interpretation of $T=\sqcup[T_i^{i\in[1,n]}]$ can include interpretations
+precisely the instances of all $T_i$, the type $J$ is a LUB type and
+the interpretation of $J=\sqcup[T_i^{i\in[1,n]}]$ can include interpretations
 of classes that are not among $T_i^{i\in[1,n]}$.
 
-A join type of $T_i^{i\in[1,n]}$ may not exist in a poset of types from a
-KG. In general, a join type $J=\sqcap[T_i^{i\in[1,n]}]$ exists in a class
+A meet type of $T_i^{i\in[1,n]}$ may not exist in a poset of types from a
+KG. In general, a meet type $M=\sqcap[T_i^{i\in[1,n]}]$ exists in a class
 ontology if the types $T_i^{i\in[1,n]}$ are \emph{bounded below} which means
 that there exists a type $L$ such that $L\preceq\/T_i$ for all
-$i$. The bounded join types \cite{Pierce2002} are not frequent on the
+$i$. The meet types \cite{Pierce2002} are not frequent on the
 lower levels of a class ontology from a KG.
 
-Similarly to the $\lor$-type and the meet type, the semantics of the
-$\land$-type is similar to the semantics of join type. Both of them
+Similarly to the $\lor$-type and the join type, the semantics of the
+$\land$-type is similar to the semantics of meet type. Both of them
 define a GLB type. The type $\land[T_i^{i\in[1,n]}]$ denotes the intersection
-$\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a join type
-$J=\sqcap[T_i^{i\in[1,n]}]$ includes solely the interpretation of $J$. The
+$\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a meet type
+$M=\sqcap[T_i^{i\in[1,n]}]$ includes solely the interpretation of $M$. The
 set $\bigcap\/\llb\/T_i\rrb_\D$ can also include objects that are not
-instances of $J$. Hence,
-$$\llb\sqcap[T_i^{i\in[1,n]}]\rrb_\D=\llb\/J\rrb_\D\subseteq\llb\land[T_i^{i\in[1,n]}]\rrb_\D=\bigcap_{i\in[1..n]}\/\llb\/T_i\rrb_\D.$$
+instances of $M$. Hence,
+$$\llb\sqcap[T_i^{i\in[1,n]}]\rrb_\D=\llb\/M\rrb_\D\subseteq\llb\land[T_i^{i\in[1,n]}]\rrb_\D=\bigcap_{i\in[1..n]}\/\llb\/T_i\rrb_\D.$$
 
-In type-checking the ground triples, the meet types are used in the
+In type-checking the ground triples, the join types are used in the
 procedure for checking the types derived bottom-up against the stored
 schema of a KG as presented in Section \ref{sec:3-ground-types}. The
-meet as well as join types are useful in the procedure for
+join as well as meet types are useful in the procedure for
 type-checking basic graph patterns \cite{Savnik2025a}. The $\lor$ and
 $\land$-types are logical types that can be simplified in the typing
 positions of a graph pattern by using typing rules, and can be
-approximated by using meet and join types to obtain a more precise
+approximated by using join and meet types to obtain a more precise
 type of a graph pattern variable.
 
 
 
 
-\subsection{Typing identifiers with $\land$ and $\lor$ types}
+\subsection{Typing with $\land$ and $\lor$ types}
 
 \medskip
 \notes{The use of $\land$ and $\lor$ types to describe identifiers.}
@@ -761,94 +761,93 @@ $\llbracket\land[S_1..S_m]\rrbracket\subseteq\llbracket\land[T_i^{i\in[1,n]}]\rr
 \end{equation}
 
 
-The rule for filtering $\land[T_i^{i\in[1,n]}]$ of all $T_i\succeq\/T_j$
-where $i\not=j$ by using algorithmic typing is defined as
-follows. Note that $M$ is a set of minimal types. The algorithm
-implementing the operation meet is presented in Section
-\ref{sec:alg-MIN}.
+The rule for filtering $\land[T_i^{i\in[1,n]}]$ of all
+$T_i\succeq\/T_j$ where $i\not=j$ by using algorithmic typing is
+defined as follows. The algorithm implementing the operation MIN is
+presented in Section \ref{sec:alg-MIN}.
 
 \begin{equation}
 \label{rul:alg-min}
 \dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
-      {\vdasharr\/V:_{\Darr}\land\/[S_j^{j\in[1,m]}]}
+{\vdasharr\/V:_{\D
+    arr}\land\/[S_j^{j\in[1,m]}]}
 \end{equation}
 
-Now we have a minimal type of a value $V$ in the form of a conjunction
-of minimal types $S_i$ of $V$. The types that are important from the
-perspective of typing languages defined on values from a KG are the
-user-defined types of triples. The definition of a triple type
-requires the knowledge about the meaning of the binary relationship
-defined by a predicate.
+Now we have a minimal ground type of a value $V$ in the form of a
+conjunction of minimal types $S_i$ of $V$. The types that are
+important from the perspective of typing languages defined on values
+from a KG are the user-defined types of triples. The definition of a
+user-defined triple type requires the knowledge about the meaning of
+the binary relationship defined by a predicate.
 
 The first step in verifying the relations between the ground type and
-user-defined types is the computation of a meet type of a ground
-type. The meet type of a ground type should be more specific than the
-user-defined types that describe the value $V$. If the meet type is
+user-defined types is the computation of a join type of a ground
+type. The join type of a ground type should be more specific than the
+user-defined types that describe the value $V$. If the join type is
 not more specific than user-defined types then there is an error in
 stored types of a value $V$.
 
 Let us now present the typing rules that, given $V\in\upsilon$,
-compute a meet type of $T_i^{i\in[1,n]}$ as
-$V:\sqcup[T_i^{i\in[1,n]}]$. A meet type $\sqcup[T_i^{i\in[1,n]}]$ is
-defined on the set of types $\{T_i^{i\in[1,n]}\}$. Note that since the
-types form a poset we may have more than one meet types. A meet type
+determine a join type of $T_i^{i\in[1,n]}$ as
+$V:\sqcup[T_i^{i\in[1,n]}]$. A join type $\sqcup[T_i^{i\in[1,n]}]$ is
+defined on the set of types ordered into a poset. Since the types form
+a poset, we may have more than one join types. A join type
 $\sqcup[T_i^{i\in[1,n]}]$ is a set of minimal types $S_j^{j\in[1,m]}$
-that are related to all types $T_i^{i\in[1,n]}$ via $\preceq$. More
-precisely, is a set of the least upper bound types of
-$\{T_i^{i\in[1,n]}\}$ with respect to the relation $\preceq$.
+that are related to all types $T_i^{i\in[1,n]}$ via
+$\preceq$. Precisely, a join type is a set of the least upper bound
+types of $\{T_i^{i\in[1,n]}\}$ with respect to the relation $\preceq$.
 
 %\nnotes{$\llb\land[T_i^{i\in[1,n]}]\rrb\subseteq\bigcup_{i\in[1..n]}\llb\/T_i\rrb\subseteq\llb\/T\rrb$.}
-%\ennotes{A meet type is used when we want to determine the user-defined type of $V$.}
+%\ennotes{A join type is used when we want to determine the user-defined type of $V$.}
 
-Rules \ref{rul:meet-logic}-\ref{rul:meet-gather} present the logical
-definition of the meet type. The following Rule \ref{rul:meet-logic}
-determines one meet type but can be used to generate all different
-meet types.
+Rules \ref{rul:join-logic}-\ref{rul:join-gather} present the logical
+definition of the join type. The following Rule \ref{rul:join-logic}
+determines one join type but can be used to generate all join types.
 
 
 \begin{equation}
-\label{rul:meet-logic}
-\dfrac{V\in\upsilon,\, \/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/T\in\tau,\, T_i^{i\in[1,n]}\preceq\/T\quad\forall\/S\in\tau,\, (S_i^{i\in[1,n]}\preceq\/S\land\/T\preceq\/S)\lor\/S\not\sim\/T}
-      {V:_\sqcup\/T}
+\label{rul:join-logic}
+\dfrac{V\in\upsilon,\, \/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/S\in\tau,\, T_i^{i\in[1,n]}\preceq\/S\quad\forall\/P\in\tau,\, (T_i^{i\in[1,n]}\preceq\/P\land\/S\preceq\/P)\lor\/P\not\sim\/S}
+      {V:_\sqcup\/S}
 \end{equation}
 
-The individual meet types derived by the above rule are gathered
-into one $\land$ type by using the following rule.
+The individual join types derived by the above rule are gathered
+into one $\land$ type of join types by using the following rule.
 
 \begin{equation}
-\label{rul:meet-gather}
+\label{rul:join-gather}
 \dfrac{V\in\upsilon\quad\/S_i^{i\in[1,m]}\in\tau\quad\forall\/i\in[1,m],\ V:_\sqcup\/S_i}
 {V:_{\sqcup}\land[S_i^{i\in[1,m]}]}
 \end{equation}
 
-The following Rule \ref{rul:meet-alg} derives the complete meet type
+The following Rule \ref{rul:join-alg} derives the complete join type
 in one step. The operator $\sqcup[T_i^{i\in[1,n]}]$ returns as a
-result a set of LUB types of $T_i^{i\in[1,n]}$. Since all the meet types
+result a set of LUB types of $T_i^{i\in[1,n]}$. Since all the join types
 are valid types of $V$, we can group them into one $\land$ type.
 
 \begin{equation}
-\label{rul:meet-alg} 
+\label{rul:join-alg} 
 \dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/\vdasharr\{S_j^{j\in[1,m]}\}=\sqcup[T_i^{i\in[1,n]}]}
       {\vdasharr\/V:_\sqcup\land[S_j^{j\in[1,m]}]}
 \end{equation}
 
-\notes{Why computing a meet type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
+\notes{Integrate this explanation above.}
+\notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
 \nnotes{Show how the $\land$ and $\sqcup$ types of $V$ are used to compute a type of $V$.}
 \nnotes{$V:_\sqcup\/S$ and there should be a path from $S$ to class components of stored triple types $T$.}
 \nnotes{... details about the above statement.}
 \nnotes{As such, $S$ is an approprite point to start searching stored types of $t$.}
 
+\notes{Example from a KG.}
 \notes{Let's have a look at $\sqcup$ types of $I$'s ground types $S_1..S_n$ from a KG. }
 \nnotes{In many cases $I$ has a single type $S_1$ which is the same as the join type $S$.}
 \nnotes{The super-classes of the join type $S$ have to be included in the stored triple types $\T_t$}
 \nnotes{to be defined as the types of subject or object.}
 \nnotes{Often join type $S$ is close to the classes that are components of stored triple types.}
 
-\notes{In a class poset we can have more than one $\sqcup$ types of $[S_1..S_n]$.}
-\nnotes{All $\sqcup$ types of a given set of types $\{S_1,...,S_n\}$.}
-\nnotes{Show how all $\sqcup$ types can be gathered into one $\land$ or $\lor$ type.}
-\nnotes{Show how join types of $\land$ type are gathered with $\land$ type of join types.}
-\nnotes{... the same for $\lor$ types.}
+
+
+
 
 
 
@@ -862,7 +861,7 @@ are valid types of $V$, we can group them into one $\land$ type.
 \nnotes{1. $t:T_g$ is computed bottom-up: from the stored types of triple components.}
 \nnotes{2. $t:T_u$ can be computed from the user-defined types of properties.}
 \nnotes{The relation $T_g\preceq\/T_u$ must hold if the typing of KG is correct.}
-\nnotes{If the predicate $p$ of type $T_u$ is defined in multiple contexts some of disjunctively}
+\nnotes{If the predicate $p$ of type $T_u$ is defined in multiple contexts, some of disjunctively}
 \nnotes{linked components of $T_u$ may not be related to $T_g$.}
 \nnotes{The filtering of $T_u$ is done by Rule \ref{rul:3-typing}.}
 
@@ -871,6 +870,7 @@ are valid types of $V$, we can group them into one $\land$ type.
 \nnotes{A triple can have multiple ground types $T_g=(\land[S_i^{i\in[1,k]}],p,\land[O_j^{j\in[1,m]}])$.}
 \nnotes{Next, the join type $\sqcup[T_g]$ of ground type $T_g$ is derived.}
 \nnotes{The type $\sqcup[T_g]$ is used as a stepping stone to determine the final type of $t$.}
+\nnnotes{To be used for type-checking graph patterns.}
 
 \notes{Stored triple types are user-defined types.}
 \nnotes{Stored types for a predicate $p$ are defined via the predicates rdfs:domain and rdfs:range.}
@@ -908,18 +908,31 @@ are valid types of $V$, we can group them into one $\land$ type.
 
 
 
-\subsection{Deriving a ground type of a triple\label{sec:3-ground-types}}
+\subsection{Ground types of a triple\label{sec:3-ground-types}}
+
+%
+% deriving ground types of triples
+% taking MIN types of ground types
+% determine join type of minimal ground types
+% 
 
 \noindent
-A ground type of an individual identifier $i$ is a class $C$ related
-to $i$ by one-step type relationship $:_\darr$ denoting a ground
-type. In terms of the concepts of a knowledge graph, $C$ and $i$ are
-related by the relationship rdf:type.
+The ground types of a triple $t$ are either a stored ground type, a
+minimal ground type, or a join type (least upper bound). The stored
+ground type includes types that are stored in a KG. The minimal ground
+type then consists of solely the minimal gound types. Finally, the
+join type is a least upper bound type of the minimal ground type.
 
-A ground type of a triple $t=(I_s,p,I_o)$ is a triple $T=C_s*p*C_o$ that
-includes the ground types of $t$'s components $I_s$ and $I_o$, and the
-property $p$ which now has the role of a type. A ground type of a
-triple is defined by the following rule.
+A ground type of an individual identifier $I$ is a class $C$ related
+to $I$ by one-step type relationship $:_\darr$ denoting a ground type,
+as presented by Rule \ref{rul:ident-1step-type}. In terms of the
+concepts of a knowledge graph, $C$ and $I$ are related by the
+relationship rdf:type.
+
+A ground type of a triple $t=(I_s,p,I_o)$ is a product type
+$C_s*p*C_o$ that includes the ground types of $t$'s components $I_s$
+and $I_o$, and the property $p$ which now has the role of a type. A
+ground type of a triple is defined by the following rule.
 
 \begin{equation}
 \label{rul:3-ground}
@@ -1199,7 +1212,7 @@ i.e., $T\preceq\/S$.
 
 
 
-\subsection{Computing meet type\label{sec:alg-meet}}
+\subsection{Computing join type\label{sec:alg-join}}
 
 \notes{A ground type of a triple $t=(s,p,o)$ is a type $(s_t,p,o_t)$ such that $(s,\text{rdf:type},s_t)$ and $(o,\text{rdf:type},o_t)$.}
 \notes{The sets of types $s_t$ and $o_t$ are stored in the sets $g_s$ and $g_o$, respectively.}
