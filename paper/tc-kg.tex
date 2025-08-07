@@ -31,7 +31,7 @@
         \vdash\hspace*{-5pt}%
         \raisebox{2.3pt}{\scalebox{.5}{\(\blacktriangleright\)}}%
     }%
-}\newcommand{\D}{{\cal D}} 
+}\newcommand{\D}{{\Delta}} 
 \newcommand{\U}{{\cal U}} 
 \newcommand{\B}{{\cal B}} 
 \newcommand{\Lt}{{\cal L}} 
@@ -121,7 +121,7 @@ This is an abstract...
 \notes{Insight into the structure of KG.}
 \notes{The classes form an ontology that can formally be represented as a poset.}
 \notes{Consequently, triple types are also ordered in a poset.}
-\notes{A KG includes triples that represent the values and triples that represent user-defined types that form the schema of a KG \cite{Savnik2022}.}
+\notes{A KG includes triples that represent the values and triples that represent user-defined types that form the schema of a KG \cite{Savnik2025}.}
 \notes{Denotational view of classes and type triples.}
 \notes{The interpretations of classes and triple types form a poset based on the subset relation.}
 
@@ -162,7 +162,7 @@ a program. The type-checking problem \\
 \notes{There are two ways of computing the type of a triple.}
 \notes{First, we can use types of identifiers representing the components of a triple.}
 \nnotes{We call this type a \emph{ground type} since the types of identifiers classes from the bottom of the class ontology.}
-\nnotes{Note that, because of the rule of subsumption \cite{Pierce}, the type of a ground triple is any triple type that is a supertype of a ground triple type.}
+\nnotes{Note that, because of the rule of subsumption \cite{Pierce2002}, the type of a ground triple is any triple type that is a supertype of a ground triple type.}
 \notes{Second, we can select appropriate user-defined triple type $T$ such that the components of $T$ are the types of the components of the ground triple we are checking.}
 \nnotes{The components of the user-defined triple types are noramlly from the top of the class ontology.}
 \nnotes{Type checking of a ground triple is converted to checking the relationships between the ground type and user-defined type of a triple.} 
@@ -619,52 +619,85 @@ $\llbracket\/T\rrbracket_\D=\{t\ |\ t\in\T_t\land\/t:T\}$\footnote{Triple
 
 \subsection{The join and meet types}
 
-The $\land$ and $\lor$ types are logical types defined through the
-sets of instances. Given two types $T$ and $S$ we have a greatest
-lower bound $S\land\/T$, and a least upper bound $S\lor\/T$ types
-where $S\land\/T$ denotes a maximal set of objects that are of type
-$S$ \emph{and} $T$, and $S\lor\/T$ denotes a minimal set of objects
-that are of type $S$ \emph{or} $T$ (or both).
+The $\lor$ and $\land$ types are logical types defined through the
+sets of instances. Given two types $T$ and $S$ we have a least upper
+bound $S\lor\/T$, and a greatest lower bound $S\land\/T$ types where
+$S\lor\/T$ denotes a minimal set of objects that are of type $S$
+\emph{or} $T$ (or both), and $S\land\/T$ denotes a maximal set of
+objects that are of type $S$ \emph{and} $T$, and .
 
 A KG includes a stored poset of classes and triple types that
 represent types of the individual objects and ground triples. The
-poset can be used to compute a meet type $S\sqcap\/T$ and a join type
-$S\sqcup\/T$ \cite{Pierce2002}. The meet type $M=S\sqcap\/T$ is the
-greatest type such that $M\preceq\/S$, $M\preceq\/T$, i.e., for all types
-$U$, if $U\preceq\/S$ and $U\preceq\/T$, then $U\preceq\/M$.
+poset can be used to compute a join $S\sqcup\/T$ and a meet
+$S\sqcap\/T$. Usual definition of the join and meet operators is by
+using a least upper bound and a greatest lower bound if they exist
+\cite{Pierce2002}, respectively. However, in a KG we are also
+interested in the upper bound and lower bound types
+\cite{DaveyPriestley2002}. Let us present an example.
 
-The join type $J=S\sqcup\/T$ is the least type such that
-$S\preceq\/J$, $T\preceq\/J$, i.e., there is no such $L$ where
-$S\preceq\/L$ and $T\preceq\/L$ without also having $J\preceq\/L$.
-Since we have a top type $\top$ defined in a KG, the join of arbitrary
-two types always exists. However, the meet of two arbitrary types may
-not exist always.
+\begin{example}
+  Let $P=(U,\preceq)$ be a partialy oredered set $P$ such that
+  $U=\{a,b,c,d,e\}$ and the relation
+  $\preceq=\{a\preceq\/c,a\preceq\/d,b\preceq\/c,b\preceq\/d,c\preceq\/e,d\preceq\/e\}$.
+  The upper bounds of $S=\{a,b\}$ are the elements $c$ and $d$. Since
+  there is no lower upper bounds, the upper bounds $\{c,d\}$ are
+  minimal upper bounds. The least upper bound of $S$ is $e$.
+
+  In the case that we remove the element $e$ from $P$ then $P$ does
+  not have a least upper bound but it still has two minimal upper
+  bounds $c$ and $d$. $\finbox$
+\end{example}
+
+The least upper bound (abbr. LUB) is by definition one element. It has
+to be related to all upper bounds via the relationship $\preceq$.  On
+the other hand, the most interesting upper and lower bounds are
+minimal upper bounds (abbr. MUB) and maximal lower bounds (abbr. MLB)
+\cite{Knudstorp2024}. They are lower than the least upper bound and
+higher than the greatest lower bound, respectively. They represent
+more detailed information about the parameter set of types $S$ than
+the LUB type of $S$.
+
+The join $J=\sqcup[T_i^{i\in[1,n]}]$ is a set of MUB types
+$J_j^{j\in[1,m]}\in\/J$ such that $J_j$ is an upper bound with
+$T_i^{i\in[1,n]}\preceq\/J_j$, and there is no such $L$ where
+$T_i^{i\in[1,n]}\preceq\/L$ without also having $J_j\preceq\/L$. Since
+we have a top type $\top$ defined in a KG, the join of arbitrary two
+types always exists.
+
+The meet of types $T_i^{i\in[1,n]}]$, $M=S\sqcap[T_i]$, is a set of
+the maximal lower bound types $M_j^{j\in[1,m]}\in\/M$ such that $M_j$
+is lower bound with $M_j\preceq\/T_i^{i\in[1,n]}$, and all other lower
+bounds $U$ with $U\preceq\/T_i^{i\in[1,n]}$ entail
+$U\preceq\/M_j$. Note that the meet of the set of types from a KG does
+not always exist.
 
 The join type is related to the $\lor$-type. Given a set of types
-$\{T_i^{i\in[1,n]}\}$, the join type $J=\sqcup[T_i^{i\in[1,n]}]$ represents a
-least upper bound type such that $T_i\preceq\/J$ for all $i$. On the other hand,
+$\{T_i^{i\in[1,n]}\}$, the join $J=\sqcup[T_i^{i\in[1,n]}]$ is a set
+of types $J_j^{j\in[1,m]}\in\/J$ that are the minimal upper bounds
+such that $T_i\preceq\/J_j$ for $i\in[1,n]$. On the other hand,
 Rule \ref{rul:lor-1} for the $\lor$-types states
-$T_i\preceq\lor[T_i^{i\in[1,n]}]$. However, the join type and $\lor$-type
-differ in the interpretation. 
-$$\llb\lor[T_i^{i\in[1,n]}]\rrb_\D=\bigcup_{i\in[1..n]}\llb\/T_i\rrb_\D\subseteq\llb\/J\rrb_\D=\llb\sqcup[T_i^{i\in[1,n]}]\rrb_\D$$
+$T_i\preceq\lor[T_i^{i\in[1,n]}]$. However, the join type and
+$\lor$-type differ in the interpretation.
+$$\llb\lor[T_i^{i\in[1,n]}]\rrb_\D=\bigcup_{i\in[1..n]}\llb\/T_i\rrb_\D\subseteq\bigcup_{j\in[1,m]}\llb\/J_j\rrb_\D=\llb\sqcup[T_i^{i\in[1,n]}]\rrb_\D$$
 
 While the interpretation of the type $\lor[T_i^{i\in[1,n]}]$ includes
-precisely the instances of all $T_i$, the type $J$ is a LUB type and
-the interpretation of $J=\sqcup[T_i^{i\in[1,n]}]$ can include interpretations
-of classes that are not among $T_i^{i\in[1,n]}$.
+precisely the instances of all $T_i$, the interpretation of the type
+$\sqcup[T_i^{i\in[1,n]}]$ contains the instances of minimal upper bound
+types. The interpretation of $\sqcup[T_i^{i\in[1,n]}]$ can include
+interpretations of classes that are not among $T_i^{i\in[1,n]}$.
 
-A meet type of $T_i^{i\in[1,n]}$ may not exist in a poset of types from a
-KG. In general, a meet type $M=\sqcap[T_i^{i\in[1,n]}]$ exists in a class
-ontology if the types $T_i^{i\in[1,n]}$ are \emph{bounded below} which means
-that there exists a type $L$ such that $L\preceq\/T_i$ for all
-$i$. The meet types \cite{Pierce2002} are not frequent on the
-lower levels of a class ontology from a KG.
+A meet type of $T_i^{i\in[1,n]}$ may not exist in a poset of types
+from a KG. In general, the meet types $M=\sqcap[T_i^{i\in[1,n]}]$
+exist in a class ontology if the types $T_i^{i\in[1,n]}$ are
+\emph{bounded below} which means that there exists a type $L$ such
+that $L\preceq\/T_i$ for all $i$. The meet types are not frequent on
+the lower levels of a class ontology from a KG.
 
 Similarly to the $\lor$-type and the join type, the semantics of the
 $\land$-type is similar to the semantics of meet type. Both of them
 define a GLB type. The type $\land[T_i^{i\in[1,n]}]$ denotes the intersection
 $\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a meet type
-$M=\sqcap[T_i^{i\in[1,n]}]$ includes solely the interpretation of $M$. The
+$M_j\in\sqcap[T_i^{i\in[1,n]}]$ includes solely the interpretation of $M$. The
 set $\bigcap\/\llb\/T_i\rrb_\D$ can also include objects that are not
 instances of $M$. Hence,
 $$\llb\sqcap[T_i^{i\in[1,n]}]\rrb_\D=\llb\/M\rrb_\D\subseteq\llb\land[T_i^{i\in[1,n]}]\rrb_\D=\bigcap_{i\in[1..n]}\/\llb\/T_i\rrb_\D.$$
@@ -729,7 +762,7 @@ cases there are no pairs among $S_j^{j\in[1,m]}$ related by $\preceq$.}
 The operator MIN is defined on a poset of types
 $(\{T_i^{i\in[1,n]}\},\preceq)$. Given a set of types $\{T_i^{i\in[1..n]}\}$
 the MIN operator retains types $S_j^{j\in[1,m]}\in\{T_i^{i\in[1,n]}\}$
-such that $\not\exists\/T_k^{k\in[1,n]}(T_k\prec\/S_j)$. All pairs of
+such that ${\nexists}\/T_k^{k\in[1,n]}(T_k\prec\/S_j)$. All pairs of
 types $S_k,S_l\in\{S_j^{j\in[1,m]}\}$ with $k\not=l$ are
 \emph{incomparable}, i.e.,
 $S_1\not\sim\/S_2\equiv\/S_1\not\preceq\/S_2\land\/S_1\not\succeq\/S_2$.
@@ -769,8 +802,7 @@ presented in Section \ref{sec:alg-MIN}.
 \begin{equation}
 \label{rul:alg-min}
 \dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
-{\vdasharr\/V:_{\D
-    arr}\land\/[S_j^{j\in[1,m]}]}
+{\vdasharr\/V:_{\Darr}\land\/[S_j^{j\in[1,m]}]}
 \end{equation}
 
 Now we have a minimal ground type of a value $V$ in the form of a
@@ -844,6 +876,8 @@ are valid types of $V$, we can group them into one $\land$ type.
 \nnotes{The super-classes of the join type $S$ have to be included in the stored triple types $\T_t$}
 \nnotes{to be defined as the types of subject or object.}
 \nnotes{Often join type $S$ is close to the classes that are components of stored triple types.}
+
+
 
 
 
@@ -930,23 +964,23 @@ concepts of a knowledge graph, $C$ and $I$ are related by the
 relationship rdf:type.
 
 A ground type of a triple $t=(I_s,p,I_o)$ is a product type
-$C_s*p*C_o$ that includes the ground types of $t$'s components $I_s$
+$T_s*p*T_o$ that includes the ground types of $t$'s components $I_s$
 and $I_o$, and the property $p$ which now has the role of a type. A
 ground type of a triple is defined by the following rule.
 
 \begin{equation}
 \label{rul:3-ground}
-\dfrac{t\in\/\T_i,\ t=(I_s,p,I_o)\quad I_s:_\darr\/C_s\quad I_o:_\darr\/C_o\quad p:_\darr\text{rdf:Property}}
-      {t:_\darr\/C_s*p*C_o}
+\dfrac{t\in\/\T_i,\ t=(I_s,p,I_o)\quad I_s:_\darr\/T_s\quad I_o:_\darr\/T_o\quad p:_\darr\text{rdf:Property}}
+      {t:_\darr\/T_s*p*T_o}
 \end{equation}
 
-The class $C_s$ is one of the ground types of $I_s$, and the type $C_o$
-is one of the ground types of $I_o$. The predicates are treated
-differently to the subject and object components of triples. The
-predicates have the role of classes while they are instances of
-rdf:Property.
+The type $T_s$ is either a class identifier or a $\land$-type composed
+of a conjunction of minimal set of class identifiers. The predicates
+are treated differently to the subject and object components of
+triples. The predicates have the role of classes while they are
+instances of rdf:Property.
 
-There can be multiple ground types of a triple. They may be gathered
+A triple can have multiple ground types. They may be gathered
 into a single $\land$-type by using the following rule. The types
 $T_1$,\ldots,$T_n$ are obtained using Rule~\ref{rul:3-ground}.
 
