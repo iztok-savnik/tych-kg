@@ -874,8 +874,8 @@ $\land$ type.
 The join types are used as the starting point for searching the
 correct user-defined type. In the case the predicate of has two
 different definitions in two different contextes, then the paths from
-join types to the domain and range classes would determine the
-definition of the triple type. The details are presented in Section
+join types to the domain and range classes determines the definition
+of the triple type. The details are presented in Section
 \ref{sec:stored-3types}.
 
 %\notes{Integrate this explanation above.}
@@ -967,16 +967,16 @@ definition of the triple type. The details are presented in Section
 
 \noindent
 The ground types of a triple $t$ are either a stored ground type, a
-minimal ground type, or a join type (least upper bound). The stored
-ground type includes types that are stored in a KG. The minimal ground
-type then consists of solely the minimal gound types. Finally, the
-join type is a least upper bound type of the minimal ground type.
-
+minimal ground type, or a join ground type. The stored ground type
+includes types that are stored in a KG. The minimal ground type then
+consists of solely the minimal ground types. All valid types can be
+derived from the set of minimal ground types. Finally, the join type
+is the conjunction of minimal upper bound types \cite{Knudstorp2024}.
+ 
 A ground type of an individual identifier $I$ is a class $C$ related
-to $I$ by one-step type relationship $:_\darr$ denoting a ground type,
-as presented by Rule \ref{rul:ident-1step-type}. In terms of the
-concepts of a knowledge graph, $C$ and $I$ are related by the
-relationship rdf:type.
+to $I$ by one-step type relationship $:_\darr$, as presented by Rule
+\ref{rul:ident-1step-type}. In terms of the concepts of a knowledge
+graph, $C$ and $I$ are related by the relationship rdf:type.
 
 A ground type of a triple $t=(I_s,p,I_o)$ is a product type
 $T_s*p*T_o$ that includes the ground types of $t$'s components $I_s$
@@ -985,64 +985,72 @@ ground type of a triple is defined by the following rule.
 
 \begin{equation}
 \label{rul:3-ground}
-\dfrac{t\in\/\T_i,\ t=(I_s,p,I_o)\quad I_s:_\darr\/T_s\quad I_o:_\darr\/T_o\quad p:_\darr\text{rdf:Property}}
+\dfrac{t\in\upsilon,\ t=(I_s,p,I_o)\quad T_s,T_o\in\tau\quad I_s:_\darr\/T_s\quad I_o:_\darr\/T_o\quad p:_\darr\text{rdf:Property}}
       {t:_\darr\/T_s*p*T_o}
 \end{equation}
 
 The type $T_s$ is either a class identifier or a $\land$-type composed
-of a conjunction of minimal set of class identifiers. The predicates
-are treated differently to the subject and object components of
-triples. The predicates have the role of classes while they are
-instances of rdf:Property.
+of a conjunction of class identifiers. The predicates are treated
+differently to the subject and object components of triples. The
+predicates have the role of classes while they are instances of
+rdf:Property.
 
-A triple can have multiple ground types. They may be gathered
-into a single $\land$-type by using the following rule. The types
-$T_1$,\ldots,$T_n$ are obtained using Rule~\ref{rul:3-ground}.
-
-\begin{equation}
-\label{rul:3-ground-gather}
-\dfrac{\forall\/i\in[1..n],\ t:_\darr\/T_i}
-      {t:_\darr\land[T_i]}
-\end{equation}
-
-
-\notes{Typing using lub types of $T_i^{i\in[1,n]}$. Explain why this is needed?}
-
-Let us now define the least upper bound types (abbr. \emph{lub}) of
-ground types derived by Rule \ref{rul:3-ground-gather}. Since a
-partialy ordered set is not a lattice, we can have more than one lub
-type for a given set of ground types.
-
-The lub types of a given list of triple types $T_i^{i\in[1,n]}$ are
-computed in two steps as before when gathering multiple ground types
-with conjunction. A single lub type is defined as follows.
+The minimal ground type of a triple $t$ can be obtained by using the
+minimal ground types of the triple components. 
 
 \begin{equation}
-\dfrac{t:_\darr\land[T_i^{i\in[1,n]}]\quad T\in\T_t,\quad \forall\/i,\ T_i\preceq\/T\quad \forall\/S\in\T_t,\ \forall\/i,\ (T_i\preceq\/S\land\/T\preceq\/S)\lor\/T\not\sim\/S}
-      {t:_\sqcup\/T}
+\label{rul:3-min-ground}
+\dfrac{t\in\upsilon,\ t=(I_s,p,I_o)\quad T_s,T_o\in\tau\quad I_s:_\Darr\/T_s\quad I_o:_\Darr\/T_o\quad p:_\darr\text{rdf:Property}}
+      {t:_\Darr\/T_s*p*T_o}
 \end{equation}
+
+The component types $T_s$ and $T_o$ of the minimal ground type
+$T_s*p*T_o$ can represent $\land$-types. The following rule transforms
+a triple type including $\land$-types into a $\land$-type of simple
+triple types composed of a class identifiers in place of $S$ and $O$
+components. The rule is expressed in a general form by using the
+typing relation "$:$" which can be replaced by any labeled typing
+relation.
 
 \begin{equation}
-\dfrac{t:_\darr\land[T_i^{i\in[1,n]}]\quad \vdasharr\/T=\sqcup[T_i^{i\in[1,n]}]}
-      {t:_{\darr\sqcup}\/T}
+\label{rul:3-land-transform}
+\dfrac{t\in\upsilon\quad t:\land[S_i^{i\in[1,n]}]*p*\land[R_j^{j\in[1,m]}]}
+      {t:\bigwedge_{i\in[1,n], j\in[1,m]}[S_i*p*T_j]}
 \end{equation}
+
+The type in the conclusion of the rule is constructed by the Cartesian
+product of the sets of types belonging to types of $S$ and $O$
+components. Since each of types $S_i$ and $R_j$ are valid for the
+components $S$ and $O$, respectively, then also the triple types from
+the conclusion are valid.
+
+The above decomposition of a triple type into a set of triple types is
+useful when we check the ground types against the user-defined types
+to select the valid user-defined type of a triple. This is detailed in
+Section \ref{sec:stored-3types}.
+
+Finally, the join of a set of ground types is a set of minimal upper
+bound types. Similarly to the previous two rules, the join is defined
+on the basis of joins of triple type components $S$ and $O$.
 
 \begin{equation}
-\dfrac{t:_\darr\land[T_i^{i\in[1,n]}]\quad \vdasharr\forall\/i\in[1..m],\ S_i=\sqcup[T_i^{i\in[1,n]}]}
-      {t:_{\darr\sqcup}\land[S_1..S_m]}
+\label{rul:3-join}
+\dfrac{t\in\upsilon,\ t=(I_s,p,I_o)\quad T_s,T_o\in\tau\quad I_s:_\sqcup\/T_s\quad I_o:_\sqcup\/T_o\quad p:_\darr\text{rdf:Property}}
+      {t:_\sqcup\/T_s*p*T_o}
 \end{equation}
 
-The above rule states that a type $T$ is a lub type of a ground type 
-$\land[T_i^{i\in[1,n]}]$ if all ground types $T_i$ are subtypes of
-$T$. Furthermore, the lub type $T$ is the least (closest) supertype of
-all members of ground $\land$-type $T_1,\ldots\/,T_n$. The lub types
-can be now gathered using the following rule.
+The join type $T_s*p*T_o$ includes in the components $S$ and $O$ the
+$\land$-types comprising one or multiple MUB classes. When we convert
+this type into a conjunction of single MUB triple types then each MUB
+triple type stands for all ground triple types of $t$.
 
-\begin{equation}
-\dfrac{\forall i\in[1..n](t:_\sqcup\/T_i)}
-      {t:_\sqcup\land[T_i^{i\in[1,n]}]}
-\end{equation}
+We can easily see that each particular triple type is a MUB type since
+it includes MUB types in its components. Since the MUB types of the
+components are incomparable by $\preceq$ then also the MUB triple
+types obtained by Rule \ref{rul:3-join} are incomparable.
 
+\notes{All rules defined for the ground triple types rely on the computation of MIN and MUB types of its components.}
+\notes{This is because the stored types as well as the stored poset relation $\preceq$ is defined on the class ontology.}
 
 \memo{The types of $s$ and $o$ can be any classes $T_s$ and $T_o$ from
   ${\cal I}_c$, while the type of $p$ has to be a class $T_p$ that is
@@ -1060,7 +1068,12 @@ can be now gathered using the following rule.
 
 
 
-\subsection{Stored types of triples\label{sec:stored-3types}}
+\subsection{Stored triple types\label{sec:stored-3types}}
+
+\notes{Each predicate has the domain and range defined either directly or indirectly if the domain and range is defined for $p$'s super-predicates.}
+\notes{In the case of indirect definition of a triple type the domain and range is inherited from the properties of super-predicates.}
+\notes{Stored types of triples are in a KG represented with the predicates rdfs:domain and rdfs:range.}
+\notes{Formally, the triple types $T_s*p*T_o$ are represented as triples that inlcude solely a predicate and two classes.}
 
 \notes{Computing the minimal and valid stored type of a triple $t=(s,p,o)\in\T_i$.}
 \nnotes{Stored types are defined by linking a predicate $p$ to a domain and range classes.}
