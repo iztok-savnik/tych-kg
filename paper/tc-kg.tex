@@ -745,7 +745,7 @@ Let's have a look at $\land$ type composed of $V$'s ground types
 $T_i^{i\in[1,n]}$ in the case $V\in\I_i$. In Yago \cite{Hoffart2013},
 often $V$ has a set of very specific classes $C_s$ but also some
 general classes $C_g$. The general classes $C_g$ are close to the
-classes used in the stored triple types.  If stored typing of $V$ is
+classes used in the stored triple types. If stored typing of $V$ is
 correct, then $C_g$ includes the classes that are supertypes of
 classes from $C_s$.
 
@@ -1070,10 +1070,61 @@ types obtained by Rule \ref{rul:3-join} are incomparable.
 
 \subsection{Stored triple types\label{sec:stored-3types}}
 
-\notes{Each predicate has the domain and range defined either directly or indirectly if the domain and range is defined for $p$'s super-predicates.}
+The stored triple types are types of triples defined by RDF-Schema
+\cite{rdfschema} vocabulary. Each predicate has the domain and range
+defined either directly, when domain and range are defined for the
+predicate $p$, or indirectly, if the domain and range is defined for
+$p$'s super-predicates and inherited to the predicate $p$.
+
 \notes{In the case of indirect definition of a triple type the domain and range is inherited from the properties of super-predicates.}
 \notes{Stored types of triples are in a KG represented with the predicates rdfs:domain and rdfs:range.}
-\notes{Formally, the triple types $T_s*p*T_o$ are represented as triples that inlcude solely a predicate and two classes.}
+\notes{Formally, the triple types $T_s*p*T_o$ are represented as triples that inlcude solely a predicate and two types.}
+
+When a KG is restricted by using RDF-Schema we can specify one or more
+domain and range types. The semantics of RDF-Schema
+\cite{rdfsemantics} interprets multiple domains and ranges with
+$\land$-type. If $p$ has two domains $T_1$ and $T_2$ then $p$ can link
+subjects $I$ that are of type $T_1$ \emph{and} $T_2$. The domain type
+of $p$ is then $T_1\land\/T_2$, or, in terms of OWL \cite{owl},
+owl:intersectionOf$(T_1\ T_2)$. The RDF-Schema does not allow the
+definition of the domain of a predicate with the
+$\lor$-type. Consequently, each predicate can have only one meaning.
+  
+However, we often need a semantics of a predicate that allows the
+definition of a predicate with multiple meanings, depending on the
+context of the predicate. This can happen when multiple ontologies are
+merged into one KG. Another reason for adding $\lor$-types to a KG can
+be the expressive power of KG. These KGs use owl:unionOf and
+owl:intersectionOf to define more complex types of predicates.
+Examples of such KGs are schema.org, EPCIS, DBpedia (in few cases) and
+model transformation tools. Finally, KGs that can define contexts and
+use contextual reasoning also use $\land$ and $\lor$-types. Examples
+of such KGs are Cyc \cite{cyc}, Scone \cite{Fahlman2011} and RACER
+\cite{Haarslev2012}.
+
+We have two ways of modelling predicate sense. The first is by using
+one predicate for one meaning. A current trend in KGs is to model each
+sense of a predicate with a separate name. The general form of
+predicate can be specialized to sub-predicates modelling different
+senses. In the case that predicates have many senses
+(homophones,polysemy) this representation can lead to predicate
+explosion. The reasoning is simpler if all predicates have unique
+meaning. But the predicates are context insensitive.
+
+The second is that we have a predicate that can be defined differently in different contexts (microtheories, ontologies).
+Whitin an ontology it seems that the triple type can be used, quite naturally, as the context of a predicate.
+The meaning of predicate is modelled by a triple type including concrete classes, types of domains and ranges.
+We have one triple type (predicate and types of S and O) mapped to one meaning.
+The representation requires using contextual reasoning \cite{cyc}.
+One of the pros is that contextual representation and reasoning is close to the natural language \cite{Fahlman2011}.
+Pitfalls of word sense disambiguation and contextual reasoning....
+
+How to define types of predicates when we have $\land$ and $\lor$-types possibly in different ontologies, RDF graphs, or KGs.
+Different situations where and how the domains and ranges of predicate can be defined.
+List some possibilities: diff ontologies, diff contexts, explicit definition of union in a context,...
+We are goiung to use OWL syntax for the definition of domains and ranges.
+For simplicity we assume that for each predicate we have a definition of the domain (range) in disjunctive noraml form.
+
 
 \notes{Computing the minimal and valid stored type of a triple $t=(s,p,o)\in\T_i$.}
 \nnotes{Stored types are defined by linking a predicate $p$ to a domain and range classes.}
@@ -1109,9 +1160,11 @@ statement.
 
 \begin{equation}
 \label{rul:3-stored1}
-\dfrac{t\in\Ti, t=(s,p,o)\quad p_1,p_2\in\I_p\quad p\preceq\/p_1\quad p\preceq\/p_2\quad (p_1,\text{domain},T_s)\in\/g
-                \quad (p_2,\text{range},T_o)\in\/g}
-      {t:_\uarr\/T_s*p*T_o}
+\dfrac{\begin{array}{c}
+       t\in\upsilon, t=(s,p,o)\quad p_1,p_2\in\tau,\, p\preceq\/p_1\preceq\/p_2\quad \\
+       T_i^{i\in[1,n]}\in\tau,\, (p_1,\text{domain},T_i)\in\/\Delta\quad S_j^{j\in[1,m]}\in\tau,\, (p_2,\text{range},S_j)\in\Delta
+       \end{array}}
+      {t:_\uarr\/\land[T_i^{i\in[1,n]}]*p*\land[S_j^{j\in[1,m]}]}
 \end{equation}
 
 \notes{If $p$ inherits from multiple $p'\succeq\/p$, then the above rule generates multiple types. Explain.}
@@ -1132,7 +1185,7 @@ greatest lower bound (abbr. glb) of stored types generated by the rule
 \nnotes{These (MIN types) are collected in a $\lor$-type including all MIN types.}
 
 \begin{equation}
-\dfrac{t\in\T_i\quad T\in\T_t,\, t:_\uarr\/T\quad \forall\/S\in\T_t,\, t:_\uarr\/S\quad T\preceq\/S\lor\/T\not\sim\/S}
+\dfrac{t\in\T_i\quad T\in\tau,\, t:_\uarr\/T\quad \forall\/S\in\tau,\, t:_\uarr\/S\quad T\preceq\/S\lor\/T\not\sim\/S}
       {t:_{\Darr}\/T}
 \end{equation}
 
@@ -1158,7 +1211,7 @@ The MIN types are now gathered in a $\lor$-type. Hence, the resulting
 $\lor$-type includes all MIN types of $t$.
 
 \begin{equation}
-\dfrac{\forall\/T_i\in\T_t,\, t:_\Darr\/T_i}
+\dfrac{t\in\upsilon\quad\/T_i^{i\in[1,n]}\in\tau\quad \forall\/i\in[1,n],\ t:_\Darr\/T_i}
       {t:_\Darr\lor[T_i]}
 \end{equation}
 
@@ -1166,7 +1219,14 @@ The premise says that we identify all triple types $T_i$ that are the
 MIN types $t:_\Darr\/T_i$. The MIN types are gathered in a triple type
 $\lor[T_i]$.
 
+\notes{Algorithmic typing.}
 
+
+\begin{equation}
+\label{rul:join-gather}
+\dfrac{t\in\upsilon\quad\/T_i^{i\in[1,n]}\in\tau\quad \vdasharr\forall\/i\in[1,n],\ t:_\uarr\/T_i\quad \vdasharr\{S_j^{j\in[1,m]}\} =\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
+{\vdasharr\/V:_{\Darr}\lor[S_i^{i\in[1,m]}]}
+\end{equation}
 
 
 
