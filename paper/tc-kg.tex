@@ -1111,24 +1111,29 @@ senses. In the case that predicates have many senses
 explosion. The reasoning is simpler if all predicates have unique
 meaning. But the predicates are context insensitive.
 
-The second is that we have a predicate that can be defined differently in different contexts (microtheories, ontologies).
-Whitin an ontology it seems that the triple type can be used, quite naturally, as the context of a predicate.
-The meaning of predicate is modelled by a triple type including concrete classes, types of domains and ranges.
-We have one triple type (predicate and types of S and O) mapped to one meaning.
-The representation requires using contextual reasoning \cite{cyc}.
-One of the pros is that contextual representation and reasoning is close to the natural language \cite{Fahlman2011}.
-Pitfalls of word sense disambiguation and contextual reasoning....
+\notes{The second is that we have a predicate that can be defined differently in different contexts (microtheories, ontologies).}
+\notes{Whitin an ontology it seems that the triple type can be used, quite naturally, as the context of a predicate.}
+\notes{The meaning of predicate is modelled by a triple type including concrete classes, types of domains and ranges.}
+\notes{We have one triple type (predicate and types of S and O) mapped to one meaning.}
+\notes{The representation requires using contextual reasoning \cite{cyc}.}
+\notes{One of the pros is that contextual representation and reasoning is close to the natural language \cite{Fahlman2011}.}
+\notes{Pitfalls of word sense disambiguation and contextual reasoning....}
 
+\memo{
 How to define types of predicates when we have $\land$ and $\lor$-types possibly in different ontologies, RDF graphs, or KGs.
 Different situations where and how the domains and ranges of predicate can be defined.
 List some possibilities: diff ontologies, diff contexts, explicit definition of union in a context,...
 We are goiung to use OWL syntax for the definition of domains and ranges.
 For simplicity we assume that for each predicate we have a definition of the domain (range) in disjunctive noraml form.
+}
 
+\subsubsection{KGs with RDF-Schema}
 
-We first find stored triple types for a given triple $t=(s,p,o)$. A
-stored type is constructed by selecting triple types that are composed
-of a predicate $p$ and the domain and range types linked to predicates
+Let us first define the rules for finding a stored type of a triple in
+the case RDF-Schema semantics is used in a KG. We first determine all
+stored triple types for a given triple $t=(s,p,o)$. A stored type is
+constructed by selecting triple types that are composed of a predicate
+$p$ and the domain and range types linked to predicates
 $p'\succeq\/p$. We say that the domain and range types are
 \emph{inherited} from the predicates $p'\succeq\/p$.
 
@@ -1178,6 +1183,8 @@ different domains or ranges of $p$ then reasoner would treat the
 domain and range types as $\land$-types. Each instance of the domain
 (range) type have to be an instance of all specified types of the
 domain (range).
+
+\subsubsection{KGs with the contextual representation}
 
 While the current trend is to enforce exactly one meaning of a
 predicates in KGs, the contextual representation and reasoning allows
