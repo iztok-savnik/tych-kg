@@ -1076,10 +1076,6 @@ defined either directly, when domain and range are defined for the
 predicate $p$, or indirectly, if the domain and range is defined for
 $p$'s super-predicates and inherited to the predicate $p$.
 
-\notes{In the case of indirect definition of a triple type the domain and range is inherited from the properties of super-predicates.}
-\notes{Stored types of triples are in a KG represented with the predicates rdfs:domain and rdfs:range.}
-\notes{Formally, the triple types $T_s*p*T_o$ are represented as triples that inlcude solely a predicate and two types.}
-
 When a KG is restricted by using RDF-Schema we can specify one or more
 domain and range types. The semantics of RDF-Schema
 \cite{rdfsemantics} interprets multiple domains and ranges with
@@ -1091,33 +1087,46 @@ definition of the domain of a predicate with the
 $\lor$-type. Consequently, each predicate can have only one meaning.
   
 However, we often need a semantics of a predicate that allows the
-definition of a predicate with multiple meanings, depending on the
-context of the predicate. This can happen when multiple ontologies are
-merged into one KG. Another reason for adding $\lor$-types to a KG can
-be the expressive power of KG. These KGs use owl:unionOf and
+definition of a predicate with multiple senses, depending on the
+context of the predicate. One reason for adding $\lor$-types to a KG
+can be the expressive power of KG. These KGs use owl:unionOf and
 owl:intersectionOf to define more complex types of predicates.
 Examples of such KGs are schema.org, EPCIS, DBpedia (in few cases) and
-model transformation tools. Finally, KGs that can define contexts and
-use contextual reasoning also use $\land$ and $\lor$-types. Examples
-of such KGs are Cyc \cite{cyc}, Scone \cite{Fahlman2011} and RACER
-\cite{Haarslev2012}.
+model transformation tools. Further, KGs that can define contexts and
+use contextual reasoning also use $\land$ and $\lor$-types. The
+contexts are often defined by RDF named graphs, e.g., DBpedia
+\cite{Auer2007} and Linked Data \cite{ld-site}. Examples of KGs that
+can define and use contexts are Cyc \cite{cyc}, Scone
+\cite{Fahlman2011} and RACER \cite{Haarslev2012}.
 
-We have two ways of modelling predicate sense. The first is by using
-one predicate for one meaning. A current trend in KGs is to model each
-sense of a predicate with a separate name. The general form of
-predicate can be specialized to sub-predicates modelling different
-senses. In the case that predicates have many senses
-(homophones,polysemy) this representation can lead to predicate
-explosion. The reasoning is simpler if all predicates have unique
-meaning. But the predicates are context insensitive.
+Let us now inspect the same problem from the perspecive of predicate
+modelling. In the case one predicate stands for one sense of a
+predicate, a polysemic predicate is specialized to sub-predicates
+modelling different senses. In the case that predicates of a KG have
+many senses, this representation can lead to predicate
+explosion. However, the reasoning is simpler if all predicates have
+unique meaning.% But the predicates are context insensitive.
 
-\notes{The second is that we have a predicate that can be defined differently in different contexts (microtheories, ontologies).}
+The second way of modelling predicate sense is definition of the same
+predicate in multiple contexts. The context can be defined
+differently. As mentioned above, some reasoners (KGs), e.g., Cyc and
+Scone, can define and use contextes. A predicate can be defined
+differently in different contexts but within one context we can only
+have one meaning of a predicate. The context of a predicate can also
+be defined in a different way. The senses (contexts) of a predicate
+can be defined by means of triple types including a given
+predicate. In other words, a sense of a predicate depends on the
+context, i.e., a triple type, where the predicate is used. This
+approach is similar to the approach used in a natural language for
+expressing human contextual reasoning \cite{Fahlman2011}.
+
+\memo{
 \notes{Whitin an ontology it seems that the triple type can be used, quite naturally, as the context of a predicate.}
 \notes{The meaning of predicate is modelled by a triple type including concrete classes, types of domains and ranges.}
 \notes{We have one triple type (predicate and types of S and O) mapped to one meaning.}
 \notes{The representation requires using contextual reasoning \cite{cyc}.}
 \notes{One of the pros is that contextual representation and reasoning is close to the natural language \cite{Fahlman2011}.}
-\notes{Pitfalls of word sense disambiguation and contextual reasoning....}
+\notes{Pitfalls of word sense disambiguation and contextual reasoning....}}
 
 \memo{
 How to define types of predicates when we have $\land$ and $\lor$-types possibly in different ontologies, RDF graphs, or KGs.
@@ -1127,35 +1136,35 @@ We are goiung to use OWL syntax for the definition of domains and ranges.
 For simplicity we assume that for each predicate we have a definition of the domain (range) in disjunctive noraml form.
 }
 
-\subsubsection{KGs with RDF-Schema}
+\subsubsection{KGs with RDF-Schema.}
 
 Let us first define the rules for finding a stored type of a triple in
 the case RDF-Schema semantics is used in a KG. We first determine all
 stored triple types for a given triple $t=(s,p,o)$. A stored type is
 constructed by selecting triple types that are composed of a predicate
 $p$ and the domain and range types linked to predicates
-$p'\succeq\/p$. We say that the domain and range types are
-\emph{inherited} from the predicates $p'\succeq\/p$.
+$p'\succeq\/p$. The domain and range types can be defined for the
+predicate $p$ and/or inherited from the predicates $p'\succ\/p$.
 
 \begin{equation}
 \label{rul:3-stored1}
 \dfrac{\begin{array}{c}
-       t\in\upsilon, t=(s,p,o)\quad p_1,p_2\in\tau,\, p\preceq\/p_1\preceq\/p_2\quad \\
+       t\in\upsilon,\, t=(s,p,o)\quad p_1,p_2\in\tau,\, p\preceq\/p_1\preceq\/p_2\quad \\
        T_i^{i\in[1,n]}\in\tau,\, (p_1,\text{domain},T_i)\in\/\Delta\quad S_j^{j\in[1,m]}\in\tau,\, (p_2,\text{range},S_j)\in\Delta
        \end{array}}
       {t:_\uarr\/\land[T_i^{i\in[1,n]}]*p*\land[S_j^{j\in[1,m]}]}
 \end{equation}
 
-The above rule gathers the types of the domain and range of a
+The above rule generates the types of the domain and range of a
 predicate $p$. The valid domain or range types of the predicate $p$
 can be any of types defined as domain or range for some
 $p'\succeq\/p$. Note that domain and range types can be defined for
-different predicates $p_1$ and $p_2$ "above" $p$ ($p_1,p_2\succ\/p$)
-which are comparable, i.e., $p_1\sim\/p_2$. This condition restricts
-the domain and range to be defined on the same path from $p$ to some
-maximal element $m$ of the predicate poset. In the second part of the
-premise the domain and range types are gathered for the selected
-predicates $p_1$ and $p_2$, respectively.
+different predicates $p_1$ and $p_2$ "above" $p$ ($p_1,p_2\succeq\/p$)
+which have to be comparable, i.e., $p_1\sim\/p_2$. This condition
+restricts the domain and range to be defined on the same path from $p$
+to some maximal element $m$ of the predicate $p$ poset. In the second
+part of the premise the domain and range types are gathered for the
+selected predicates $p_1$ and $p_2$, respectively.
 
 The above Rule \ref{rul:3-stored1} generates all valid stored types of
 a triple $t$. From the set of all valid stored types of $t$ we select
@@ -1164,15 +1173,18 @@ logical judgment for a minimal stored triple type of a $t$.
 
 \begin{equation}
 \label{rul:min-stored-type}
-\dfrac{t\in\T_i\quad T\in\tau,\, t:_\uarr\/T\quad \forall\/S\in\tau,\, t:_\uarr\/S\quad T\preceq\/S\lor\/T\not\sim\/S}
+\dfrac{t\in\T_i\quad T\in\tau,\, t:_\uarr\/T\quad\/S_i^{i\in[1,n]}\in\tau,\, t:_\uarr\/S_i\quad T\preceq\/S_i\lor\/T\not\sim\/S_i}
       {t:_{\Darr}\/T}
 \end{equation}
 
 The first part of premise says that $t$ is a ground triple and there
 exists $T\in\tau$ which is a type of $t$. The second part of the
 premise requires that $T$ is the minimal type of all types $S$ of
-$t$. In other words, there is no type $S$ of $t$ that is a subtype of
-$T$. Hence, $T$ is the minimal type of the stored triple types of $t$.
+$t$. In other words, there is no type $S_i^{i\in[1,n]}$ of $t$ that is
+a subtype of $T$. Hence, $T$ is the minimal type of the stored triple
+types of $t$. Note that if the stored typing of a KG (using
+RDF.Schema) is correct then the condition $T\sim\/S_i$ is always
+$true$.
 
 In the case that our KG is restricted to RDF-Schema data model then
 one predicate must represent exactly one meaning. Therefore, Rule
@@ -1184,19 +1196,21 @@ domain and range types as $\land$-types. Each instance of the domain
 (range) type have to be an instance of all specified types of the
 domain (range).
 
-\subsubsection{KGs with the contextual representation}
+\subsubsection{KGs with the contextual representation.}
 
 While the current trend is to enforce exactly one meaning of a
 predicates in KGs, the contextual representation and reasoning allows
-the definition of multiple senses of a predicate. There are multiple
-reasons to use the contextual representation and reasoning in a
-KG. First, with the evolvment of KGs there are many cases where the
-RDF store is represented in the modular way spliting the dataset into
-parts that corespond to the contexts. The meaning of a predicate can
-be different in different contexts while the reasoner is able to
-disambiguate among the different meanings of a predicate. There are
-many ways to define contexts in practical systems. Examples are the
-named graphs in KGs DBpedia, Wiki Data and Yago. Another example is
+the use of multiple senses of a predicate. There are many reasons to
+use the contextual representation and reasoning in a KG. First, with
+the evolvment of KGs there are many examples where the RDF store is
+represented in the modular way spliting the dataset into parts that
+correspond to the contexts. The meaning of a predicate can be different
+in different contexts while the reasoner is able to disambiguate among
+the different meanings of a predicate.
+
+There are many ways to define contexts in practical systems. Examples
+are the named graphs in KGs DBpedia \cite{Auer2007}, Wiki Data
+\cite{vrandecic2014} and Yago \cite{Hoffart2013}. Another example is
 Cyc \cite{cyc} that uses microtheories to represent different
 contexts. Similarly to Cyc, Scone \cite{Fahlman2011} is a KR system
 that can define spaces (contexts) and uses contextual
@@ -1206,22 +1220,32 @@ language is inherently contextual, and the context is essential in the
 human representation of knowledge and reasoning.
 
 In mathematics, a function is not represented by its name only, but
-also with the types of its domain and range. Types of function can
-disambiguate among the different functions with the same name but
-different domain and range types. Similarly, the types can be
-effectively used to disambiguate the meaning of the predicate in a KG.
+with a function type including, besides the function name, also the
+types of its domain and range. Types of function can disambiguate
+among the different functions with the same name but different domain
+and range types. Similarly, the types can be effectively used to
+disambiguate the meaning of the predicate in a KG.
 
 To be able to study KRs including predicates with multiple senses we
-propose the minimal KR schema language that includes the triple types
-in the form of triples (instead of specifying the domain and range of
-predicate) together with the OWL type constructors owl:intersectionOf
-and owl:unionOf. These are often used for extending the semantics of a
-KG \cite{}. The triple types are stored in a KG as triples composed of
-the types of S and O components and the predicate. The S and O
-components can be classes or type constructors applied to classes.
+propose a minimal KR schema language that includes the triple types in
+the form of triples, and OWL type constructors owl:intersectionOf and
+owl:unionOf. So far, the union and intersection type constructors are
+employed mostly in domain specific KGs like biomedical and genomic
+ontologies. In these scientific fields the knowledge includes large
+ontologies where new classes can be defined as logical combinations
+existing classes.
 
-In the data model of RDF-Schema the context of predicate is the
-predicate itself. However, it is common in 
+The KR language that we use is composed of the triple types stored in
+a KG as triples. In the case there are more than one triple types
+including a predicate $p$ then these are treated as alternatives. For
+example, if a KG includes triples $(c_1,p,c_2)$ and $(c_3,p,c_4)$,
+where $c_i\in\I_c$, then the type of ground triples including $p$ is
+$c_1*p*c_2\lor\/c_3*p*c_4$. In addition, the KR language can use
+$\land$ and $\lor$-types in subject and object components of triple
+types. The use of $\lor$-type is redundant since it can be expressed
+with multiple triple types. Hence, the minimal KR language includes
+solely the triple types of the form
+$\land[c_i^{i\in[1,n]}]*p*\land[c_j^{j\in[1,m]}]$.
 
 A stored triple type of $t$ is a disjunction of a set of minimal
 elements from a set of all valid stored triple types of $t$. The
@@ -1253,10 +1277,10 @@ $\lor$-type.
 
 
 
-
+\memo{
 \notes{If $p$ inherits from multiple $p'\succeq\/p$, then the above rule generates multiple types. Explain.}
 \nnotes{The type is determined only if the domain and range of $p'\succeq\/p$ is defined.}
-\nnotes{Otherwise, the domain and range shoud be $\top$. This should be included.}
+\nnotes{Otherwise, the domain and range shoud be $\top$. This should be included.}}
 
 \memo{
 Somewhere here, the inheritance should be noted.
