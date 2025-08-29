@@ -75,26 +75,27 @@
 
 \begin{document}
 
-\title{Type-checking knowledge graphs}
+\title{Typing knowledge graphs}
 
 \author{Iztok Savnik\inst{1}} 
 
-\authorrunning{I. Savnik et al.}
+\authorrunning{I. Savnik}
 
-\institute{Faculty of mathematics, natural sciences and information technologies, \\
+\institute{Department of computer science, \\
+  Faculty of mathematics, natural sciences and information technologies, \\
   University of Primorska, Slovenia \\
   \email{iztok.savnik@upr.si}}
 
 \maketitle
 
 \begin{abstract}
-This is an abstract...
-  \keywords{type checking \and knowledge graphs \and RDF stores \and graph databases.}
+...
+  \keywords{knowledge graphs \and type systems.}
 \end{abstract}
 
-\newpage
-\tableofcontents
-\newpage
+%\newpage
+%\tableofcontents
+%\newpage
 
 \thispagestyle{headings}
 %\tableofcontents
@@ -1226,55 +1227,81 @@ among the different functions with the same name but different domain
 and range types. Similarly, the types can be effectively used to
 disambiguate the meaning of the predicate in a KG.
 
-To be able to study KRs including predicates with multiple senses we
-propose a minimal KR schema language that includes the triple types in
-the form of triples, and OWL type constructors owl:intersectionOf and
-owl:unionOf. So far, the union and intersection type constructors are
-employed mostly in domain specific KGs like biomedical and genomic
-ontologies. In these scientific fields the knowledge includes large
-ontologies where new classes can be defined as logical combinations
-existing classes.
+To be able to study the behavior of KG predicates with multiple senses
+in the presence of triple types, we propose a minimal KR schema
+language that includes the triple types stored in a KG as triples. In
+the case there are more than one triple types including a predicate
+$p$ then these are treated as alternatives. For example, if a KG
+includes triples $(c_1,p,c_2)$ and $(c_3,p,c_4)$, where $c_i\in\I_c$,
+then the type of ground triples including $p$ is
+$c_1*p*c_2\lor\/c_3*p*c_4$.
 
-The KR language that we use is composed of the triple types stored in
-a KG as triples. In the case there are more than one triple types
-including a predicate $p$ then these are treated as alternatives. For
-example, if a KG includes triples $(c_1,p,c_2)$ and $(c_3,p,c_4)$,
-where $c_i\in\I_c$, then the type of ground triples including $p$ is
-$c_1*p*c_2\lor\/c_3*p*c_4$. In addition, the KR language can use
-$\land$ and $\lor$-types in subject and object components of triple
-types. The use of $\lor$-type is redundant since it can be expressed
-with multiple triple types. Hence, the minimal KR language includes
-solely the triple types of the form
+Further, the proposed KR language can use $\land$ and $\lor$-types in
+subject and object components of triple types. The $\land$ and
+$\lor$-types are often implemented in KGs in the form of OWL type
+constructors owl:intersectionOf and owl:unionOf\footnote{The OWL union
+  and intersection type constructors are employed mostly in domain
+  specific KGs like biomedical and genomic ontologies. In these
+  scientific fields the knowledge base includes large ontologies where
+  new classes can be defined as logical combinations of existing
+  classes.}. The use of $\lor$-type is redundant since it can be
+expressed with multiple triple types. Hence, the \emph{minimal} KR
+schema language includes solely the triple types of the form
 $\land[c_i^{i\in[1,n]}]*p*\land[c_j^{j\in[1,m]}]$.
 
-A stored triple type of $t$ is a disjunction of a set of minimal
-elements from a set of all valid stored triple types of $t$. The
-minimal stored types are gathered in a $\lor$-type. 
+Let us now present the rules which derive the stored types of a ground
+triple $t$ in the case our minimal KR schema language is used for the
+definition of the KG schema. First, the following Rule
+\ref{rul:3-stored2} generates all valid alternatives of stored triple
+types given a triple $t$.
 
 \begin{equation}
-\label{rul:gather-min-types}
-\dfrac{t\in\upsilon\quad\/T_i^{i\in[1,n]}\in\tau\quad \forall\/i\in[1,n],\ t:_\Darr\/T_i}
-      {t:_\Darr\lor[T_i]}
+\label{rul:3-stored2}
+\dfrac{t\in\upsilon,\, t=(s,p,o)\quad T_i^{i\in[1,n]}\in\tau,\, T_i=(T_s,p,T_o)\quad\/T_i^{i\in[1,n]}\in\Delta}
+      {t:_\uarr\/\lor[T_i^{i\in[1,n]}]}
 \end{equation}
 
-The premise says that we identify all triple types $T_i$ that are the
-MIN types $t:_\Darr\/T_i$. The minimal stored triple types are
-gathered in a triple type $\lor[T_i]$.
-
-The following Rule \ref{rul:min-stored-type-alg} presents the
-algorithmic typing of minimal types of a poset. All stored types of
-$t$ are first gathered in a set ordered by $\preceq$. The minimal
-elements of poset are selected using the operator $\Darr$ defined as a
-function. Finally, the computed minimal elements are gathered in a
-$\lor$-type.
+A stored triple type $\lor[T_i^{i\in[1,n]}]$ of $t$ is a disjunction
+of all valid stored triple types of $t$. Similarly to Rules
+\ref{rul:min}-\ref{rul:min-gather}, which is defined to find minimal
+types of a set of classes, the following Rules
+\ref{rul:3-min}-\ref{rul:3-min-gather} generate the set of minimal
+stored triple types of a set including all valid stored tyes of $t$.
 
 \begin{equation}
-  \label{rul:min-stored-type-alg}
-\dfrac{t\in\upsilon\quad\/T_i^{i\in[1,n]}\in\tau\quad \vdasharr\forall\/i\in[1,n],\ t:_\uarr\/T_i\quad \vdasharr\{S_j^{j\in[1,m]}\} =\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
-{\vdasharr\/V:_{\Darr}\lor[S_i^{i\in[1,m]}]}
+\label{rul:3-min}
+\dfrac{t\in\upsilon\quad\/t:_\uarr\lor[T_i^{i\in[1,n]}]\quad\/S\in\/\{T_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ S\preceq\/T_i\lor\/S\not\sim\/T_i}
+      {V:_{\Darr}S}
 \end{equation}
 
+The rule says that $S$ is a minimal stored triple type of a stored
+triple type $\lor[T_i^{i\in[1,n]}]$. $S$ is minimal since all other
+types $T_i$ are either more general or equal ($\succeq$), or not
+related to $S$. The following rule gathers all minimal stored triple
+types of $\lor[T_i^{i\in[1,n]}]$.
 
+\begin{equation}
+\label{rul:3-min-gather}
+\dfrac{t\in\upsilon\quad\forall\/i\in[1,m],\ t:_\Darr\/S_i}
+      {t:_{\Darr}\lor[S_j^{j\in[1,m]}]}
+\end{equation}
+
+The above rule is identical to the Rule \ref{rul:min-gather} except
+that in this settings it handles triples and not identifiers. The
+result is a disjunction of minimal stored triple types $S_j^{j\in[1,m]}$.
+
+The following Rule \ref{rul:3-alg-min} is an algorithmic typing rule
+for deriving a minimal type of a type $\lor[T_i^{i\in[1,n]}]$ by
+computing a set of minimal stored triple types $\{S_j^{j\in[1,m]}\}$
+from a poset of all valide stored triple types $T_i^{i\in[1,n]}$. The
+algorithm implementing the operation MIN is presented in Section
+\ref{sec:alg-MIN}.
+
+\begin{equation}
+\label{rul:3-alg-min}
+\dfrac{t\in\upsilon\quad\vdasharr\/t:_\uarr\lor[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
+{\vdasharr\/t:_{\Darr}\lor\/[S_j^{j\in[1,m]}]}
+\end{equation}
 
 
 \memo{
