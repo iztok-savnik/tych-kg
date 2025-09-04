@@ -240,24 +240,25 @@ triples.
 
 \subsection{Typing rule language}
 
-In this paper we define typing of a data language used to represent a
-TBOX \cite{Brachman2004KnowledgeRR} of a knowledge base given in a
+In this paper we define typing of a data language used to represent an
+ABOX \cite{Brachman2004KnowledgeRR} of a knowledge base given in a
 form of a knowledge graph. The data language specifys the assertions
-in the form of triples and the schema of assertions as the types of
-triples. The ground triples are the instances of the triple types that
-altogether define the schema of a KG.
+in the form of ground triples (ABOX) and the schema of assertions as
+the types of triples (TBOX). The ground triples are the instances of
+the triple types that altogether define the schema of a KG.
 
 In comparison to the data structures used in programming languages
-\cite{Pierce2002,Hindley1997}, the data language of a KG is more
-complex. First, a KG graph includes an ontology of classes and
+\cite{Pierce2002,Hindley1997}, the conceptual schema of a KG is
+complex in the sense that any data structure can be represented as a
+graph. First, a KG graph includes an ontology of classes and
 properties. Second, typing of ground identifiers is stored in a KG,
 i.e., each ground identifier has one or more types represented as
-class identifiers. Further, the properties (predicates) of a KG are
+class identifiers. Further, similarly to the \emph{roles}
+\cite{Brachman1985} of a knowledge base, the predicates of a KG are
 treated as objects that are included in a classification hierarchy of
 properties. For each property we have the definition of one or more
-triple types stored in a KG. Finally, the properties (including triple
-types) are inherited through the classification hierarchy of classes
-and predicates.
+triple types stored in a KG. Finally, the predicates are inherited
+through the classification hierarchy of classes and predicates.
 
 Furthermore, the data language of a KG, which is based on RDF and
 RDF-Schema \cite{rdf,rdfschema}, does not include variables as in
@@ -266,22 +267,21 @@ information needed for typing a ground triple is available from a KG.
 
 For the above presented reasons, we do not use standard typing rule
 language \cite{Pierce2002,Hindley1997} that includes the context
-$\Gamma$ where the types of the variables are stored. We use more
-expressive meta-language that is rooted in first order logic
-(abbr. FOL). The rules are composed of a set of premises and a
-conclusion. The premises are either typing judgements in the form
-$o:T$, or expressions in the FOL. The expressions of FOL can express
-complex premises such as the requirements for the LUB and GLB triple
-types. The conclusion part of the rule is a typing or subtyping
-jufgement.
+$\Gamma$ where the types of the variables are stored. We use a
+meta-language that is rooted in first order logic (abbr. FOL). The
+rules are composed of a set of premises and a conclusion. The premises
+can be expressions stating the membership of an object, typing
+judgements in the form $o:T$, or expressions in the FOL. The
+expressions of FOL can express complex premises such as the
+requirements for the LUB and GLB triple types. The conclusion part of
+the rule is a typing or subtyping judgment.
 
-The rules are grounded in a knowledge graph through the sets of
-identifiers and triples that are defined in Section
-\ref{sec:kg}. In rules we specify the domain for each symbol used.
-When we write $O\in\/S$ then we mean the \emph{existence} of $O$ in a
-set $S$. We use universal quantification $\forall\/O\in\/S,\ p(O)$
-when we state that some property $p(O)$ holds for all objects $O$ from
-$S$.
+The symbols used in a rule are grounded by stating their membership in
+a knowledge graph through the sets of identifiers ($\I_i$ and $\I_c$)
+and triples ($\T_i$ and $\T_t$) defined in Section \ref{sec:kg}. When
+we write $O\in\/S$ then we mean the \emph{existence} of $O$ in a set
+$S$. We use universal quantification $\forall\/O\in\/S,\ p(O)$ when we
+state that some property $p(O)$ holds for all objects $O$ from $S$.
 
 Similar to \cite{Dunfield2021}, we differ between two interpretations
 of rules. First, the \emph{generator} view of rules is the forward
@@ -498,93 +498,7 @@ by adding a typing rule called \emph{rule of subsumption}
 
 \section{Intersection and union types\label{sec:intsc-union}}
 
-The instances of the intersection type $T_1\land\/T_2$ are objects
-belonging to both $T_1$ and $T_2$. The type $T_1\land\/T_2$ is the
-greatest lower bound of the types $T_1$ and $T_2$. In general,
-$\land[T_i^{i\in[1,n]}]$ is the greatest lower bound (abbr. GLB) of
-types $T_i^{i\in[1,n]}$ \cite{Pierce1991,Pierce1996}. The instances of
-the type $\land[T_i^{i\in[1,n]}]$ form a maximal set of objects that
-belong to all types $T_i$.
-
-The rules for the $\land$ and $\lor$ types presented in this section
-are general---they apply for the identifier types $\I_c$ and triple
-types $\T_t$. The set of types $\tau=\I_c\cup\T_t$ is used to ground
-the types in the rules.
-
-The instances of a type $\land[T_i^{i\in[1,n]}]$ are the instances of all
-particular types $T_i$. This is stated by the following rule. 
-
-\memo{\begin{equation}
-\dfrac{T_1,T_2\in\tau}
-      {T_1\land\/T_2\preceq\/T_1}
-\end{equation}
-
-\begin{equation}
-\dfrac{T_1,T_2\in\tau}
-      {T_1\land\/T_2\preceq\/T_2}
-\end{equation}}
-
-\begin{equation}
-\dfrac{\forall\/i\in[1..n],\ T_i\in\tau}
-      {\land[T_i^{i\in[1,n]}] \preceq\/T_i} 
-\end{equation}
-
-Further, the following rule states that if the type $S$ is more
-specific than the types $T_1,\ldots\/,T_n$ then $S$ is more specific
-then $\land[T_i^{i\in[1,n]}]$.
-
-\memo{\begin{equation}
-\dfrac{S,T_1,T_2\in\tau\quad S\preceq\/T_1\quad\/S\preceq\/\/T_2}
-      {S\preceq\/T_1\land\/T_2}  
-\end{equation}}
-
-\begin{equation}
-\label{rul:intsc-gather}
-\dfrac{S\in\tau\quad\forall\/i\in[1..n],\ T_i\in\tau\quad\/S\preceq\/T_i}
-      {S\preceq\land[T_i^{i\in[1,n]}]}  
-\end{equation} 
-
-The intersection and union types are dual. This can be seen also from
-the duality of the rules for the $\land$ and $\lor$ types.
-
-The instances from the union type $T_1\lor\/T_2$ are either the
-instances of $T_1$ or $T_2$, or the instances of both
-types. Therefore, $\lor[T_i^{i\in[1,n]}]$ is the least upper bound of
-types $T_i^{i\in[1,n]}$ \cite{Pierce1991}.
-
-\memo{\begin{equation}
-\dfrac{T_1,T_2\in\tau}
-      {T_1\preceq\/T_1\lor\/T_2}
-\end{equation}
-
-\begin{equation}
-\dfrac{T_1,T_2\in\tau}
-      {T_2\preceq\/T_1\lor\/T_2}
-\end{equation}}
-
-\begin{equation}
-\label{rul:lor-1}
-\dfrac{\forall\/i\in[1..n],\ T_i\in\tau}
-      {T_i\preceq\/\lor[T_i^{i\in[1,n]}]}
-\end{equation}
-
-Finally, if the type $T$ is more general than the types $S_1..\/S_n$
-then $T$ is more general then $\lor[S_1..\/S_n]$.
-
-\memo{\begin{equation}
-\dfrac{T,S_1,S_2\in\tau\quad S_1\preceq\/T\quad\/S_2\preceq\/\/T}
-      {S_1\lor\/S_2\preceq\/T}  
-\end{equation}}
-
-\begin{equation}
-\label{rul:lor-2}
-\dfrac{T\in\tau\quad\forall\/i\in[1..n],\ S_i\in\tau\quad\/S_i\preceq\/T}
-      {\lor[S_1..\/S_n]\preceq\/T}  
-\end{equation}
-
-
-\medskip\noindent
-\textbf{Semantics of $\land$ and $\lor$ types in KGs.$\ \ $}
+\memo{
 The meaning of the $\land$ and $\lor$ types can be defined through
 their interpretations. The following definition expresses the
 denotation of a $\lor$ type with the interpretations of its component
@@ -600,15 +514,94 @@ the interpretations of its component types.
 
 \begin{displaymath}
 \llbracket\land[T_i^{i\in[1,n]}]\rrbracket_\D = \bigcap_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
-\end{displaymath}
+\end{displaymath}}
 
+The meaning of the $\land$ and $\lor$ types can be seen through
+their interpretations. The instances of the intersection type
+$T_1\land\/T_2$ are objects belonging to both $T_1$ and $T_2$. The
+type $T_1\land\/T_2$ is the greatest lower bound of the types $T_1$
+and $T_2$. In general, $\land[T_i^{i\in[1,n]}]$ is the greatest lower
+bound (abbr. GLB) of types $T_i^{i\in[1,n]}$
+\cite{Pierce1991,Pierce1996}. The instances of the type
+$\land[T_i^{i\in[1,n]}]$ form a maximal set of objects that belong to
+all types $T_i$.
+
+The rules for the $\land$ and $\lor$ types presented in this section
+are general---they apply for the identifier types $\I_c$ and triple
+types $\T_t$. The set of types $\tau=\I_c\cup\T_t$ is used to ground
+the types in the rules.
+
+The instances of a type $\land[T_i^{i\in[1,n]}]$ are the instances of all
+particular types $T_i$. This is stated by the following rule. 
+
+\begin{equation}
+\dfrac{T_i^{i\in[1,n]}\in\tau}
+      {\land[T_i^{i\in[1,n]}] \preceq\/T_i^{i\in[1,n]}} 
+\end{equation}
+
+Further, the following rule states that if the type $S$ is more
+specific than the types $T_i^{i\in[1,n]}$ then $S$ is more specific
+then $\land[T_i^{i\in[1,n]}]$.
+
+\begin{equation}
+\label{rul:land-preceq}
+\dfrac{S\in\tau\quad\/T_i^{i\in[1,n]}\in\tau\quad\/S\preceq\/T_i^{i\in[1,n]}}
+      {S\preceq\land[T_i^{i\in[1,n]}]}  
+\end{equation} 
+
+The opposite to the above rule, the following rule states the
+necessary conditions that must be meet so that a type $T$ is a
+supertype of a $\land$-type $\land[S_i^{i\in[1,n]}]$.
+
+\begin{equation}
+\label{rul:land-succeq}
+\dfrac{T\in\tau\quad\/S_i^{i\in[1,n]}\in\tau\quad\/S\in{S_i^{i\in[1,n]}}\quad\/S\preceq\/T}
+      {\land[S_i^{i\in[1,n]}]\preceq\/T}  
+\end{equation} 
+
+The intersection and union types are dual. This can be seen also from
+the duality of the rules for the $\land$ and $\lor$ types.
+
+The instances from the union type $T_1\lor\/T_2$ are either the
+instances of $T_1$ or $T_2$, or the instances of both
+types. Therefore, $\lor[T_i^{i\in[1,n]}]$ is the least upper bound of
+types $T_i^{i\in[1,n]}$ \cite{Pierce1991}.
+
+\begin{equation}
+\label{rul:lor-1}
+\dfrac{T_i^{i\in[1,n]}\in\tau}
+      {T_i^{i\in[1..n]}\preceq\/\lor[T_i^{i\in[1,n]}]}
+\end{equation}
+
+Finally, the following rules defines the necessary conditions to be
+met for a type $T$ to be a supertype of a type
+$\lor[S_i^{i\in[1,n]}]$.
+
+\begin{equation}
+\label{rul:lor-succeq}
+\dfrac{T\in\tau\quad\/S_i^{i\in[1..n]}\in\tau\quad\/S_i^{i\in[1..n]}\preceq\/T}
+      {\lor[S_i^{i\in[1..n]}]\preceq\/T}  
+\end{equation}
+
+Again, the opposite rule that defines the premises that must hold so
+that $S$ is a subtype of a type $\lor[T_i^{i\in[1,n]}]$.
+
+\begin{equation}
+\label{rul:lor-preceq}
+\dfrac{S\in\tau\quad\/T_i^{i\in[1..n]}\in\tau\quad\/T\in\{T_i^{i\in[1..n]}\}\quad\/S\preceq\/T}
+      {S\preceq\lor[S_i^{i\in[1..n]}]}  
+\end{equation}
+
+
+\memo{
 Note that the interpretation of a class $C$ is a set of instances
 $\llbracket\/C\rrbracket_\D=\{I\ |\ I\in\I_i\land\/I:C\}$. Further, the
 interpretation of a triple type $T$ is the set of ground triples
 $\llbracket\/T\rrbracket_\D=\{t\ |\ t\in\T_t\land\/t:T\}$\footnote{Triple
   types $\T_t$ are presented in the following Section
-  \ref{sec:triples}.}\cite{Savnik2025}.\\
-\notes{What about subtyping?}
+  \ref{sec:triples}.}\cite{Savnik2025}.\\}
+
+\notes{Show $\preceq$ for $\land$ types related to $\land$ types (and $\lor$ types).}
 
 \memo{Put together the base types of ground identifiers using $\land$ type.}
 \memo{First, the base type of an ground identifier is the $\land$ of all base types.}
