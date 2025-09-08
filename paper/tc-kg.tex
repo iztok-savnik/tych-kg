@@ -516,6 +516,8 @@ the interpretations of its component types.
 \llbracket\land[T_i^{i\in[1,n]}]\rrbracket_\D = \bigcap_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
 \end{displaymath}}
 
+\notes{CHECK: upper and lower bounds in the following rules.}
+
 The meaning of the $\land$ and $\lor$ types can be seen through
 their interpretations. The instances of the intersection type
 $T_1\land\/T_2$ are objects belonging to both $T_1$ and $T_2$. The
@@ -531,31 +533,35 @@ are general---they apply for the identifier types $\I_c$ and triple
 types $\T_t$. The set of types $\tau=\I_c\cup\T_t$ is used to ground
 the types in the rules.
 
-The instances of a type $\land[T_i^{i\in[1,n]}]$ are the instances of all
-particular types $T_i$. This is stated by the following rule. 
+The interpretation of a type $\land[T_i^{i\in[1,n]}]$ in included in
+interpretation of every particular type $T_i$. Hence, the type
+$\land[T_i^{i\in[1,n]}]$ is the greatest lower bound of types
+$T_i^{i\in[1,n]}$. This is stated by the following rule.
 
 \begin{equation}
+\label{rul:land-preceq-elems}
 \dfrac{T_i^{i\in[1,n]}\in\tau}
       {\land[T_i^{i\in[1,n]}] \preceq\/T_i^{i\in[1,n]}} 
 \end{equation}
 
-Further, the following rule states that if the type $S$ is more
-specific than the types $T_i^{i\in[1,n]}$ then $S$ is more specific
-then $\land[T_i^{i\in[1,n]}]$.
+Further, the following rule states that if the type $S$ is a subtype
+of every type $T_i^{i\in[1,n]}$ then $S$ is a subtype of
+$\land[T_i^{i\in[1,n]}]$.
 
 \begin{equation}
-\label{rul:land-preceq}
+\label{rul:lbound-preceq-land}
 \dfrac{S\in\tau\quad\/T_i^{i\in[1,n]}\in\tau\quad\/S\preceq\/T_i^{i\in[1,n]}}
       {S\preceq\land[T_i^{i\in[1,n]}]}  
 \end{equation} 
 
 The opposite to the above rule, the following rule states the
-necessary conditions that must be meet so that a type $T$ is a
+necessary conditions that must be met so that a type $T$ is a
 supertype of a $\land$-type $\land[S_i^{i\in[1,n]}]$.
+% this are upper bound types
 
 \begin{equation}
-\label{rul:land-succeq}
-\dfrac{T\in\tau\quad\/S_i^{i\in[1,n]}\in\tau\quad\/S\in{S_i^{i\in[1,n]}}\quad\/S\preceq\/T}
+\label{rul:land-preceq-ubound}
+\dfrac{T\in\tau\quad\/S_i^{i\in[1,n]}\in\tau\quad\/S\in\{S_i^{i\in[1,n]}\}\quad\/S\preceq\/T}
       {\land[S_i^{i\in[1,n]}]\preceq\/T}  
 \end{equation} 
 
@@ -568,7 +574,7 @@ types. Therefore, $\lor[T_i^{i\in[1,n]}]$ is the least upper bound of
 types $T_i^{i\in[1,n]}$ \cite{Pierce1991}.
 
 \begin{equation}
-\label{rul:lor-1}
+\label{rul:lor-preceq-elems}
 \dfrac{T_i^{i\in[1,n]}\in\tau}
       {T_i^{i\in[1..n]}\preceq\/\lor[T_i^{i\in[1,n]}]}
 \end{equation}
@@ -578,7 +584,7 @@ met for a type $T$ to be a supertype of a type
 $\lor[S_i^{i\in[1,n]}]$.
 
 \begin{equation}
-\label{rul:lor-succeq}
+\label{rul:lor-preceq-ubound}
 \dfrac{T\in\tau\quad\/S_i^{i\in[1..n]}\in\tau\quad\/S_i^{i\in[1..n]}\preceq\/T}
       {\lor[S_i^{i\in[1..n]}]\preceq\/T}  
 \end{equation}
@@ -587,10 +593,15 @@ Again, the opposite rule that defines the premises that must hold so
 that $S$ is a subtype of a type $\lor[T_i^{i\in[1,n]}]$.
 
 \begin{equation}
-\label{rul:lor-preceq}
-\dfrac{S\in\tau\quad\/T_i^{i\in[1..n]}\in\tau\quad\/T\in\{T_i^{i\in[1..n]}\}\quad\/S\preceq\/T}
-      {S\preceq\lor[S_i^{i\in[1..n]}]}  
+\label{rul:lbound-preceq-lor}
+\dfrac{T\in\tau\quad\/S_i^{i\in[1..n]}\in\tau\quad\/S\in\{S_i^{i\in[1..n]}\}\quad\/T\preceq\/S}
+      {T\preceq\lor[S_i^{i\in[1..n]}]}  
 \end{equation}
+
+Note that besides checking the subtype relation between a type treated
+as a whole and some logical type, Rules
+\ref{rul:land-preceq-elems}-\ref{rul:lbound-preceq-lor} can be used to
+check the subtyping among arbitrary logical types.
 
 
 \memo{
@@ -600,8 +611,6 @@ interpretation of a triple type $T$ is the set of ground triples
 $\llbracket\/T\rrbracket_\D=\{t\ |\ t\in\T_t\land\/t:T\}$\footnote{Triple
   types $\T_t$ are presented in the following Section
   \ref{sec:triples}.}\cite{Savnik2025}.\\}
-
-\notes{Show $\preceq$ for $\land$ types related to $\land$ types (and $\lor$ types).}
 
 \memo{Put together the base types of ground identifiers using $\land$ type.}
 \memo{First, the base type of an ground identifier is the $\land$ of all base types.}
@@ -669,7 +678,7 @@ The join type is related to the $\lor$-type. Given a set of types
 $\{T_i^{i\in[1,n]}\}$, the join $J=\sqcup[T_i^{i\in[1,n]}]$ is a set
 of types $J_j^{j\in[1,m]}\in\/J$ that are the minimal upper bounds
 such that $T_i\preceq\/J_j$ for $i\in[1,n]$. On the other hand,
-Rule \ref{rul:lor-1} for the $\lor$-types states
+Rule \ref{rul:lor-preceq-elems} for the $\lor$-types states
 $T_i\preceq\lor[T_i^{i\in[1,n]}]$. However, the join type and
 $\lor$-type differ in the interpretation.
 $$\llb\lor[T_i^{i\in[1,n]}]\rrb_\D=\bigcup_{i\in[1..n]}\llb\/T_i\rrb_\D\subseteq\bigcup_{j\in[1,m]}\llb\/J_j\rrb_\D=\llb\sqcup[T_i^{i\in[1,n]}]\rrb_\D$$
@@ -949,6 +958,48 @@ of the triple type. The details are presented in Section
 
 
 
+\subsection{Triple types\label{sec:3-types}}
+
+A type of a triple $(s,p,o)\in\upsilon$ is a triple
+$(D,p,R)\in\tau$ such that $s:D$ and $o:R$ holds. The types
+$D$ and $R$ are type expressions that represent either a class or
+a $\land$-type composed of classes.
+
+The $\land$-types reflect the semantics of RDF-Schema \cite{rdfschema}
+which permits the definition of multiple domains and ranges of the
+predicate $p$. Consequently, each predicate $p$ has exactly one triple
+triple type of the form
+$$(\land[S_i^{i\in[1,n]}],p,\land[O_j^{j\in[1,m]}])$$.
+For example, if $p$ has two domains $D_1$ and $D_2$, and a single
+range type $R$ then the type corresponding to $p$ is
+$(D_1\land\/D_2,p,R)$.
+
+The interpretation of a triple type $(D,p,R)$ is defined as
+follows.
+$$\llb(D,p,R)\rrb_\Delta=\{(s,p,o)\mid\/s\in\llb\/D\rrb_\Delta\land\/o\in\llb\/R\rrb_\Delta \}$$
+
+The subtype relationship among the triples is defined on the basis of
+the subtype relationship among the classes and the $\land$-types
+defined on classes, and predicates. The following rule defines the
+relationship $\preceq$ beween two triple types.
+
+\begin{equation}
+\label{rul:3-subtype}
+\dfrac{T_1\in\tau,\ T_1=(D_1,p_1,R_1)\quad T_2\in\tau,\ T_2=(D_2,p_2,R_2)\quad\/D_1\preceq\/D_2\quad\/p_1\preceq\/p_2\quad\/R_1\preceq\/R_2}
+      {T_1\preceq\/T_2}
+\end{equation}
+
+It is obvious from the definition of the subtyping relationship among
+the triple types that
+$\llb\/T_1\rrb_\Delta\subseteq\llb\/T_2\rrb_\Delta$. Note that Rule
+\ref{rul:3-subtype} handles the $\land$-types of the subject and
+object through Rules
+\ref{rul:land-preceq-elems}-\ref{rul:land-preceq-ubound}.
+
+
+
+
+
 
 
 \subsection{Ground types of a triple\label{sec:3-ground-types}}
@@ -963,9 +1014,9 @@ of the triple type. The details are presented in Section
 The ground types of a triple $t$ are either a stored ground type, a
 minimal ground type, or a join ground type. The stored ground type
 includes types that are stored in a KG. The minimal ground type then
-consists of solely the minimal ground types. All valid types can be
-derived from the set of minimal ground types. Finally, the join type
-is the conjunction of minimal upper bound types \cite{Knudstorp2024}.
+consists of solely the minimal types from the stored ground
+types. Finally, the join ground type is the conjunction of minimal
+upper bound types \cite{Knudstorp2024}.
  
 A ground type of an individual identifier $I$ is a class $C$ related
 to $I$ by one-step type relationship $:_\darr$, as presented by Rule
