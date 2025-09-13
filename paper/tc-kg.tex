@@ -40,8 +40,13 @@
 \newcommand{\Ot}{{\cal Ot}} 
 \newcommand{\I}{{\cal I}} 
 \newcommand{\Ii}{{\cal I}_i} 
-\newcommand{\Ic}{{\cal I}_c} 
+\newcommand{\Ic}{{\cal I}_i} 
 \newcommand{\Ip}{{\cal I}_p}
+\newcommand{\V}{{\cal V}} 
+\newcommand{\Vl}{{\cal V}_l} 
+\newcommand{\Vi}{{\cal V}_i} 
+\newcommand{\Vt}{{\cal V}_t} 
+\newcommand{\Vp}{{\cal V}_p}
 \newcommand{\T}{{\cal T}}
 \newcommand{\Ti}{{\cal T}_i}
 \newcommand{\Tt}{{\cal T}_t}
@@ -75,7 +80,7 @@
 
 \begin{document}
 
-\title{Typing knowledge graphs}
+\title{On typing knowledge graphs}
 
 \author{Iztok Savnik\inst{1}} 
 
@@ -209,32 +214,52 @@ This section defines a knowledge graph as a RDF graph \cite{rdf} using
 RDF-Schema \cite{rdfschema} for the representation of the structural
 part of a knowledge base. 
 
-Let $I$ be the set of URI-s, $B$ be the set of blanks and $L$ be the
-set of literals. Let us also define sets $S = I\cup\/B$, $P = I$, and
+Let $I$ be a set of URI-s, $B$ be a set of blanks and $L$ be a set of
+literals. Let us also define sets $S = I\cup\/B$, $P = I$, and
 $O = I\cup\/B\cup\/L$. A \emph{RDF triple} is a triple
 $(s,p,o)\in\/S\times\/P\times\/O$. A \emph{RDF graph}
 $g\subseteq\/S\times\/P\times\/O$ is a set of triples. Set of all
 graphs will be denoted as $G$.
 
+The complete set of triples of a RDF graph is in the text denoted as
+$\Delta$. We use $\Delta$ when we want to refer to the original set of
+KG triples and not the data model of a KG presented in the following
+Section.
+
 %We say that RDF graph $g_1$ is \emph{sub-graph} of $g_2$, denoted
 %$g_1 \sqsubseteq g_2$, if all triples in $g_1$ are also triples from
 %$g_2$. 
 
+
+
+
+
+\subsection{A data model of a KG}
+
 To abstract away the details of the RDF data model we unify the
 representation of knowledge graph by separating solely between the
-identifiers and triples. In view of the above formal representation of
-RDF triples, the complete set of identifiers is
-$\I=I\cup\/B\cup\/L$. The identifiers from $\I$ are classified into
-the sets including literals $\I_l$, individual (ground) identifiers
-$\I_i$, class identifiers $\I_c$, predicate identifiers $\I_p$.
+identifiers and triples. The identifiers include the set of individual
+identifiers and the set of class identifiers. The triples inlcude the
+set of ground triples and the set of triple types.
 
-The complete set of triples, referred to as $\T$, is classified into
-the sets of individual (ground) triples $\T_i$, triple types $\T_t$
-and abstract triples $\T_a$. The individual triples include solely the
-individual identifiers $\I_i$ and predicates $\I_p$. The triple types
-include only class identifiers $\I_c$ and predicates. Finally, the
-abstract triples link individual and class identifiers in single
-triples.
+%In view of the above formal representation of RDF triples, the
+%complete set of identifiers is $\I=I\cup\/B\cup\/L$. The identifiers
+%from $\I$ are classified into the sets including literals $\I_l$,
+%individual (ground) identifiers $\I_i$, class identifiers $\I_c$,
+%predicate identifiers $\I_p$.
+
+However, since typing of a KG is based on the separation between the
+values and the types we use the following classification of
+identifiers and triples. The set of values $\V$ includes the
+individual identifiers $\V_i$ and the individual (ground) triples
+$\V_t$. The set of types $\T$ comprises the class identifiers $\T_i$,
+i.e. types of individual identifiers $\V_i$, and the triple types
+$T_t$, i.e. the types of individual triples $\V_t$.
+
+...
+
+
+
 
 
 
@@ -296,27 +321,33 @@ given type is checked by the rules.
 
 
 
+
+
+
 \section{Typing identifiers}
 
-The set of identifiers $\I$ include ground identifiers $\I_g$, class
-identifiers $\I_c$, and the predicates (properties) $\I_p$ that are
-are both ground identifiers, since they are instances of rdf:Property,
-and similar to class identifiers, since they act as types and form an
-ontology of predicates.
+%\memo{
+%The set of identifiers $\I$ include ground identifiers $\I_g$, class
+%identifiers $\I_c$, and the predicates (properties) $\I_p$ that are
+%are both ground identifiers, since they are instances of rdf:Property,
+%and similar to class identifiers, since they act as types and form an
+%ontology of predicates.}
 
-In this section we present typing of ground identifiers. The types of
-ground identifiers are further used for typing ground triples in
-Section \ref{sec:triples}. However, before presenting the types of
-identifiers, we introduce the intersection and union types that are
-used for the description of the types of identifiers in the following
-Section \ref{sec:intsc-union}. Typing of literals is described in
-Section \ref{sec:literals}. The rules for deriving the stored types of
-ground identifiers are given in Section
-\ref{sec:idents-stored}. Finally, the sub-typing relation $\preceq$ is
-defined for the class identifiers and the complete types of ground
-identifiers are presented in Section \ref{sec:idents-typing}.
+In this section we present the basic typing of ground identifiers
+$\V_i$. The rules for typing ground identifiers are further used for
+typing ground triples $\V_t$ in Section \ref{sec:triples}.  Typing of
+literals $\V_l$ is described in Section \ref{sec:literals}. The rules
+for deriving the stored types of ground identifiers are given in
+Section \ref{sec:idents-stored}. Finally, the sub-typing relation
+$\preceq$ is defined for the class identifiers $\T_i$ and the types of
+ground identifiers are presented in Section \ref{sec:idents-typing}.
 
-%\notes{Details.}
+%However, before presenting the
+%types of identifiers, we introduce the intersection and union types
+%that are used for the description of the types of identifiers in the
+%following Section \ref{sec:intsc-union}.
+
+% \notes{Details.}
 %\notes{1. First define base type of identifiers $:_1$ and stored subtyping relationship $\preceq_1$.}
 %\notes{2. From the basis define the indent typing $:$ and subtyping rel $\preceq$ among identifiers.}
 %\notes{3. Include the link between subtyping and typing.}
@@ -330,38 +361,51 @@ identifiers are presented in Section \ref{sec:idents-typing}.
 
 \subsection{Typing literals\label{sec:literals}}
 
-Literals are the values of an atomic type. The atomic types are in RDF
-provided by the RDF-Schema dictionary \cite{rdfschema}. RDF-Schema
-defines a list of atomic types, such as xsd:integer, xsd:string, or
-xsd:boolean.
+Literal values $\V_l\subseteq\V_i$ are the instances of literal types
+$\T_l\subseteq\T_i$. The literal types are in RDF provided by the
+RDF-Schema dictionary \cite{rdfschema}. RDF-Schema defines a list of
+literal types, such as xsd:integer, xsd:string, or xsd:boolean.
 
-Typing of the atomic types is determined by the following rule.
+The literals are composed of literal values and literal types. For
+example, the literal
+"literal"\textasciicircum\textasciicircum\/xsd:string includes the
+literal value "365" and a type xsd:integer. Typing of literals is
+defined by the following rule.
 
 \begin{equation}
-\dfrac{L\in\I_l\quad T\in\I_c,\quad \text{"L"\textasciicircum\textasciicircum\/T}\in\Lt}
+\dfrac{L\in\V_l\quad T\in\T_l\quad \text{"L"\textasciicircum\textasciicircum\/T}\in\Delta}
       {L:T}  
 \end{equation}
 
 The rule states that a literal value $L$ is of a type $T$ if a literal
-"L"\textasciicircum\textasciicircum\/T is an element of the set of
-literals $\Lt$. A literal "L"\textasciicircum\textasciicircum\/T
-includes a literal value $L$ and a literal type $T$ referencing a type
-from the RDF-Schema dictionary. As an example, the literal
-"365"\textasciicircum\textasciicircum\/xsd:integer includes the
-literal value 365 and its type xsd:integer.
+"L"\textasciicircum\textasciicircum\/T is an element of a KG
+$\Delta$. A literal type $T$ is referencing a type from the RDF-Schema
+dictionary.
 
 
 
 
 
-\subsection{Stored typing and subtyping of identifiers\label{sec:idents-stored}}
 
-The expression $I:_\darr\/C$ states that a class $C$ is a type of an
-individual identifier $I$. The expression $I_1\preceq_\darr\/I_2$
-defines the subtype (sub-class) relationship between the class
-identifiers $I_1$ and $I_2$. The index '$\darr$' in relations
-$:_\darr$ and $\preceq_\darr$ denotes that the relations are stored in
-a database---we refere to them as \emph{one-step} typing and subtyping
+\subsection{Ground typing and subtyping of identifiers\label{sec:idents-stored}}
+
+The typing expression $V:_\darr\/T$ is a \emph{ground typing} relation
+$:_\darr$ that links a value $V\in\V$ to a ground type $T\in\T$. In
+this section we deal with the identifiers $I\in\V_i$ which are the
+values of type $T\in\T_i$. The ground types of identifiers are types
+that are directly linked to the ground identifiers via stored
+(explicit) typing relation in the form $(I,rdf:type,T)\in\Delta$. The
+expression $I:_\darr\/T$, where $I\in\V_i$ and $T\in\T_i$, states that
+a class identifier $T$ is a ground type of an individual identifier
+$I$.
+
+The subtyping expression $T_1\preceq_\darr\/T_2$ defines a subtype
+relationship between the types $T_1$ and $T_2$ both from $\T$. In the
+case we deal with the identifiers, the relation
+$T_1\preceq_\darr\/T_2$ denotes the subclass relations since
+$T_1,T_2\in\T_i$. The relation $\preceq_\darr$ is a ground subtyping
+relation that is stored in $\Delta$. We refer to the relations
+$:_\darr$ and $\preceq_\darr$ as \emph{one-step} typing and subtyping
 relations. Such notation allows us to address differently the
 \emph{stored} and the \emph{derived} types of the graph database
 schema.
@@ -378,68 +422,72 @@ the predicate rdf:type.
 
 \begin{equation}
 \label{rul:ident-1step-type}
-\dfrac{I\in\Ii\quad I_c\in\Ic\quad (I,\text{rdf:type},I_c)\in \D}
-      {I :_\darr I_c}
+\dfrac{I\in\V_i\quad T\in\T_i\quad (I,\text{rdf:type},T)\in\D}
+      {I :_\darr T}
 \end{equation}
 
 The individual entity $I$ can have more than one stored types. By
-using a generative interpretation, Rule \ref{rul:ident-1step-type}
-synthesizes all types $I_c$ such that $I:I_c$. The rule can be used
-either in some other rule that employ it as a generator, or we can
-update above rule to generate a $\land$ type including all the types
-of $I$ as presented in Section \ref{sec:intsc-union}.
+using Rule \ref{rul:ident-1step-type} as a generator, it synthesizes
+all types $T_j^{j\in[1,n]}$ such that $I:_\darr\/T_j^{j\in[1,n]}$.
 
-A one-step subtyping relationship $\preceq_\darr$ is defined by means
-of the RDF predicate rdfs:sub\-ClassOf in the following rule.
+If we want to obtain all valid ground types of $I$, the rule can be
+used either in some other rule that employs it as a generator, or we
+can update above rule to generate a $\land$ type including all the
+types of $I$ as presented in Section \ref{sec:intsc-union}.
+
+The one-step subtyping relationship $\preceq_\darr$ is defined on
+classes by using the RDF predicate rdfs:sub\-ClassOf as follows.
 
 \begin{equation}
-\dfrac{I_1,I_2\in\Ic \quad (I_1,\text{rdfs:subClassOf},I_2)\in \D}
-{I_1 \preceq_\darr\/I_2}
+\label{rul:ident-1step-subtype}
+\dfrac{C_1,C_2\in\T_i \quad (C_1,\text{rdfs:subClassOf},C_2)\in\D}
+{C_1 \preceq_\darr\/C_2}
 \end{equation}
 
 The rule for the definition of the one-step subtyping relationship
 $\preceq_\darr$ is based on the predicate rdfs:subPropertyOf.
 
 \begin{equation}
-\dfrac{I_1,I_2\in\Ip \quad (I_1,\text{rdfs:subPropertyOf},I_2)\in \D}
-      {I_1\preceq_\darr\/I_2}
+\dfrac{P_1,P_2\in\T_p \quad (P_1,\text{rdfs:subPropertyOf},P_2)\in\D}
+      {P_1\preceq_\darr\/P_2}
 \end{equation}
 
-
+The predicates have in the above rule the role of types in the sense
+that they represent the names of the binary relations. 
 
 
 
 \subsection{Typing and subtyping identifiers\label{sec:idents-typing}}
 
-The one-step relationship $\preceq_\darr$ is now extended with the
-reflectivity, transitivity and asymmetry to obtain the relationship
-$\preceq$. Relation $\preceq$ forms a partial ordering of class
-identifiers. The ground typing relation $:_\darr$ is then extended
-with the \emph{rule of subsumption}, presented as Rule
-\ref{rul:typing-subsumption}, to obtain a typing relation $:$.
+The one-step relationship $\preceq_1$ is extended with the
+reflectivity, transitivity and antisymmetry to obtain the subtyping
+relationship $\preceq$. The relation $\preceq$ forms a partial ordering of
+class identifiers. The ground typing relation $:_1$ is then
+extended with the \emph{rule of subsumption} presented as Rule
+\ref{rul:typing-subsumption} to obtain a typing relation $:$.
 
-First, the one-step relationship $\preceq_\darr$ is generalized to the
-relationship $\preceq$ defined over class identifiers $\I_c$.
+First, the one-step relationship $\preceq_1$ is generalized to the
+relationship $\preceq$ defined over class identifiers $\T_i$.
 
 \begin{equation}
 \label{rul:Ic-extended}
-\dfrac{I_1,I_2\in\I_c \quad I_1\preceq_\darr I_2}
+\dfrac{I_1,I_2\in\T_i \quad I_1\preceq_1\/I_2}
       {I_1 \preceq I_2}
 \end{equation}
 
 Next, the subtyping relationship $\preceq$ is reflexive.
 
 \begin{equation}
-\label{rul:Ic-reflexivity}
-\dfrac{I_c\in \I_c}
-      {I_c\preceq\/I_c}
+\label{rul:Ti-reflexivity}
+\dfrac{I\in\T_i}
+      {I=I}
 \end{equation}
 
 The subtype relationship is also transitive. 
 
 \begin{equation}
-\label{rul:Ic-transitivity}
-\dfrac{I_1,I_2,I_3\in\I_c \quad I_1\preceq\/I_2 \quad I_2\preceq\/I_3}
+\label{rul:Ti-transitivity}
+\dfrac{I_1,I_2,I_3\in\T_i\quad\/I_1\preceq\/I_2\quad\/I_2\preceq\/I_3}
       {I_1\preceq\/I_3}   
 \end{equation}
 
@@ -447,13 +495,13 @@ Finally, the subtype relationship is asymmetric which is expressed
 using the following rule. 
 
 \begin{equation}
-\label{rul:Ic-antisymmetry}
-\dfrac{I_1,I_2\in\I_c \quad I_1\preceq\/I_2 \quad I_2\preceq\/I_1}
+\label{rul:Ti-antisymmetry}
+\dfrac{I_1,I_2\in\T_i \quad I_1\preceq\/I_2 \quad I_2\preceq\/I_1}
       {I_1=I_2}   
 \end{equation}
 
 As a consequence of the rules
-\ref{rul:Ic-reflexivity}-\ref{rul:Ic-antisymmetry} the relation
+\ref{rul:Ti-reflexivity}-\ref{rul:Ti-antisymmetry} the relation
 $\preceq$ is a poset.
 
 Knowledge graphs include a special class $\top$ that represents the
@@ -463,17 +511,17 @@ following rule specifys that all class identifiers are more specific
 than $\top$.
 
 \begin{equation}
-\dfrac{\forall\/S\in\I_c}
+\dfrac{\forall\/S\in\T_i}
       {S\preceq\top}
 \end{equation}
 
 %\subsection{Typing of identifiers.}
-The stored typing relation $:_\darr$ is now extended to the typing
+The one-step typing relation $:_1$ is now extended to the typing
 relation $:$ that takes into account the subtyping relation $\preceq$.
 The following rule states that a stored type is a type.
 
 \begin{equation}
-\dfrac{I\in\I_i \quad C\in\I_c \quad I:_\darr\/C}
+\dfrac{I\in\V_i\quad\/C\in\T_i\quad\/I:_1\/C}
       {I:C}
 \end{equation}
 
@@ -483,7 +531,7 @@ by adding a typing rule called \emph{rule of subsumption}
 
 \begin{equation}
 \label{rul:typing-subsumption}
-\dfrac{I\in\I_i\quad S\in\I_c\quad I:S \quad S\preceq\/T}
+\dfrac{I\in\T_i\quad\/S,T\in\T_i\quad\/I:S\quad\/S\preceq\/T}
       {I:T}    
 \end{equation}
 
@@ -969,11 +1017,15 @@ The $\land$-types reflect the semantics of RDF-Schema \cite{rdfschema}
 which permits the definition of multiple domains and ranges of the
 predicate $p$. Consequently, each predicate $p$ has exactly one triple
 triple type of the form
-$$(\land[S_i^{i\in[1,n]}],p,\land[O_j^{j\in[1,m]}])$$.
-For example, if $p$ has two domains $D_1$ and $D_2$, and a single
-range type $R$ then the type corresponding to $p$ is
-$(D_1\land\/D_2,p,R)$.
+$$(\land[S_i^{i\in[1,n]}],p,\land[O_j^{j\in[1,m]}]).$$
 
+\begin{example}
+  If $p$ has two domains $D_1$ and $D_2$, and a single
+range type $R$ then the type corresponding to $p$ is
+$(D_1\land\/D_2,p,R)$. $\finbox$
+\end{example}
+
+\noindent
 The interpretation of a triple type $(D,p,R)$ is defined as
 follows.
 $$\llb(D,p,R)\rrb_\Delta=\{(s,p,o)\mid\/s\in\llb\/D\rrb_\Delta\land\/o\in\llb\/R\rrb_\Delta \}$$
@@ -1362,7 +1414,6 @@ minimum is presented in Section \ref{sec:alg-MIN}.
 \dfrac{t\in\upsilon\quad\vdasharr\/t:_\uarr\lor[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
 {\vdasharr\/t:_{\Darr}\lor\/[S_j^{j\in[1,m]}]}
 \end{equation}
-
 
 \memo{
 \notes{If $p$ inherits from multiple $p'\succeq\/p$, then the above rule generates multiple types. Explain.}
