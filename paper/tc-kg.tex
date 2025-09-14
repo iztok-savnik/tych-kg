@@ -80,7 +80,7 @@
 
 \begin{document}
 
-\title{On typing knowledge graphs}
+\title{DRAFT! \\ On typing knowledge graphs}
 
 \author{Iztok Savnik\inst{1}} 
 
@@ -252,12 +252,31 @@ However, since typing of a KG is based on the separation between the
 values and the types we use the following classification of
 identifiers and triples. The set of values $\V$ includes the
 individual identifiers $\V_i$ and the individual (ground) triples
-$\V_t$. The set of types $\T$ comprises the class identifiers $\T_i$,
-i.e. types of individual identifiers $\V_i$, and the triple types
-$T_t$, i.e. the types of individual triples $\V_t$.
+$\V_t$. To be able to refer to the specific subsets of $\V_i$ in the
+rules we also introduce the set $\V_l\subseteq\V_i$, which denotes a
+set of literal valus, and the set $\V_p\subseteq\V_i$ that refers to
+the set of predicates from a KG. Finally, a set $\T_p\in\T_i$ standes
+for all predicates of a KG that now have the role of types.
 
-...
+The set of valid types $\T$ of a KG comprises the class identifiers
+$\T_i$, i.e. types of individual identifiers $\V_i$, and the triple
+types $T_t$, i.e. the types of individual triples $\V_t$.
 
+The set of class identifiers $\T_i$ related by subclass relation is a
+poset forming an ontology of classes. Similarly also predicates, now
+in the role of types, are ordered in a poset. The meaning oof class
+identifiers is established by their interpretations. The
+interpretatation of a class identifier $c$ comprises the instances of
+a given class $c$ es well as the instances of all $c$'s sub-classes.
+
+The individual triples include solely the individual identfifiers
+$\V_i$ in places of S and O, and predicates $\V_p$ in the place of P
+component of a triple. The types of individual triples are product
+types $S*p*O$ where $S,O\in\T_i$ and $p\in\T_p$. The product types are
+in our data model of a KG written as a triple $(S,p,O)$. The triple
+types ordered by a subtype relation form a poset. The subtype relation
+among the triple types in defined on the basis of the subtype relation
+among the class identifiers.
 
 
 
@@ -265,23 +284,24 @@ $T_t$, i.e. the types of individual triples $\V_t$.
 
 \subsection{Typing rule language}
 
+\memo{
 In this paper we define typing of a data language used to represent an
 ABOX \cite{Brachman2004KnowledgeRR} of a knowledge base given in a
 form of a knowledge graph. The data language specifys the assertions
 in the form of ground triples (ABOX) and the schema of assertions as
 the types of triples (TBOX). The ground triples are the instances of
-the triple types that altogether define the schema of a KG.
+the triple types that altogether define the schema of a KG.}
 
 In comparison to the data structures used in programming languages
 \cite{Pierce2002,Hindley1997}, the conceptual schema of a KG is
 complex in the sense that any data structure can be represented as a
-graph. First, a KG graph includes an ontology of classes and
+graph. First, a KG includes an ontology of classes and
 properties. Second, typing of ground identifiers is stored in a KG,
 i.e., each ground identifier has one or more types represented as
 class identifiers. Further, similarly to the \emph{roles}
 \cite{Brachman1985} of a knowledge base, the predicates of a KG are
 treated as objects that are included in a classification hierarchy of
-properties. For each property we have the definition of one or more
+predicates. For each predicate we have the definition of one or more
 triple types stored in a KG. Finally, the predicates are inherited
 through the classification hierarchy of classes and predicates.
 
@@ -389,26 +409,24 @@ dictionary.
 
 \subsection{Ground typing and subtyping of identifiers\label{sec:idents-stored}}
 
-The typing expression $V:_\darr\/T$ is a \emph{ground typing} relation
-$:_\darr$ that links a value $V\in\V$ to a ground type $T\in\T$. In
-this section we deal with the identifiers $I\in\V_i$ which are the
-values of type $T\in\T_i$. The ground types of identifiers are types
-that are directly linked to the ground identifiers via stored
-(explicit) typing relation in the form $(I,rdf:type,T)\in\Delta$. The
-expression $I:_\darr\/T$, where $I\in\V_i$ and $T\in\T_i$, states that
-a class identifier $T$ is a ground type of an individual identifier
-$I$.
+The typing expression $V:_1\/T$ is a \emph{ground typing} relation
+$:_1$ that links a value $V\in\V$ to a ground type $T\in\T$. The
+ground typing relation is a one-step typing relation based on typing
+stored in a KG.
 
-The subtyping expression $T_1\preceq_\darr\/T_2$ defines a subtype
-relationship between the types $T_1$ and $T_2$ both from $\T$. In the
-case we deal with the identifiers, the relation
-$T_1\preceq_\darr\/T_2$ denotes the subclass relations since
-$T_1,T_2\in\T_i$. The relation $\preceq_\darr$ is a ground subtyping
-relation that is stored in $\Delta$. We refer to the relations
-$:_\darr$ and $\preceq_\darr$ as \emph{one-step} typing and subtyping
-relations. Such notation allows us to address differently the
-\emph{stored} and the \emph{derived} types of the graph database
-schema.
+In this section we deal with the identifiers $I\in\V_i$ which are the
+values of type $T\in\T_i$. The ground types are directly linked to the
+ground identifiers via a stored typing relation in the form
+$(I,rdf:type,T)\in\Delta$. The expression $I:_1\/T$ states that a
+class identifier $T$ is a ground type of an individual identifier $I$.
+
+The subtyping expression $T_1\preceq_1\/T_2$ defines a subtype
+relationship between the types $T_1$ and $T_2$. In the case we deal
+with the identifiers, the relation $T_1\preceq_1\/T_2$ denotes the
+subclass relations since $T_1,T_2\in\T_i$. The relation $\preceq_1$ is
+a one-step relation that is stored in $\Delta$. Note that a unique
+notation for gound typing allows us to address differently the
+\emph{stored} and the \emph{derived} types of ta KG.
 
 %\notes{Partial ordering defined with stored schema triples in a database.}
 %\notes{The relationships that poset $\preceq_1$ covers are rdfs:subClassOf and rdfs:subPropertyOf. }
@@ -417,39 +435,39 @@ schema.
 
 \memo{Oportunity to introduce ``mixed'' objects including ground and schema components.}
 
-The rule for the one-step typing relation $:_\darr$ is defined using
-the predicate rdf:type.
+The rule for the one-step typing relation $:_1$ is defined using the
+predicate rdf:type.
 
 \begin{equation}
 \label{rul:ident-1step-type}
 \dfrac{I\in\V_i\quad T\in\T_i\quad (I,\text{rdf:type},T)\in\D}
-      {I :_\darr T}
+      {I :_1 T}
 \end{equation}
 
 The individual entity $I$ can have more than one stored types. By
 using Rule \ref{rul:ident-1step-type} as a generator, it synthesizes
-all types $T_j^{j\in[1,n]}$ such that $I:_\darr\/T_j^{j\in[1,n]}$.
+all types $T_j^{j\in[1,n]}$ such that $I:_1\/T_j^{j\in[1,n]}$.
 
 If we want to obtain all valid ground types of $I$, the rule can be
 used either in some other rule that employs it as a generator, or we
-can update above rule to generate a $\land$ type including all the
+can update above rule to generate a $\land$-type including all the
 types of $I$ as presented in Section \ref{sec:intsc-union}.
 
-The one-step subtyping relationship $\preceq_\darr$ is defined on
+The one-step subtyping relationship $\preceq_1$ is defined on
 classes by using the RDF predicate rdfs:sub\-ClassOf as follows.
 
 \begin{equation}
 \label{rul:ident-1step-subtype}
 \dfrac{C_1,C_2\in\T_i \quad (C_1,\text{rdfs:subClassOf},C_2)\in\D}
-{C_1 \preceq_\darr\/C_2}
+{C_1 \preceq_1\/C_2}
 \end{equation}
 
 The rule for the definition of the one-step subtyping relationship
-$\preceq_\darr$ is based on the predicate rdfs:subPropertyOf.
+$\preceq_1$ is based on the predicate rdfs:subPropertyOf.
 
 \begin{equation}
 \dfrac{P_1,P_2\in\T_p \quad (P_1,\text{rdfs:subPropertyOf},P_2)\in\D}
-      {P_1\preceq_\darr\/P_2}
+      {P_1\preceq_1\/P_2}
 \end{equation}
 
 The predicates have in the above rule the role of types in the sense
