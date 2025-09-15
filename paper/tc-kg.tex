@@ -111,6 +111,36 @@
 
 \section{Introduction}
 
+A knowledge graph (abbr. KG) includes a data and knowledge
+representation language in the form of a graph. It is the
+dictionaries, such as RDF-Schema \cite{rdfschema}, which attaches
+meanings to the edges of a graph, turning a graph into a language for
+the representation of data and knowledge. In comparison to the data
+structures used in programming languages
+\cite{Pierce2002,Hindley1997}, the conceptual schema of a KG is
+complex in the sense that any data structure can be represented as a
+graph. Let us depict some of the features of the data and knowledge
+representation language of a KG.
+
+First, a KG includes taxonomies of classes and properties
+\cite{Baader2002}. Second, typing of ground identifiers, as well as
+typing of the predicates with the domain and range types are stored in
+a KG. Further, similarly to the \emph{roles} \cite{Brachman1985} of a
+knowledge base, the predicates of a KG are treated as objects that are
+included in a taxonomy of predicates. For each predicate we have the
+definition of one or more triple types stored in a KG. Finally, the
+predicates are inherited through the taxonomy of classes, and, from
+the other perspective, the domain and range types of the predicates
+are inherited through the hierarchy of predicates.
+
+Furthermore, the data and KR language of a KG, which is based on RDF
+and RDF-Schema \cite{rdf,rdfschema}, does not include variables as in
+the case for the expressions of a programming language. All
+information needed for typing a ground triple is in a KG.
+
+...
+
+\memo{
 %% Intro to KGs... what kind of language is it?
 \notes{Introduction to knowledge graphs (KG)... \cite{Hogan2022,Ehrlinger2016}.}
 \notes{KGs are becoming knowledge bases (KB)...}
@@ -172,7 +202,7 @@ a program. The type-checking problem \\
 \notes{Second, we can select appropriate user-defined triple type $T$ such that the components of $T$ are the types of the components of the ground triple we are checking.}
 \nnotes{The components of the user-defined triple types are noramlly from the top of the class ontology.}
 \nnotes{Type checking of a ground triple is converted to checking the relationships between the ground type and user-defined type of a triple.} 
-\notes{In all contexts we want to determine \emph{minimal type} of a triple, having the smallest interpretation.}
+\notes{In all contexts we want to determine \emph{minimal type} of a triple, having the smallest interpretation.}}
 
 % differences to classical TC and tying data (structures)
 %\notes{On differences of type-checking KGs to classical type-checking problem.}
@@ -249,34 +279,36 @@ set of ground triples and the set of triple types.
 %predicate identifiers $\I_p$.
 
 However, since typing of a KG is based on the separation between the
-values and the types we use the following classification of
+values and the types, we use the following classification of
 identifiers and triples. The set of values $\V$ includes the
 individual identifiers $\V_i$ and the individual (ground) triples
 $\V_t$. To be able to refer to the specific subsets of $\V_i$ in the
-rules we also introduce the set $\V_l\subseteq\V_i$, which denotes a
-set of literal valus, and the set $\V_p\subseteq\V_i$ that refers to
-the set of predicates from a KG. Finally, a set $\T_p\in\T_i$ standes
-for all predicates of a KG that now have the role of types.
+rules, we also introduce the set $\V_l\subseteq\V_i$, which denotes a
+set of literal values, and the set $\V_p\subseteq\V_i$ that refers to
+the set of predicates from a KG. Finally, a set $\T_p\in\T_i$ stands
+for all predicates of a KG that now have the role of types. Note that
+predicates are treated both as values and as types.
 
-The set of valid types $\T$ of a KG comprises the class identifiers
-$\T_i$, i.e. types of individual identifiers $\V_i$, and the triple
-types $T_t$, i.e. the types of individual triples $\V_t$.
+The set of all valid types $\T$ of a KG comprises the class
+identifiers $\T_i$, i.e. types of individual identifiers $\V_i$, and
+the triple types $\T_t$, i.e. the types of individual triples $\V_t$.
 
 The set of class identifiers $\T_i$ related by subclass relation is a
-poset forming an ontology of classes. Similarly also predicates, now
-in the role of types, are ordered in a poset. The meaning oof class
+poset forming a taxonomy of classes. Similarly also predicates, now
+in the role of types, are ordered in a poset. The meaning of class
 identifiers is established by their interpretations. The
 interpretatation of a class identifier $c$ comprises the instances of
-a given class $c$ es well as the instances of all $c$'s sub-classes.
+a given class $c$ es well as the instances of all $c$'s sub-classes. 
 
-The individual triples include solely the individual identfifiers
+The individual triples include solely the individual identfifiers from
 $\V_i$ in places of S and O, and predicates $\V_p$ in the place of P
 component of a triple. The types of individual triples are product
 types $S*p*O$ where $S,O\in\T_i$ and $p\in\T_p$. The product types are
 in our data model of a KG written as a triple $(S,p,O)$. The triple
-types ordered by a subtype relation form a poset. The subtype relation
-among the triple types in defined on the basis of the subtype relation
-among the class identifiers.
+types are ordered by a subtype relation to form a poset. The subtype
+relation among the triple types is defined on the basis of the subtype
+relation among the classes and predicates. A more detailed formal
+definition of a KG is given in \cite{Savnik2025}.
 
 
 
@@ -292,52 +324,37 @@ in the form of ground triples (ABOX) and the schema of assertions as
 the types of triples (TBOX). The ground triples are the instances of
 the triple types that altogether define the schema of a KG.}
 
-In comparison to the data structures used in programming languages
-\cite{Pierce2002,Hindley1997}, the conceptual schema of a KG is
-complex in the sense that any data structure can be represented as a
-graph. First, a KG includes an ontology of classes and
-properties. Second, typing of ground identifiers is stored in a KG,
-i.e., each ground identifier has one or more types represented as
-class identifiers. Further, similarly to the \emph{roles}
-\cite{Brachman1985} of a knowledge base, the predicates of a KG are
-treated as objects that are included in a classification hierarchy of
-predicates. For each predicate we have the definition of one or more
-triple types stored in a KG. Finally, the predicates are inherited
-through the classification hierarchy of classes and predicates.
+We do not use standard typing rule language
+\cite{Pierce2002,Hindley1997} that includes a context $\Gamma$ where
+the types of the variables are stored. We use a meta-language that is
+rooted in first-order logic (abbr., FOL) but similar to the one used by
+Pierce in \cite{Pierce2002} for the representation of records and
+subtyping.
 
-Furthermore, the data language of a KG, which is based on RDF and
-RDF-Schema \cite{rdf,rdfschema}, does not include variables as in
-the case for the expressions of a programming language. All
-information needed for typing a ground triple is available from a KG.
-
-For the above presented reasons, we do not use standard typing rule
-language \cite{Pierce2002,Hindley1997} that includes the context
-$\Gamma$ where the types of the variables are stored. We use a
-meta-language that is rooted in first order logic (abbr. FOL). The
-rules are composed of a set of premises and a conclusion. The premises
-can be expressions stating the membership of an object, typing
-judgements in the form $o:T$, or expressions in the FOL. The
-expressions of FOL can express complex premises such as the
-requirements for the LUB and GLB triple types. The conclusion part of
-the rule is a typing or subtyping judgment.
+The rules are composed of a set of premises and a conclusion. The
+premises can be expressions stating the set membership of an object,
+typing and subtyping judgements, or expressions in the FOL including
+the previous two forms. The expressions of FOL can express complex
+premises such as the requirements for the LUB and GLB triple
+types. The conclusion part of the rule is a typing or subtyping
+judgment.
 
 The symbols used in a rule are grounded by stating their membership in
-a knowledge graph through the sets of identifiers ($\I_i$ and $\I_c$)
-and triples ($\T_i$ and $\T_t$) defined in Section \ref{sec:kg}. When
-we write $O\in\/S$ then we mean the \emph{existence} of $O$ in a set
-$S$. We use universal quantification $\forall\/O\in\/S,\ p(O)$ when we
-state that some property $p(O)$ holds for all objects $O$ from $S$.
+the sets of identifiers ($\V$, $\V_i$ and $\V_t$) and triples ($\T$,
+$\T_i$ and $\T_t$) defined in Section \ref{sec:kg}. When we write
+$O\in\/S$ then we mean the \emph{existence} of $O$ in a set $S$. We
+use universal quantification $\forall\/O\in\/S,\ p(O)$ when we state
+that some property $p(O)$ holds for all objects $O$ from $S$. The
+premises of the rule are treated from the left to the right. The
+quantification of the symbols binds the symbols up to the last premise
+unless defined differently by the parentheses.
 
 Similar to \cite{Dunfield2021}, we differ between two interpretations
 of rules. First, the \emph{generator} view of rules is the forward
-interpretation where rules sythesize the types from the types derived
-by premises. The premises of the rule are treated from the left to the
-right. The quantification of the symbols binds the symbols up to the
-last premise unless defined differently by the parentheses. Second,
-the \emph{type-checking} view of the rules is the backward
-interpretation. Given the symbol and its type, the construction of a
-given type is checked by the rules.
-
+interpretation where rules infer the types from the types derived by
+premises. Second, the \emph{type-checking} view of the rules is the
+backward interpretation. Given the expression and its type, the rules
+are applied backwards to verify that the expression has that type.
 
 
 
