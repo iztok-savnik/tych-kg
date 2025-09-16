@@ -94,7 +94,7 @@
 \maketitle
 
 \begin{abstract}
-...
+  
   \keywords{knowledge graphs \and type systems.}
 \end{abstract}
 
@@ -138,7 +138,37 @@ and RDF-Schema \cite{rdf,rdfschema}, does not include variables as in
 the case for the expressions of a programming language. All
 information needed for typing a ground triple is in a KG.
 
-...
+... \\
+
+Typing a knowledge graph requires a framework for the definition of
+rules, that is different from classical typing of programming
+languages. While typing in programming languages is based on the
+syntactical composition of a program, typing of a knowledge graph is
+partially guided by a procedure.
+
+The syntactic structures of a KG include typed identifiers, tuples
+(triples), $\land$ and $\lor$-types, and ontologies of classes and
+predicates. The latter are hard to grasp structurally; rather, posets
+can be manipulated with algebraic operations.
+
+The paper presents a study of typing a single ground triple $t$. We
+propose to infer first the ground type of $t$ using the stored typing
+of identifiers. The ground type is minimized and then generalized to
+the minimal upper bound (MUB) type. The MUB type is an appropriate
+starting point to search for the triple types from a KG conceptual
+schema.
+
+The triple type of $t=(s,p,o)$ must be selected from the triple types
+provided by a conceptual schema stored in a KG. Using the predicate
+$p$ as the starting point, we select first all valid triple types
+including a predicate $p$ or one of $p$'s super-predicates. The set of
+selected triple types is minimized to obtain a set of minimal and
+unrelated triple types, the candidates for the type of $t$.
+
+The appropriate candidate triple types are selected by relating the
+candidates to the MUB ground type by means of a subtype relation. The
+disjunctively bound candidate triple types related to the MUB ground
+type via subtype relation form the final type of~$t$.
 
 \memo{
 %% Intro to KGs... what kind of language is it?
