@@ -429,13 +429,13 @@ ground identifiers are presented in Section \ref{sec:idents-typing}.
 \subsection{Typing literals\label{sec:literals}}
 
 Literal values $\V_l\subseteq\V_i$ are the instances of literal types
-$\T_l\subseteq\T_i$. The literal types are in RDF provided by the
+$\T_l\subseteq\T_i$. The literal types $\V_l$ are provided by the
 RDF-Schema dictionary \cite{rdfschema}. RDF-Schema defines a list of
 literal types, such as xsd:integer, xsd:string, or xsd:boolean.
 
 The literals are composed of literal values and literal types. For
 example, the literal
-"literal"\textasciicircum\textasciicircum\/xsd:string includes the
+"365"\textasciicircum\textasciicircum\/xsd:integer includes the
 literal value "365" and a type xsd:integer. Typing of literals is
 defined by the following rule.
 
@@ -464,7 +464,7 @@ stored in a KG.
 In this section we deal with the identifiers $I\in\V_i$ which are the
 values of type $T\in\T_i$. The ground types are directly linked to the
 ground identifiers via a stored typing relation in the form
-$(I,rdf:type,T)\in\Delta$. The expression $I:_1\/T$ states that a
+$(I,\text{rdf:type},T)\in\Delta$. The expression $I:_1\/T$ states that a
 class identifier $T$ is a ground type of an individual identifier $I$.
 
 The subtyping expression $T_1\preceq_1\/T_2$ defines a subtype
@@ -473,7 +473,7 @@ with the identifiers, the relation $T_1\preceq_1\/T_2$ denotes the
 subclass relations since $T_1,T_2\in\T_i$. The relation $\preceq_1$ is
 a one-step relation that is stored in $\Delta$. Note that a unique
 notation for gound typing allows us to address differently the
-\emph{stored} and the \emph{derived} types of ta KG.
+\emph{stored} and the \emph{derived} types of a KG.
 
 %\notes{Partial ordering defined with stored schema triples in a database.}
 %\notes{The relationships that poset $\preceq_1$ covers are rdfs:subClassOf and rdfs:subPropertyOf. }
@@ -555,9 +555,9 @@ The subtype relationship is also transitive.
 \dfrac{I_1,I_2,I_3\in\T_i\quad\/I_1\preceq\/I_2\quad\/I_2\preceq\/I_3}
       {I_1\preceq\/I_3}   
 \end{equation}
-
-Finally, the subtype relationship is asymmetric which is expressed
-using the following rule. 
+antisymmetric
+Finally, the subtype relationship is antisymmetric which is expressed
+using the following rule.
 
 \begin{equation}
 \label{rul:Ti-antisymmetry}
@@ -1020,7 +1020,7 @@ of the triple type. The details are presented in Section
 
 \section{Typing triples\label{sec:triples}}
 
-
+\memo{
 \notes{We would like to type of a triple $t\in\T_i$.}
 \notes{There are two basic aspects of a triple type.}
 \nnotes{1. $t:T_g$ is computed bottom-up: from the stored types of triple components.}
@@ -1065,7 +1065,7 @@ of the triple type. The details are presented in Section
 \notes{Predicates should be treated in the same way as the classes.}
 \nnotes{They can have a rich hierarchy.}
 \nnotes{\emph{Note:} Discussion on special role of predicates and their relations to classes?}
-\nnotes{Mention Cyc as the practical KB with rich hierarchy of predicates.}
+\nnotes{Mention Cyc as the practical KB with rich hierarchy of predicates.}}
 
 
 
@@ -1511,6 +1511,7 @@ properties.}
 
 \subsection{Typing a triple}
 
+\memo{
 \notes{Why using $\land$ and $\sqcap$ types for typing a triple $t$?}
 \nnotes{We would like to check typing of a triple $t\in\T_i$.}
 \nnotes{We compute first the ground type $T_g=\land[T_i^{i\in[1,n]}]$ and a stored type $T_s$ of $t$.}
@@ -1525,7 +1526,9 @@ properties.}
 
 \notes{Stored types have to be related to all join ground types to represent the correct type of a triple.}
 \notes{It seems it would be easier to check the pairs one-by-one using (1) in algorithms.}
-\notes{In case of using complete types in the phases, types would further have to be processed by $\land,\lor$ rules.}
+\notes{In case of using complete types in the phases, types would further have to be processed by $\land,\lor$ rules.}}
+
+... \\
 
 The type of a triple $t=(s,p,o)$ is computed by first deriving the
 base type $T$ and the top type $S$ of $t$. Then, we check if $S$ is
@@ -1540,6 +1543,9 @@ i.e., $T\preceq\/S$.
 
 \medskip
 
+... \\
+
+\memo{
 \medskip
 \notes{How to compute $T\preceq\/S$? Refer to position where we have a description.}
 \notes{Order the possible derivations, gatherings (groupings) ... of types.}
@@ -1547,7 +1553,7 @@ i.e., $T\preceq\/S$.
 \notes{Possible diagnoses.}
 \notes{Components not related to a top type of a triple?}
 \notes{Components related to sub-types of a top type?}
-\notes{Above pertain to all components.}
+\notes{Above pertain to all components.}}
 
 
 
@@ -1573,9 +1579,10 @@ i.e., $T\preceq\/S$.
 }
 
 
-\section{Implementation of type-checking}
+\section{Implementation}
 
 
+\memo{
 \subsection{Computing MIN type\label{sec:alg-MIN}}
 
 
@@ -1637,7 +1644,7 @@ i.e., $T\preceq\/S$.
 
 
 
-\subsection{Relating LUB ground and MIN stored types}
+\subsection{Relating LUB ground and MIN stored types}}
 
 
 
@@ -1649,6 +1656,7 @@ i.e., $T\preceq\/S$.
 
 \section{Related work}
 
+\memo{
 \notes{Comparing typing relation in an OO model with a KG \cite{Pierce2002}.}
 \notes{The values from KGs have similar structure to the values of object-oriented models.}
 \notes{However, the predicates of a KG are more expressive than the data members of the classes.}
@@ -1657,7 +1665,7 @@ i.e., $T\preceq\/S$.
 \notes{Include the differences between Pierce's (classical) sub-typing view of stored sub-class relationships among classes and the approach taken in this paper}
 \notes{Pierce treats classes as generators of objects that inherit methods and data members from its super-class.}
 \notes{The methods are inherited by copying the definitions in each subclass and then explicitely calling the method in the superclass.}
-\notes{List the differences: classes are identifiers, there is a sub-class relationship included in a sub-typing relationship.}
+\notes{List the differences: classes are identifiers, there is a sub-class relationship included in a sub-typing relationship.}}
 
 
 
