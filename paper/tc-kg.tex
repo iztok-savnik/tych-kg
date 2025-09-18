@@ -95,38 +95,22 @@
 
 \begin{abstract}
   The problem addressed in this paper is typing a single ground
-  triple~$t$. First, the \emph{ground type} of $t$ is inferred
-  bottom-up, from the stored typing of individual entities which are
-  the components of $t$. The ground type is further minimized and then
-  generalized to obtain minimal upper bound (MUB) type. The MUB type
-  is an appropriate starting point for exploring its relations to the
-  conceptual schema of a knowledge graph. Second, the \emph{schema
-    triple type} of $t$ is inferred from the conceptual schema based
-  on the predicate of $t$. All valid schema triple types of $t$ are
-  gathered and then minimized to obtain a schema triple type with a
-  minimal interpretation. Finally, the minimal schema triple type is
-  filtered by relating it to the MUB ground type via the subtype
-  relation to compute the final schema triple type of $t$.
-  
-  \keywords{knowledge graphs \and type systems.}
+  triple~$t$ from a knowledge graph. First, the \emph{ground type} of
+  $t$ is inferred bottom-up, from the stored typing of individual
+  entities which are the components of $t$. The ground type is further
+  minimized and then generalized to obtain a minimal upper bound (MUB)
+  type. The MUB type is an appropriate starting point for exploring
+  its relations to the conceptual schema of a knowledge graph. Second,
+  the \emph{schema type} of $t$ is inferred from the conceptual schema
+  based on the predicate of $t$. All valid schema types of $t$ are
+  gathered and then minimized to obtain a schema type with a minimal
+  interpretation. Finally, the minimal schema type is filtered by
+  relating it to the MUB ground type via the subtype relation to
+  compute the final schema type of $t$.
+
+  \keywords{knowledge representation \and knowledge graphs \and type systems .}
 \end{abstract}
 
-\memo{
-  Version 1.
-  The problem addressed in this paper is typing a single ground triple
-  $t$. The \emph{ground type} of a triple is
-  inferred first from the stored typing of individual entities which
-  are the components of $t$. The ground type is further minimized, to
-  include solely the unrelated and minimal types of $t$'s
-  components. The minimal ground type is then genralized to obtain minimal
-  upper bound (MUB) type which is an appropriate starting point for
-  exploring its relations to the conceptual schema of a KG. All valid
-  candidates for the \emph{schema triple type} of $t$ are gathered and
-  then minimized to obtain the schema triple type with a minimal
-  interpretation. Finally, the minimal schema triple type is related
-  to the MUB ground type via the subtype relation to compute the final
-  schema triple type of $t$.
-}
 % \newpage
 %\tableofcontents
 %\newpage
@@ -140,21 +124,23 @@
 
 \section{Introduction}
 
-A knowledge graph (abbr. KG) includes a data and knowledge
+A knowledge graph (abbr.. KG) includes a data and knowledge
 representation language in the form of a graph. It is the
 dictionaries, such as RDF-Schema \cite{rdfschema}, which attach
 meanings to the edges of a graph, turning a graph into a language for
 the representation of data and knowledge. In comparison to the data
-structures used in programming languages
-\cite{Pierce2002,Hindley1997}, the conceptual schema of a KG is
-complex in the sense that any data structure can be represented as a
-graph. Let us depict some of the features of the data and knowledge
-representation language of a KG.
+and program structures used in programming languages
+\cite{Pierce2002,Hindley1997}, the conceptual schema of a KG is more
+expressive: in principle, any data and program structure can be
+represented as a graph. The expressive power comes from logic that
+stands behind a KG, where a graph is a set of named relations, and
+triples are logical statements. Let us depict some of the features of
+the data and knowledge representation language of a KG.
 
 First, a KG includes predefined classes and predicates together with
 the taxonomies of classes and predicates \cite{Baader2002}. Second,
 typing of ground identifiers, as well as typing of the predicates with
-the domain and range types are stored in a KG. Further, similarly to
+the domain and range types, is stored in a KG. Further, similarly to
 the \emph{roles} \cite{Brachman1985} of a knowledge base, the
 predicates of a KG are treated as classes (types) that are included in
 a taxonomy of predicates. However, they also act as individual
@@ -163,26 +149,28 @@ are inherited through the taxonomy of classes, and, from the other
 point of view, the domain and range types of the predicates are
 inherited through the hierarchy of predicates.
 
-%Furthermore, the data and KR language of a KG, which is based on RDF
-%and RDF-Schema \cite{rdf,rdfschema}, does not include variables as in
-%the case for the expressions of a programming language. All
-%information needed for typing a ground triple is in a KG.
-
-... \\
-
 Typing a knowledge graph requires a framework for the definition of
-rules, that is different from the framework for classical typing of
+rules, which is different from the framework for classical typing of
 programming languages. While typing in programming languages is based
 on the syntactical composition of a program, a knowledge graph is
 built from simple triples. Triples can form rich semantic structures
-depending on the type of values that the triples link. For this reason
-typing is ****** partially guided by a procedure.
+depending on the kinds of entities and values. The kind of object,
+for example, can be either a ground value or a class. Typing of a KG
+must, therefore, be able to grasp the kinds of objects in the rules,
+and, in many cases, need to be guided by a procedure.
 
-****** The syntactic structures of a KG include classes and typed
-entities, product types and triples (tuples), $\land$ and $\lor$-types,
-and taxonomies of classes and predicates. The latter are hard to grasp
-structurally; rather, posets can be manipulated with algebraic
-operations.
+From a logic perspective, the ground entities and triples represent
+an ABox, while the schema of KG is a TBox and represents logical
+statements about classes and binary relations. The syntactical
+structures that we use for types are the following. First, we have 
+the classes and predicates, the types of identifiers, that are
+identifiers themselves. Second, the type of triples is a product type,
+a triple itself. Next, the $\land$ and $\lor$ types capture many
+requirements of the KG domain very naturally. For instance, entities
+belong to multiple classes simultaneously, or a domain of a predicate
+is two different classes. Finally, the taxonomies of classes and
+predicates are hard to grasp structurally; rather, posets can be
+manipulated with algebraic operations.
 
 The paper presents a study of typing a single ground triple $t$. We
 propose to infer first the ground type of $t$ using the stored typing
@@ -203,22 +191,24 @@ candidates to the MUB ground type by means of a subtype relation. The
 disjunctively bound candidate triple types related to the MUB ground
 type via subtype relation form the final type of~$t$.
 
-... \\
-
 The contributions of the presented research are as follows. First, to
-our knowledge this is the first proposal of typing a knowledge graph
+our knowledge, this is the first proposal for typing a knowledge graph
 that encompasses a complete KG. The existing approaches to typing a KG
 deal with the particular problems of typing a KG. Second, the
 presented framework for typing ground triples can serve conveniently
 for the implementation of type-checking the stored typing of a KG. The
 analysis of typing an individual triple spans from the ground types at
-the lower levels of ontology, to minimal stored triple types of an
-individual triple at the upper levels of ontology. Finally, we show
-that the triple types can be used to disambiguate the sense of
-predicate with multiple meanings.
+the lower levels of ontology to the minimal schema types at the upper
+levels of ontology. Finally, we show that the triple types can be used
+to disambiguate the sense of a predicate with multiple meanings.
+
+...\\
 
 
 
+
+
+%----------------------------------------------------------------
 \memo{
 %% Intro to KGs... what kind of language is it?
 \notes{Introduction to knowledge graphs (KG)... \cite{Hogan2022,Ehrlinger2016}.}
@@ -307,6 +297,7 @@ a program. The type-checking problem \\
 %\notes{The type $T_{lub}$ restricts $T_{min}$ in cases that the propery of $t$ has multiple different meanings.}
 %\notes{Typing triple patterns and BGP queries in further work.}
 %\notes{Identifying errors in typing of a KG.}
+%----------------------------------------------------------------
 
 
 
@@ -665,7 +656,7 @@ The meaning of the $\land$ and $\lor$ types can be defined through
 their interpretations. The following definition expresses the
 denotation of a $\lor$ type with the interpretations of its component
 types. Suppose we have a set of types
-$\forall\/i\in\/[1..n],\ T_i\in\tau$.
+$\forall\/i\in\/[1..n],\ T_i\in\T$.
 
 \begin{displaymath}
   \llbracket\lor[T_i^{i\in[1,n]}]\rrbracket_\D = \bigcup_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
@@ -692,7 +683,7 @@ all types $T_i$.
 
 The rules for the $\land$ and $\lor$ types presented in this section
 are general---they apply for the identifier types $\I_c$ and triple
-types $\T_t$. The set of types $\tau=\I_c\cup\T_t$ is used to ground
+types $\T_t$. The set of types $\T=\I_c\cup\T_t$ is used to ground
 the types in the rules.
 
 The interpretation of a type $\land[T_i^{i\in[1,n]}]$ in included in
@@ -702,7 +693,7 @@ $T_i^{i\in[1,n]}$. This is stated by the following rule.
 
 \begin{equation}
 \label{rul:land-preceq-elems}
-\dfrac{T_i^{i\in[1,n]}\in\tau}
+\dfrac{T_i^{i\in[1,n]}\in\T}
       {\land[T_i^{i\in[1,n]}] \preceq\/T_i^{i\in[1,n]}} 
 \end{equation}
 
@@ -712,7 +703,7 @@ $\land[T_i^{i\in[1,n]}]$.
 
 \begin{equation}
 \label{rul:lbound-preceq-land}
-\dfrac{S\in\tau\quad\/T_i^{i\in[1,n]}\in\tau\quad\/S\preceq\/T_i^{i\in[1,n]}}
+\dfrac{S\in\T\quad\/T_i^{i\in[1,n]}\in\T\quad\/S\preceq\/T_i^{i\in[1,n]}}
       {S\preceq\land[T_i^{i\in[1,n]}]}  
 \end{equation} 
 
@@ -723,7 +714,7 @@ supertype of a $\land$-type $\land[S_i^{i\in[1,n]}]$.
 
 \begin{equation}
 \label{rul:land-preceq-ubound}
-\dfrac{T\in\tau\quad\/S_i^{i\in[1,n]}\in\tau\quad\/S\in\{S_i^{i\in[1,n]}\}\quad\/S\preceq\/T}
+\dfrac{T\in\T\quad\/S_i^{i\in[1,n]}\in\T\quad\/S\in\{S_i^{i\in[1,n]}\}\quad\/S\preceq\/T}
       {\land[S_i^{i\in[1,n]}]\preceq\/T}  
 \end{equation} 
 
@@ -737,7 +728,7 @@ types $T_i^{i\in[1,n]}$ \cite{Pierce1991}.
 
 \begin{equation}
 \label{rul:lor-preceq-elems}
-\dfrac{T_i^{i\in[1,n]}\in\tau}
+\dfrac{T_i^{i\in[1,n]}\in\T}
       {T_i^{i\in[1..n]}\preceq\/\lor[T_i^{i\in[1,n]}]}
 \end{equation}
 
@@ -747,7 +738,7 @@ $\lor[S_i^{i\in[1,n]}]$.
 
 \begin{equation}
 \label{rul:lor-preceq-ubound}
-\dfrac{T\in\tau\quad\/S_i^{i\in[1..n]}\in\tau\quad\/S_i^{i\in[1..n]}\preceq\/T}
+\dfrac{T\in\T\quad\/S_i^{i\in[1..n]}\in\T\quad\/S_i^{i\in[1..n]}\preceq\/T}
       {\lor[S_i^{i\in[1..n]}]\preceq\/T}  
 \end{equation}
 
@@ -756,7 +747,7 @@ that $S$ is a subtype of a type $\lor[T_i^{i\in[1,n]}]$.
 
 \begin{equation}
 \label{rul:lbound-preceq-lor}
-\dfrac{T\in\tau\quad\/S_i^{i\in[1..n]}\in\tau\quad\/S\in\{S_i^{i\in[1..n]}\}\quad\/T\preceq\/S}
+\dfrac{T\in\T\quad\/S_i^{i\in[1..n]}\in\T\quad\/S\in\{S_i^{i\in[1..n]}\}\quad\/T\preceq\/S}
       {T\preceq\lor[S_i^{i\in[1..n]}]}  
 \end{equation}
 
@@ -887,22 +878,16 @@ concrete type of a graph pattern variable.
 
 
 
-\subsection{Typing with $\land$ and $\lor$ types}
+\subsection{Typing identifiers with $\land$ and $\lor$-types}
 
-\medskip
-\notes{The use of $\land$ and $\lor$ types to describe identifiers.}
-\nnotes{$\upsilon=\I_i\cup\T_i$ and $\tau=\I_c\cup\T_t$}
-\nnotes{General rules are defined to work with identifiers and triples.}
-\nnotes{Hence typing rules can be used to type idents and triples.}
-
-\notes{For $V\in\upsilon$ gather ground types of identifiers with $\land$-type as $V:_{\darr}\land[T_i^{i\in[1,n]}]$.}
-\nnotes{$V\in\upsilon\quad\forall\/T_i\in\tau,\ t:_{\darr}T_i$.}
+\notes{For $V\in\V$ gather ground types of identifiers with $\land$-type as $V:_{\darr}\land[T_i^{i\in[1,n]}]$.}
+\nnotes{$V\in\V\quad\forall\/T_i\in\T,\ t:_{\darr}T_i$.}
 \nnotes{The ground type of $V$ is a type $T_g=\land[T_i^{i\in[1,n]}]$.}
-\ennotes{The following rule geathers all ground types of $V\in\upsilon$.}
+\ennotes{The following rule geathers all ground types of $V\in\V$.}
 
 \begin{equation}
 \label{rul:land-1}
-\dfrac{V\in\upsilon\quad\/T_i^{i\in[1,n]}\in\tau\quad\/V:_{\darr}T_i^{i\in[1,n]}}
+\dfrac{V\in\V\quad\/T_i^{i\in[1,n]}\in\T\quad\/V:_{\darr}T_i^{i\in[1,n]}}
       {V:_{\darr}\land[T_i^{i\in[1,n]}]}
 \end{equation}
 
@@ -946,7 +931,7 @@ The logical rule for the operation MIN is as follows.
 
 \begin{equation}
 \label{rul:min}
-\dfrac{V\in\upsilon\quad\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/S\in\/\{T_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ S\preceq\/T_i\lor\/S\not\sim\/T_i}
+\dfrac{V\in\V\quad\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/S\in\/\{T_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ S\preceq\/T_i\lor\/S\not\sim\/T_i}
       {V:_{\Darr}S}
 \end{equation}
 
@@ -961,25 +946,9 @@ $\land[S_1..S_m]$.
 
 \begin{equation}
 \label{rul:min-gather}
-\dfrac{V\in\upsilon\quad\forall\/i\in[1,m],\ V:_\Darr\/S_i}
+\dfrac{V\in\V\quad\forall\/i\in[1,m],\ V:_\Darr\/S_i}
       {V:_{\Darr}\land[S_j^{j\in[1,m]}]}
 \end{equation}
-
-
-%----------------------------------------------------------------
-\memo{
-The rule for filtering $\land[T_i^{i\in[1,n]}]$ of all
-$T_i\succeq\/T_j$ where $i\not=j$ by using algorithmic typing is
-defined as follows. The algorithm implementing the operation MIN is
-presented in Section \ref{sec:alg-MIN}.
-
-\begin{equation}
-\label{rul:alg-min}
-\dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
-{\vdasharr\/V:_{\Darr}\land\/[S_j^{j\in[1,m]}]}
-\end{equation}}
-%----------------------------------------------------------------
-
 
 Now we have a minimal ground type of a value $V$ in the form of a
 conjunction of minimal types $S_i$ of $V$. The types that are
@@ -996,12 +965,12 @@ subtype of the user-defined types that describe the value $V$. If the
 join type is not a subtype of the user-defined type then there is an
 error in stored types of a value $V$.
 
-Let us now present the typing rules that, given $V\in\upsilon$,
+Let us now present the typing rules that, given $V\in\V$,
 determine the join of $\{T_i^{i\in[1,n]}\}$ as
 $V:\sqcup[T_i^{i\in[1,n]}]$. Recall from Section
 \ref{sec:join-meet-types} that we defined the operation join as the
 minimal upper bounds of a set $\{T_i^{i\in[1,n]}\}$. Let
-$P=(\tau,\preceq)$ and $\{T_i^{i\in[1,n]}\}\subseteq\/P$. A join
+$P=(\T,\preceq)$ and $\{T_i^{i\in[1,n]}\}\subseteq\/P$. A join
 $\sqcup[T_i^{i\in[1,n]}]$ is a set of minimal upper bounds
 $\{S_j^{j\in[1,m]}\}$ that are related to all types $T_i^{i\in[1,n]}$
 via $\preceq$, and are minimal.
@@ -1013,10 +982,9 @@ Rules \ref{rul:join-logic}-\ref{rul:join-gather} present the logical
 definition of the join type. The following Rule \ref{rul:join-logic}
 determines one join type but can be used to generate all join types.
 
-
 \begin{equation}
 \label{rul:join-logic}
-\dfrac{V\in\upsilon,\, \/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/S\in\tau,\, T_i^{i\in[1,n]}\preceq\/S\quad\forall\/P\in\tau,\, (T_i^{i\in[1,n]}\preceq\/P\land\/S\preceq\/P)\lor\/P\not\sim\/S}
+\dfrac{V\in\V,\, \/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/S\in\T,\, T_i^{i\in[1,n]}\preceq\/S\quad\forall\/P\in\T,\, (T_i^{i\in[1,n]}\preceq\/P\land\/S\preceq\/P)\lor\/P\not\sim\/S}
       {V:_\sqcup\/S}
 \end{equation}
 
@@ -1025,26 +993,9 @@ into one $\land$ type of join types by using the following rule.
 
 \begin{equation}
 \label{rul:join-gather}
-\dfrac{V\in\upsilon\quad\/S_i^{i\in[1,m]}\in\tau\quad\forall\/i\in[1,m],\ V:_\sqcup\/S_i}
+\dfrac{V\in\V\quad\/S_i^{i\in[1,m]}\in\T\quad\forall\/i\in[1,m],\ V:_\sqcup\/S_i}
 {V:_{\sqcup}\land[S_i^{i\in[1,m]}]}
 \end{equation}
-
-
-%----------------------------------------------------------------
-\memo{
-The following Rule \ref{rul:join-alg} derives the complete join type
-in one step. The operator join $\sqcup[T_i^{i\in[1,n]}]$ returns as a
-result a set of minimal upper bound types of $T_i^{i\in[1,n]}$. Since
-all the join types are valid types of $V$, we can group them into one
-$\land$ type.
-
-\begin{equation}
-\label{rul:join-alg} 
-\dfrac{V\in\upsilon\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/\vdasharr\{S_j^{j\in[1,m]}\}=\sqcup[T_i^{i\in[1,n]}]}
-      {\vdasharr\/V:_\sqcup\land[S_j^{j\in[1,m]}]}
-\end{equation}}
-%----------------------------------------------------------------
-
 
 The join types are used as the starting point for searching the
 correct user-defined type. In the case the predicate of has two
@@ -1054,7 +1005,33 @@ of the triple type. The details are presented in Section
 \ref{sec:stored-3types}.
 
 
+
 %----------------------------------------------------------------
+\memo{
+The rule for filtering $\land[T_i^{i\in[1,n]}]$ of all
+$T_i\succeq\/T_j$ where $i\not=j$ by using algorithmic typing is
+defined as follows. The algorithm implementing the operation MIN is
+presented in Section \ref{sec:alg-MIN}.
+
+\begin{equation}
+\label{rul:alg-min}
+\dfrac{V\in\V\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
+{\vdasharr\/V:_{\Darr}\land\/[S_j^{j\in[1,m]}]}
+\end{equation}}
+
+\memo{
+The following Rule \ref{rul:join-alg} derives the complete join type
+in one step. The operator join $\sqcup[T_i^{i\in[1,n]}]$ returns as a
+result a set of minimal upper bound types of $T_i^{i\in[1,n]}$. Since
+all the join types are valid types of $V$, we can group them into one
+$\land$ type.
+
+\begin{equation}
+\label{rul:join-alg} 
+\dfrac{V\in\V\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/\vdasharr\{S_j^{j\in[1,m]}\}=\sqcup[T_i^{i\in[1,n]}]}
+      {\vdasharr\/V:_\sqcup\land[S_j^{j\in[1,m]}]}
+\end{equation}}
+
 \memo{
 %\notes{Integrate this explanation above.}
 %\notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
@@ -1170,7 +1147,7 @@ defines the relationship $\preceq$ beween two triple types.
 
 \begin{equation}
 \label{rul:3-subtype}
-\dfrac{T_1\in\tau,\ T_1=(D_1,p_1,R_1)\quad T_2\in\tau,\ T_2=(D_2,p_2,R_2)\quad\/D_1\preceq\/D_2\quad\/p_1\preceq\/p_2\quad\/R_1\preceq\/R_2}
+\dfrac{T_1\in\T,\ T_1=(D_1,p_1,R_1)\quad T_2\in\T,\ T_2=(D_2,p_2,R_2)\quad\/D_1\preceq\/D_2\quad\/p_1\preceq\/p_2\quad\/R_1\preceq\/R_2}
       {T_1\preceq\/T_2}
 \end{equation}
 
@@ -1226,8 +1203,8 @@ minimal ground types of the triple components.
 
 \begin{equation}
 \label{rul:3-min-ground}
-\dfrac{t\in\upsilon,\ t=(I_s,p,I_o)\quad T_s,T_o\in\tau\quad I_s:_\Darr\/T_s\quad I_o:_\Darr\/T_o\quad p:_\darr\text{rdf:Property}}
-      {t:_\Darr\/(T_s,p,T_o)}
+\dfrac{t\in\V,\ t=(I_s,p,I_o)\quad T_s,T_o\in\T\quad I_s:_\Darr\/T_s\quad I_o:_\Darr\/T_o\quad p:_\darr\text{rdf:Property}}
+      {t:_\darr\/(T_s,p,T_o)}
 \end{equation}
 
 The component types $T_s$ and $T_o$ of the minimal ground type
@@ -1240,7 +1217,7 @@ relation.
 
 \begin{equation}
 \label{rul:3-land-transform}
-\dfrac{t\in\upsilon\quad t:(\land[S_i^{i\in[1,n]}],p,\land[R_j^{j\in[1,m]}])}
+\dfrac{t\in\V\quad t:(\land[S_i^{i\in[1,n]}],p,\land[R_j^{j\in[1,m]}])}
       {t:\bigwedge_{i\in[1,n], j\in[1,m]}[(S_i,p,T_j)]}
 \end{equation}
 
@@ -1261,8 +1238,8 @@ on the basis of joins of triple type components $S$ and $O$.
 
 \begin{equation}
 \label{rul:3-join}
-\dfrac{t\in\upsilon,\ t=(I_s,p,I_o)\quad T_s,T_o\in\tau\quad I_s:_\sqcup\/T_s\quad I_o:_\sqcup\/T_o\quad p:_\darr\text{rdf:Property}}
-      {t:_\sqcup\/(T_s,p,T_o)}
+\dfrac{t\in\V,\ t=(I_s,p,I_o)\quad T_s,T_o\in\T\quad I_s:_\sqcup\/T_s\quad I_o:_\sqcup\/T_o\quad p:_\darr\text{rdf:Property}}
+      {t:_\darr\/(T_s,p,T_o)}
 \end{equation}
 
 The join type $(T_s,p,T_o)$ includes in the components $S$ and $O$ the
@@ -1319,6 +1296,7 @@ owl:intersectionOf$(T_1\ T_2)$. The RDF-Schema does not allow the
 definition of the domain of a predicate with the
 $\lor$-type. Consequently, each predicate can have only one meaning.
   
+%----------------------------------------------------------------
 \memo{
 However, we often need a semantics of a predicate that allows the
 definition of a predicate with multiple senses, depending on the
@@ -1332,6 +1310,7 @@ contexts are often defined by RDF named graphs, e.g., DBpedia
 \cite{Auer2007} and Linked Data \cite{ld-site}. Examples of KGs that
 can define and use contexts are Cyc \cite{cyc}, Scone
 \cite{Fahlman2011} and RACER \cite{Haarslev2012}.}
+%----------------------------------------------------------------
 
 Let us now inspect the same problem from the perspecive of predicate
 modelling. In the case one predicate stands for one sense of a
@@ -1358,6 +1337,7 @@ predicate depends on the context implemented by a triple type. The
 definition of one predicate in multiple contexts is studied in
 \ref{sec:stored-3types}.2.
 
+%----------------------------------------------------------------
 \memo{
 \notes{Whitin an ontology it seems that the triple type can be used, quite naturally, as the context of a predicate.}
 \notes{The meaning of predicate is modelled by a triple type including concrete classes, types of domains and ranges.}
@@ -1373,6 +1353,10 @@ List some possibilities: diff ontologies, diff contexts, explicit definition of 
 We are goiung to use OWL syntax for the definition of domains and ranges.
 For simplicity we assume that for each predicate we have a definition of the domain (range) in disjunctive noraml form.
 }
+%----------------------------------------------------------------
+
+
+
 
 \subsubsection{\ref{sec:stored-3types}.1 KGs with RDF-Schema.}
 Let us first define the rules for finding a stored type of a triple in
@@ -1386,8 +1370,8 @@ predicate $p$ and/or inherited from the predicates $p'\succ\/p$.
 \begin{equation}
 \label{rul:3-stored1}
 \dfrac{\begin{array}{c}
-       t\in\upsilon,\, t=(s,p,o)\quad p_1,p_2\in\tau,\, p\preceq\/p_1\preceq\/p_2\quad \\
-       T_i^{i\in[1,n]}\in\tau,\, (p_1,\text{domain},T_i)\in\/\Delta\quad S_j^{j\in[1,m]}\in\tau,\, (p_2,\text{range},S_j)\in\Delta
+       t\in\V,\, t=(s,p,o)\quad p_1,p_2\in\T,\, p\preceq\/p_1\preceq\/p_2\quad \\
+       T_i^{i\in[1,n]}\in\T,\, (p_1,\text{domain},T_i)\in\/\Delta\quad S_j^{j\in[1,m]}\in\T,\, (p_2,\text{range},S_j)\in\Delta
        \end{array}}
       {t:_\uarr\/\land[T_i^{i\in[1,n]}]*p*\land[S_j^{j\in[1,m]}]}
 \end{equation}
@@ -1395,7 +1379,7 @@ predicate $p$ and/or inherited from the predicates $p'\succ\/p$.
 The above rule generates the types of the domain and range of a
 predicate $p$. The valid domain or range types of the predicate $p$
 can be any of types defined as domain or range for some
-$p'\succeq\/p$. Note that domain and range types can be defined for
+$p'\succeq\/p$. (****) Note that domain and range types can be defined for
 different predicates $p_1$ and $p_2$ "above" $p$ ($p_1,p_2\succeq\/p$)
 which have to be comparable, i.e., $p_1\sim\/p_2$. This condition
 restricts the domain and range to be defined on the same path from $p$
@@ -1410,12 +1394,12 @@ logical judgment for a minimal stored triple type of a $t$.
 
 \begin{equation}
 \label{rul:min-stored-type}
-\dfrac{t\in\T_i\quad T\in\tau,\, t:_\uarr\/T\quad\/S_i^{i\in[1,n]}\in\tau,\, t:_\uarr\/S_i\quad T\preceq\/S_i\lor\/T\not\sim\/S_i}
-      {t:_{\Darr}\/T}
+\dfrac{t\in\T_i\quad T\in\T,\, t:_\uarr\/T\quad\/S_i^{i\in[1,n]}\in\T,\, t:_\uarr\/S_i\quad T\preceq\/S_i\lor\/T\not\sim\/S_i}
+      {t:_{\uarr}\/T}
 \end{equation}
 
 The first part of premise says that $t$ is a ground triple and there
-exists $T\in\tau$ which is a type of $t$. The second part of the
+exists $T\in\T$ which is a type of $t$. The second part of the
 premise requires that $T$ is the minimal type of all types $S$ of
 $t$. In other words, there is no type $S_i^{i\in[1,n]}$ of $t$ that is
 a subtype of $T$. Hence, $T$ is the minimal type of the stored triple
@@ -1432,6 +1416,9 @@ different domains or ranges of $p$ then reasoner would treat the
 domain and range types as $\land$-types. Each instance of the domain
 (range) type have to be an instance of all specified types of the
 domain (range).
+
+
+
 
 \subsubsection{\ref{sec:stored-3types}.2 KGs with the contextual representation.}
 
@@ -1505,7 +1492,7 @@ domains and ranges of $p$ that can stand for a $\land$-type.
 
 \begin{equation}
 \label{rul:3-stored2}
-\dfrac{t\in\upsilon,\, t=(s,p,o)\quad T_i^{i\in[1,n]}\in\tau,\, T_i=(D_i,p,R_i)\quad\/T_i^{i\in[1,n]}\in\Delta}
+\dfrac{t\in\V,\, t=(s,p,o)\quad T_i^{i\in[1,n]}\in\T,\, T_i=(D_i,p,R_i)\quad\/T_i^{i\in[1,n]}\in\Delta}
       {t:_\uarr\/\lor[T_i^{i\in[1,n]}]}
 \end{equation}
 
@@ -1518,8 +1505,8 @@ stored triple types of a set including all valid stored tyes of $t$.
 
 \begin{equation}
 \label{rul:3-min}
-\dfrac{t\in\upsilon\quad\/t:_\uarr\lor[T_i^{i\in[1,n]}]\quad\/S\in\/\{T_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ S\preceq\/T_i\lor\/S\not\sim\/T_i}
-      {V:_{\Darr}S}
+\dfrac{t\in\V\quad\/t:_\uarr\lor[T_i^{i\in[1,n]}]\quad\/S\in\/\{T_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ S\preceq\/T_i\lor\/S\not\sim\/T_i}
+      {t:_{\uarr}S}
 \end{equation}
 
 The rule says that $S$ is a minimal stored triple type of a stored
@@ -1530,13 +1517,14 @@ types of $\lor[T_i^{i\in[1,n]}]$.
 
 \begin{equation}
 \label{rul:3-min-gather}
-\dfrac{t\in\upsilon\quad\forall\/i\in[1,m],\ t:_\Darr\/S_i}
-      {t:_{\Darr}\lor[S_j^{j\in[1,m]}]}
+\dfrac{t\in\V\quad\forall\/i\in[1,m],\ t:_\uarr\/S_i}
+      {t:_{\uarr}\lor[S_j^{j\in[1,m]}]}
 \end{equation}
 
 The above rule is identical to the Rule \ref{rul:min-gather} except
 that in this settings it handles triples and not identifiers. The
 result is a disjunction of minimal stored triple types $S_j^{j\in[1,m]}$.
+
 
 
 %----------------------------------------------------------------
@@ -1552,7 +1540,7 @@ $(T_i^{i\in[1,n]},\preceq)$.
 
 \begin{equation}
 \label{rul:3-alg-min}
-\dfrac{t\in\upsilon\quad\vdasharr\/t:_\uarr\lor[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m]}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
+\dfrac{t\in\V\quad\vdasharr\/t:_\uarr\lor[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m]}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
 {\vdasharr\/t:_{\Darr}\lor\/[S_j^{j\in[1,m]}]}
 \end{equation}}
 
@@ -1588,23 +1576,6 @@ properties.}
 
 \subsection{Typing a triple}
 
-\memo{
-\notes{Why using $\land$ and $\sqcap$ types for typing a triple $t$?}
-\nnotes{We would like to check typing of a triple $t\in\T_i$.}
-\nnotes{We compute first the ground type $T_g=\land[T_i^{i\in[1,n]}]$ and a stored type $T_s$ of $t$.}
-\nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
-\nnotes{The subtype relation should hold $T_g\preceq\/T_s$.}
-
-\notes{Two ways of defining semantics.}
-\notes{1) enumeration style: stored types are enumerated as alternatives ($\lor$).}
-\notes{2) packed together: alternative types are packed in one $\bigvee$ type.}
-\notes{One advantage of (1) is that individual glb types can be processed further individually.}
-\notes{Advantage of (2) is the higer-level semantics without going in implementation.}
-
-\notes{Stored types have to be related to all join ground types to represent the correct type of a triple.}
-\notes{It seems it would be easier to check the pairs one-by-one using (1) in algorithms.}
-\notes{In case of using complete types in the phases, types would further have to be processed by $\land,\lor$ rules.}}
-
 ... \\
 
 The type of a triple $t=(s,p,o)$ is computed by first deriving the
@@ -1622,6 +1593,27 @@ i.e., $T\preceq\/S$.
 
 ... \\
 
+
+
+
+%----------------------------------------------------------------
+\memo{
+\notes{Why using $\land$ and $\sqcap$ types for typing a triple $t$?}
+\nnotes{We would like to check typing of a triple $t\in\T_i$.}
+\nnotes{We compute first the ground type $T_g=\land[T_i^{i\in[1,n]}]$ and a stored type $T_s$ of $t$.}
+\nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
+\nnotes{The subtype relation should hold $T_g\preceq\/T_s$.}
+
+\notes{Two ways of defining semantics.}
+\notes{1) enumeration style: stored types are enumerated as alternatives ($\lor$).}
+\notes{2) packed together: alternative types are packed in one $\bigvee$ type.}
+\notes{One advantage of (1) is that individual glb types can be processed further individually.}
+\notes{Advantage of (2) is the higer-level semantics without going in implementation.}
+
+\notes{Stored types have to be related to all join ground types to represent the correct type of a triple.}
+\notes{It seems it would be easier to check the pairs one-by-one using (1) in algorithms.}
+\notes{In case of using complete types in the phases, types would further have to be processed by $\land,\lor$ rules.}}
+
 \memo{
 \medskip
 \notes{How to compute $T\preceq\/S$? Refer to position where we have a description.}
@@ -1631,8 +1623,6 @@ i.e., $T\preceq\/S$.
 \notes{Components not related to a top type of a triple?}
 \notes{Components related to sub-types of a top type?}
 \notes{Above pertain to all components.}}
-
-
 
 \memo{
 \subsection{Typing a graph}
@@ -1654,74 +1644,13 @@ i.e., $T\preceq\/S$.
 \nnotes{What is the type in meeting points of two triple types?}
 \nnotes{Since a tye of a graph should present any legal triple in $\D$}
 }
+%----------------------------------------------------------------
+
+
 
 
 \section{Implementation}
 
-
-\memo{
-\subsection{Computing MIN type\label{sec:alg-MIN}}
-
-
-\notes{We have a tuple $t=(s,p,o)$.}
-\nnotes{The task is to compute MIN type of $t$'s stored types.}
-\nnotes{The algorithm is using the predicates $p'\preceq\/p$ to obtain all domains and ranges of $p$.}
-
-
-
-\notes{FUNCTION typeGlbStored ($p$: Property, $cnt$: Integer, $d_p$,$r_p$: Set): Type}
-\notes{BEGIN}
-\notes{if $d_p=\{\}$ then $d_p =  \{ c_s \mid (p,\text{rdfs:domain},c_s)\in\/G\}$}
-\notes{if $r_p=\{\}$ then $r_p =  \{ c_o \mid (p,\text{rdfs:range},c_o)\in\/G\}$}
-\notes{if $d_p\not=\{\}\land\/r_p\not=\{\}$ then }
-\notes{RETURN $(\lor\/d_p,p,\lor\/r_p)$}
-\notes{$ts = \{\}$}
-\notes{for $p'$ ($(p,\text{rdfs:SubPropertyOf},p')\in\/G$)}
-\notes{BEGIN}
-\notes{$T_{p'} = typeGlbStored(p',cnt+1$,$d_p$,$r_p$)}
-\notes{$ts = ts\cup\/\{T_{p'}\}$}
-\notes{END}
-\notes{RETURN $\lor\/ts$}
-\notes{END}
-
-
-
-
-\notes{Start with a set $\{p\}$ and close the set by using rdfs:superPropertyOf marking them with the ``distance'' from $p$.}
-\nnotes{Gather all domain and range types of $p'\preceq\/p$ in $d_p$ and $r_p$, respectively, marking each domain and range class with the distance of the related $p'$.}
-\nnotes{Generate types $\lor(s_t,p,o_t)$ where $s_t\in\/d_p$, $o_t\in\/r_p$ and both $s_t$ and $o_t$ are marked with the minimal values.}
-\nnotes{Note that there can be more than one element $s_t$ (and $o_t$) marked with a minimal value in $d_p$ (and $r_p$). Hence Cartesian product of the selected domains and ranges are used to generate types $(s_t,p,o_t)$. }
-
-
-
-
-
-
-\subsection{Computing join type\label{sec:alg-join}}
-
-\notes{A ground type of a triple $t=(s,p,o)$ is a type $(s_t,p,o_t)$ such that $(s,\text{rdf:type},s_t)$ and $(o,\text{rdf:type},o_t)$.}
-\notes{The sets of types $s_t$ and $o_t$ are stored in the sets $g_s$ and $g_o$, respectively.}
-\notes{The ground type of $t$ is then $T_t=(\land\/g_s,p,\land\/g_o)$.}
-\notes{The lub of a type $T_t$ is computed as follows.}
-
-\notes{For each $s_t\in\/g_s$ ($o_t\in\/g_o$) compute a closure of a set $\{s_t\}$ ($\{o_t\}$) with respect to the relationship rdfs:superClassOf obtaining the sets $c_s$ and $c_o$.}
-\notes{Each step of the closure newly obtained classes are marked with the number of steps if new in the set, and the maximum of both numbers of steps otherwise.}
-\notes{The maximum guaranties the monotonicity: $s_t\prec_\darr\/s_t'\Rightarrow\/m(s_t)>m(s_t')$.}
-\notes{Proof: Assume $m(s_t)<=m(s_t')$. Since $s_t\prec_\darr\/s_t'$ then $m(s_t')+1$ is maximum of $s_t$. Contradiction.}
-
-\notes{The lub of $T_t$ is computed by intersecting all sets $c_s$ ($c_o$) obtained for each $s_t$ ($o_t$), yielding a lub type of $g_s$ ($g_o$).}
-\notes{The intersection of sets is computed step-by-step. Initially, intersection is the first set $c_s$ ($c_o$) of some $s_t$ ($o_t$).}
-\notes{In each step, a new set $c_s$ ($c_o$) for another $s_t$ ($o_t$) is intersected with previous result.}
-\notes{The classes that are in the result (intersection) are merged by selecting the maximum number of closure steps for each class in the intersection.}
-\notes{The reason for this is to obtain the number of steps within which all ground classes reach a given lub class.}
-
-\notes{Finally, the lub classes are selected from the resulted intersection of all $c_s$ ($c_o$).}
-\notes{The class with the smallest number of steps is taken. Then, it is deleted from the set together with all its super-classes.}
-\notes{If set is not empty the previous step is repeated.}
-
-
-
-\subsection{Relating LUB ground and MIN stored types}}
 
 
 
@@ -1750,6 +1679,18 @@ i.e., $T\preceq\/S$.
 
 \section{Conclusions}
 
+Typing of a knowledge graph can serve many theoretical and practical
+purposes. First, typing of a KG can be extended to type-checking that
+can identify inconsistencies in a KG. Next, typing a KG can be used as
+the basis for typing basic graph patterns and SparQL, and with this,
+can be used in tasks such as query optimization and
+reasoning. Finally, we show in the paper how types can be employed to
+disambiguate the sense of a predicate.
+
+... \\
+
+
+
 
 
 % \section{Acknowledgments}
@@ -1762,6 +1703,67 @@ i.e., $T\preceq\/S$.
 \end{document}
 
 
+
+
+.............................................................
+\memo{
+\subsection{Computing MIN type\label{sec:alg-MIN}}
+
+
+\notes{We have a tuple $t=(s,p,o)$.}
+\nnotes{The task is to compute MIN type of $t$'s stored types.}
+\nnotes{The algorithm is using the predicates $p'\preceq\/p$ to obtain all domains and ranges of $p$.}
+
+\notes{FUNCTION typeGlbStored ($p$: Property, $cnt$: Integer, $d_p$,$r_p$: Set): Type}
+\notes{BEGIN}
+\notes{if $d_p=\{\}$ then $d_p =  \{ c_s \mid (p,\text{rdfs:domain},c_s)\in\/G\}$}
+\notes{if $r_p=\{\}$ then $r_p =  \{ c_o \mid (p,\text{rdfs:range},c_o)\in\/G\}$}
+\notes{if $d_p\not=\{\}\land\/r_p\not=\{\}$ then }
+\notes{RETURN $(\lor\/d_p,p,\lor\/r_p)$}
+\notes{$ts = \{\}$}
+\notes{for $p'$ ($(p,\text{rdfs:SubPropertyOf},p')\in\/G$)}
+\notes{BEGIN}
+\notes{$T_{p'} = typeGlbStored(p',cnt+1$,$d_p$,$r_p$)}
+\notes{$ts = ts\cup\/\{T_{p'}\}$}
+\notes{END}
+\notes{RETURN $\lor\/ts$}
+\notes{END}
+
+
+
+
+\notes{Start with a set $\{p\}$ and close the set by using rdfs:superPropertyOf marking them with the ``distance'' from $p$.}
+\nnotes{Gather all domain and range types of $p'\preceq\/p$ in $d_p$ and $r_p$, respectively, marking each domain and range class with the distance of the related $p'$.}
+\nnotes{Generate types $\lor(s_t,p,o_t)$ where $s_t\in\/d_p$, $o_t\in\/r_p$ and both $s_t$ and $o_t$ are marked with the minimal values.}
+\nnotes{Note that there can be more than one element $s_t$ (and $o_t$) marked with a minimal value in $d_p$ (and $r_p$). Hence Cartesian product of the selected domains and ranges are used to generate types $(s_t,p,o_t)$.}
+
+\subsection{Computing join type\label{sec:alg-join}}
+
+\notes{A ground type of a triple $t=(s,p,o)$ is a type $(s_t,p,o_t)$ such that $(s,\text{rdf:type},s_t)$ and $(o,\text{rdf:type},o_t)$.}
+\notes{The sets of types $s_t$ and $o_t$ are stored in the sets $g_s$ and $g_o$, respectively.}
+\notes{The ground type of $t$ is then $T_t=(\land\/g_s,p,\land\/g_o)$.}
+\notes{The lub of a type $T_t$ is computed as follows.}
+
+\notes{For each $s_t\in\/g_s$ ($o_t\in\/g_o$) compute a closure of a set $\{s_t\}$ ($\{o_t\}$) with respect to the relationship rdfs:superClassOf obtaining the sets $c_s$ and $c_o$.}
+\notes{Each step of the closure newly obtained classes are marked with the number of steps if new in the set, and the maximum of both numbers of steps otherwise.}
+\notes{The maximum guaranties the monotonicity: $s_t\prec_\darr\/s_t'\Rightarrow\/m(s_t)>m(s_t')$.}
+\notes{Proof: Assume $m(s_t)<=m(s_t')$. Since $s_t\prec_\darr\/s_t'$ then $m(s_t')+1$ is maximum of $s_t$. Contradiction.}
+
+\notes{The lub of $T_t$ is computed by intersecting all sets $c_s$ ($c_o$) obtained for each $s_t$ ($o_t$), yielding a lub type of $g_s$ ($g_o$).}
+\notes{The intersection of sets is computed step-by-step. Initially, intersection is the first set $c_s$ ($c_o$) of some $s_t$ ($o_t$).}
+\notes{In each step, a new set $c_s$ ($c_o$) for another $s_t$ ($o_t$) is intersected with previous result.}
+\notes{The classes that are in the result (intersection) are merged by selecting the maximum number of closure steps for each class in the intersection.}
+\notes{The reason for this is to obtain the number of steps within which all ground classes reach a given lub class.}
+
+\notes{Finally, the lub classes are selected from the resulted intersection of all $c_s$ ($c_o$).}
+\notes{The class with the smallest number of steps is taken. Then, it is deleted from the set together with all its super-classes.}
+\notes{If set is not empty the previous step is repeated.}
+
+
+
+\subsection{Relating LUB ground and MIN stored types}}
+
+...................................................
 
 = rules for identifiers
 - assumtions
