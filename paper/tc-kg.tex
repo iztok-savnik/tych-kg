@@ -137,17 +137,17 @@ stands behind a KG, where a graph is a set of named relations, and
 triples are logical statements. Let us depict some of the features of
 the data and knowledge representation language of a KG.
 
-First, a KG includes predefined classes and predicates together with
-the taxonomies of classes and predicates \cite{Baader2002}. Second,
-typing of ground identifiers, as well as typing of the predicates with
-the domain and range types, is stored in a KG. Further, similarly to
-the \emph{roles} \cite{Brachman1985} of a knowledge base, the
-predicates of a KG are treated as classes (types) that are included in
-a taxonomy of predicates. However, they also act as individual
-entities described with additional predicates. Finally, the predicates
-are inherited through the taxonomy of classes, and, from the other
-point of view, the domain and range types of the predicates are
-inherited through the hierarchy of predicates.
+First, a KG includes predefined classes and predicates that are
+organized into taxonomies \cite{Baader2002}. Second, typing of ground
+identifiers, as well as typing of the predicates with the domain and
+range types, is stored in a KG. Further, similarly to the \emph{roles}
+\cite{Brachman1985} of a knowledge base, the predicates of a KG are
+treated as classes (types) that are included in a taxonomy of
+predicates. However, they also act as individual entities described
+with additional predicates. Finally, the predicates are inherited
+through the taxonomy of classes, and, from the other point of view,
+the domain and range types of the predicates are inherited through the
+hierarchy of predicates.
 
 Typing a knowledge graph requires a framework for the definition of
 rules, which is different from the framework for classical typing of
@@ -188,8 +188,8 @@ unrelated triple types, the candidates for the type of $t$.
 
 The appropriate candidate triple types are selected by relating the
 candidates to the MUB ground type by means of a subtype relation. The
-disjunctively bound candidate triple types related to the MUB ground
-type via subtype relation form the final type of~$t$.
+disjunctively bound candidate triple types that are related to the MUB
+ground type via subtype relation form the final type of~$t$.
 
 The contributions of the presented research are as follows. First, to
 our knowledge, this is the first proposal for typing a knowledge graph
@@ -1655,12 +1655,49 @@ i.e., $T\preceq\/S$.
 
 
 
-
-
-
-
-
 \section{Related work}
+
+Most of the related work is cited in the text when presenting the
+particular topic. In this section, we present only the work that is not
+directly related to the presented work but represents a contribution
+to the typing of the knowledge graphs.
+
+The entity typing and type inference deal with predicting and
+inferring the types (classes) of entities that are either missing or
+incorrect. The automatic type assignment can use logic-based
+assignment where a reasoner infers the type of an entity from the
+schema \cite{Horrocks2003}. Alternatively, the rule-based inference
+can be employed on the rules defined as a schema by knowledge
+engineers \cite{Horrocks2004}. Reasoners use them
+automatically. Another alternative is the use of ML-based type
+prediction \cite{Yaghoobzadeh2018}. Various techniques can be used, like entity embeddings and graph neural networks, to produce embeddings
+to be fed into the classifier.
+
+The schema-based type checking is about the verification of RDF-Schema
+\cite{rdfschema12} and OWL \cite{owl2} rules and constraints against
+the data (ABox) and schema (TBox) parts of a KG
+\cite{Baader2002,Horrocks2003,OWL2Spec2012}. The domain and range
+types of predicates are checked to determine whether they are correctly interpreted
+among the ground triples of a KG. The consistency of subtyping and
+inheritance is verified in the KG schema and in the data. Similarly,
+the disjointness of types and other OWL constraints is
+checked. Most of the presented themes are covered by tools based on
+SHACL \cite{shacl2017} and ShEx \cite{shex2015}.
+
+Type checking in query answering ensures that the variables and
+results of a query over a KG are consistent with the schema of a KG
+\cite{Zhao2017,Zhang2019}. A type-checker for queries requires that a
+query respects class hierarchies, domain/range constraints, and
+disjointness rules. The type information can also be used to improve
+the query optimization and execution. In \cite{Kollia2013}, they
+propose to leverage type information to optimize query execution and
+filter semantically invalid results. In most cases, the presented
+approaches use fragments of types that are adapted for the particular
+problem.
+
+% Intersection / Union types in schema
+% Typed embeddings / type-aware representation learning
+% Typing for relation / predicate sense disambiguation
 
 \memo{
 \notes{Comparing typing relation in an OO model with a KG \cite{Pierce2002}.}
@@ -1704,102 +1741,3 @@ disambiguate the sense of a predicate.
 
 
 
-
-.............................................................
-\memo{
-\subsection{Computing MIN type\label{sec:alg-MIN}}
-
-
-\notes{We have a tuple $t=(s,p,o)$.}
-\nnotes{The task is to compute MIN type of $t$'s stored types.}
-\nnotes{The algorithm is using the predicates $p'\preceq\/p$ to obtain all domains and ranges of $p$.}
-
-\notes{FUNCTION typeGlbStored ($p$: Property, $cnt$: Integer, $d_p$,$r_p$: Set): Type}
-\notes{BEGIN}
-\notes{if $d_p=\{\}$ then $d_p =  \{ c_s \mid (p,\text{rdfs:domain},c_s)\in\/G\}$}
-\notes{if $r_p=\{\}$ then $r_p =  \{ c_o \mid (p,\text{rdfs:range},c_o)\in\/G\}$}
-\notes{if $d_p\not=\{\}\land\/r_p\not=\{\}$ then }
-\notes{RETURN $(\lor\/d_p,p,\lor\/r_p)$}
-\notes{$ts = \{\}$}
-\notes{for $p'$ ($(p,\text{rdfs:SubPropertyOf},p')\in\/G$)}
-\notes{BEGIN}
-\notes{$T_{p'} = typeGlbStored(p',cnt+1$,$d_p$,$r_p$)}
-\notes{$ts = ts\cup\/\{T_{p'}\}$}
-\notes{END}
-\notes{RETURN $\lor\/ts$}
-\notes{END}
-
-
-
-
-\notes{Start with a set $\{p\}$ and close the set by using rdfs:superPropertyOf marking them with the ``distance'' from $p$.}
-\nnotes{Gather all domain and range types of $p'\preceq\/p$ in $d_p$ and $r_p$, respectively, marking each domain and range class with the distance of the related $p'$.}
-\nnotes{Generate types $\lor(s_t,p,o_t)$ where $s_t\in\/d_p$, $o_t\in\/r_p$ and both $s_t$ and $o_t$ are marked with the minimal values.}
-\nnotes{Note that there can be more than one element $s_t$ (and $o_t$) marked with a minimal value in $d_p$ (and $r_p$). Hence Cartesian product of the selected domains and ranges are used to generate types $(s_t,p,o_t)$.}
-
-\subsection{Computing join type\label{sec:alg-join}}
-
-\notes{A ground type of a triple $t=(s,p,o)$ is a type $(s_t,p,o_t)$ such that $(s,\text{rdf:type},s_t)$ and $(o,\text{rdf:type},o_t)$.}
-\notes{The sets of types $s_t$ and $o_t$ are stored in the sets $g_s$ and $g_o$, respectively.}
-\notes{The ground type of $t$ is then $T_t=(\land\/g_s,p,\land\/g_o)$.}
-\notes{The lub of a type $T_t$ is computed as follows.}
-
-\notes{For each $s_t\in\/g_s$ ($o_t\in\/g_o$) compute a closure of a set $\{s_t\}$ ($\{o_t\}$) with respect to the relationship rdfs:superClassOf obtaining the sets $c_s$ and $c_o$.}
-\notes{Each step of the closure newly obtained classes are marked with the number of steps if new in the set, and the maximum of both numbers of steps otherwise.}
-\notes{The maximum guaranties the monotonicity: $s_t\prec_\darr\/s_t'\Rightarrow\/m(s_t)>m(s_t')$.}
-\notes{Proof: Assume $m(s_t)<=m(s_t')$. Since $s_t\prec_\darr\/s_t'$ then $m(s_t')+1$ is maximum of $s_t$. Contradiction.}
-
-\notes{The lub of $T_t$ is computed by intersecting all sets $c_s$ ($c_o$) obtained for each $s_t$ ($o_t$), yielding a lub type of $g_s$ ($g_o$).}
-\notes{The intersection of sets is computed step-by-step. Initially, intersection is the first set $c_s$ ($c_o$) of some $s_t$ ($o_t$).}
-\notes{In each step, a new set $c_s$ ($c_o$) for another $s_t$ ($o_t$) is intersected with previous result.}
-\notes{The classes that are in the result (intersection) are merged by selecting the maximum number of closure steps for each class in the intersection.}
-\notes{The reason for this is to obtain the number of steps within which all ground classes reach a given lub class.}
-
-\notes{Finally, the lub classes are selected from the resulted intersection of all $c_s$ ($c_o$).}
-\notes{The class with the smallest number of steps is taken. Then, it is deleted from the set together with all its super-classes.}
-\notes{If set is not empty the previous step is repeated.}
-
-
-
-\subsection{Relating LUB ground and MIN stored types}}
-
-...................................................
-
-= rules for identifiers
-- assumtions
-. suppose we have I, a set of identifiers from g
-. suppose we have a 
-
-- type-check literals
-
-
-.................before 05/27/22....................
-
-= (task) general picture
-- we have graph pattern 
-. a set of triples including consts and vars
-- we derive types of TPs
-
-
-
-- we derive types of GPs
-
-
-= (task) determine a type of a TP
-. type of TP without a predicate? use rdf:predicate.
-. type of TP without the schema? use generalizations.
-. type of TP with predicate? use a triple type defined as the schema.
-. type of TP can be \cup of triple types (defined in the schema).
-
-
-= (task) compute a type of a GP
-. meeting points in GP: use \cap type constructor
-. \cap of \cup of triple types can select one of triple types
-. one triple type is selected by other oper of \cap
-
-
-= (task) compute the type of a concrete triple
-- we need a type of a concrete triple, e.g. for distribution
-. if we have schema triple than it can be utilized
-. obtain the type of each constant
-. schema type, or, the most specific type?
