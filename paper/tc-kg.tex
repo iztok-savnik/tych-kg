@@ -236,7 +236,7 @@ to disambiguate the sense of a predicate with multiple meanings.
 \notes{Further, the types of the triples are the triples including types of triple components.}
 \notes{A user-defined type of a triple is not linked directly to a triple.}
 \nnotes{Types of triples are in a KG defined by specifying the types of identifiers that form triples.}
-\nnotes{However, stored types of identifiers do not need to be those that appear in user-defined stored triple types.}
+\nnotes{However, stored types of identifiers do not need to be those that appear in user-defined schema triple types.}
 \nnotes{Hence, the types of ground triples must be derived from a KG by selecting the appropriate user-defined triple types from the types of components.}
 
 %% Why types in KGs
@@ -292,7 +292,7 @@ a program. The type-checking problem \\
 %\notes{Type-checking of ground triples from a KG.}
 %\notes{Three phases of type-checking ground triples.}
 %\notes{First, a lub type $T_{lub}$ of a ground triple is derived,}
-%\notes{Second, a MIN type $T_{min}$ of the stored triple types is computed.}
+%\notes{Second, a MIN type $T_{min}$ of the schema triple types is computed.}
 %\notes{Finally, a sub-type relationship between the types $T_{lub}$ and $T_{min}$ is investigated.}
 %\notes{The type $T_{lub}$ restricts $T_{min}$ in cases that the propery of $t$ has multiple different meanings.}
 %\notes{Typing triple patterns and BGP queries in further work.}
@@ -895,7 +895,7 @@ Let's have a look at $\land$ type composed of $V$'s ground types
 $T_i^{i\in[1,n]}$ in the case $V\in\I_i$. In Yago \cite{Hoffart2013},
 often $V$ has a set of very specific classes $C_s$ but also some
 general classes $C_g$. The general classes $C_g$ are close to the
-classes used in the stored triple types. If stored typing of $V$ is
+classes used in the schema triple types. If stored typing of $V$ is
 correct, then $C_g$ includes the classes that are supertypes of
 classes from $C_s$.
 
@@ -1036,16 +1036,16 @@ $\land$ type.
 %\notes{Integrate this explanation above.}
 %\notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
 %\nnotes{Show how the $\land$ and $\sqcup$ types of $V$ are used to compute a type of $V$.}
-%\nnotes{$V:_\sqcup\/S$ and there should be a path from $S$ to class components of stored triple types $T$.}
+%\nnotes{$V:_\sqcup\/S$ and there should be a path from $S$ to class components of schema triple types $T$.}
 %\nnotes{... details about the above statement.}
 %\nnotes{As such, $S$ is an approprite point to start searching stored types of $t$.}
 
 \notes{Example from a KG.}
 \notes{Let's have a look at $\sqcup$ types of $I$'s ground types $S_1..S_n$ from a KG. }
 \nnotes{In many cases $I$ has a single type $S_1$ which is the same as the join type $S$.}
-\nnotes{The super-classes of the join type $S$ have to be part of stored triple types}
+\nnotes{The super-classes of the join type $S$ have to be part of schema triple types}
 \nnotes{to be selected as the types of subject or object.}
-\nnotes{Often join type $S$ is close to the classes that are components of stored triple types.}
+\nnotes{Often join type $S$ is close to the classes that are components of schema triple types.}
 \notes{Can the situation with two super-predicates of a predicate $p$ lead to two different definitions of $p$?}}
 %----------------------------------------------------------------
 
@@ -1081,7 +1081,7 @@ $\land$ type.
 \nnotes{The type $\sqcup[T_g]$ is used as a stepping stone to determine the final type of $t$.}
 \nnnotes{To be used for type-checking graph patterns.}
 
-\notes{Stored triple types are user-defined types.}
+\notes{Schema triple types are user-defined types.}
 \nnotes{Stored types for a predicate $p$ are defined via the predicates rdfs:domain and rdfs:range.}
 \nnotes{From the top of the ontology, the stored type $:_\uarr$ is determined based on $p$.}
 \nnotes{However, given $p$ we can have a triple type $(T_s,p,T_o)$ such that $T_s$ or $T_o$ are}
@@ -1092,7 +1092,7 @@ $\land$ type.
 \nnotes{Derived types of the stored types are computed using Rule \ref{rul:typing-subsumption}.}
 \nnotes{Derived types of $\T_\uarr$ include the complete top of the ontology }
 
-\notes{Stored triple types for a given predicate $p$ are computed as MIN of valid stored types for $p$.}
+\notes{Schema triple types for a given predicate $p$ are computed as MIN of valid stored types for $p$.}
 \nnotes{The MIN types of types obtained using $:_\uarr$ are the smallest triple types}
 \nnotes{including MIN classes as components.}
 \nnotes{Stored type have to be minimal to have minimal interpretaton (e.g., type of a triple pattern).}
@@ -1228,8 +1228,8 @@ components $S$ and $O$, respectively, then also the triple types from
 the conclusion of the rule are valid.
 
 The above decomposition of a triple type into a set of triple types is
-useful when we check the ground types against the stored triple types
-to select the valid stored triple type of a triple. This is detailed in
+useful when we check the ground types against the schema triple types
+to select the valid schema triple type of a triple. This is detailed in
 Section \ref{sec:stored-3types}.
 
 Finally, the join of a set of ground types is a set of minimal upper
@@ -1278,15 +1278,36 @@ $\preceq$, which are solely defined on classes.
 
 
 
-\subsection{Stored triple types\label{sec:stored-3types}}
+\subsection{Schema triple types\label{sec:stored-3types}}
+% checked L
 
-The stored triple types are types of triples defined by RDF-Schema
-\cite{rdfschema} vocabulary. Each predicate has the domain and range
-defined either directly, when domain and range are defined for the
-predicate $p$, or indirectly, if the domain and range is defined for
-$p$'s super-predicates and inherited to the predicate $p$.
+The schema types are types of triples defined by a variant of KG
+schema. The schema definition language currently used in KGs is either
+RDF-Schema \cite{rdfschema} or RDF-Schema combined with OWL
+\cite{owl2} vocabulary. In this section, we present the semantics of
+both approaches.
 
-When a KG is restricted by using RDF-Schema we can specify one or more
+We do not expect that the domain and range of the predicate are defined
+for each particular predicate $p$. They can be inherited from the
+super-predicates of $p$. Hence, a predicate $p$ has the domain and
+range defined either directly, when domain and range are defined for
+the predicate $p$, or indirectly, if the domain and range are defined
+for $p$'s super-predicates and inherited by the predicate $p$.
+
+The rules for the derivation of the schema triple type of a given
+triple $t$ are presented for two different schema definition
+languages. In Section \ref{sec:stored-3types}.1 we present the
+derivation of schema types when the RDF-Schema is used. Further, in
+Section \ref{sec:stored-3types}.2 we define the typing rules for
+KGs that use RDF-Schema together with $\land$ and $\lor$ types.
+
+
+
+
+
+
+\subsubsection{\ref{sec:stored-3types}.1 KGs with RDF-Schema.}
+When a KG is restricted by using RDF-Schema, we can specify one or more
 domain and range types. The semantics of RDF-Schema
 \cite{rdfsemantics} interprets multiple domains and ranges with
 $\land$-type. If $p$ has two domains $T_1$ and $T_2$ then $p$ can link
@@ -1295,77 +1316,13 @@ of $p$ is then $T_1\land\/T_2$, or, in terms of OWL \cite{owl},
 owl:intersectionOf$(T_1\ T_2)$. The RDF-Schema does not allow the
 definition of the domain of a predicate with the
 $\lor$-type. Consequently, each predicate can have only one meaning.
-  
-%----------------------------------------------------------------
-\memo{
-However, we often need a semantics of a predicate that allows the
-definition of a predicate with multiple senses, depending on the
-context of the predicate. One reason for adding $\lor$-types to a KG
-can be the expressive power of KG. These KGs use owl:unionOf and
-owl:intersectionOf to define more complex types of predicates.
-Examples of such KGs are schema.org, EPCIS, DBpedia (in few cases) and
-model transformation tools. Further, KGs that can define contexts and
-use contextual reasoning also use $\land$ and $\lor$-types. The
-contexts are often defined by RDF named graphs, e.g., DBpedia
-\cite{Auer2007} and Linked Data \cite{ld-site}. Examples of KGs that
-can define and use contexts are Cyc \cite{cyc}, Scone
-\cite{Fahlman2011} and RACER \cite{Haarslev2012}.}
-%----------------------------------------------------------------
 
-Let us now inspect the same problem from the perspecive of predicate
-modelling. In the case one predicate stands for one sense of a
-predicate, a polysemic predicate is specialized to sub-predicates
-modelling different senses. In the case that predicates of a KG have
-many senses, this representation can lead to predicate
-explosion. However, the reasoning is simpler if all predicates have
-unique meaning. % But the predicates are context insensitive.
-The use of one sense for one predicate is detailed in Section
-\ref{sec:stored-3types}.1.
-
-The second way of modelling predicate sense is definition of the same
-predicate in multiple contexts. The context can be defined in many
-ways. Examples of contexts in KGs are RDF named graphs
-\cite{Carroll2005}, microtheories of Cyc \cite{cyc}, and spaces in
-Scone \cite{Fahlman2011}. The corresponding reasoners of KGs can
-define and use contextes. A predicate can be defined differently in
-different contexts but within one context we can only have one meaning
-of a predicate.
-
-The context (sense) of a predicate can also be defined by using triple
-types including a given predicate. In other words, a sense of a
-predicate depends on the context implemented by a triple type. The
-definition of one predicate in multiple contexts is studied in
-\ref{sec:stored-3types}.2.
-
-%----------------------------------------------------------------
-\memo{
-\notes{Whitin an ontology it seems that the triple type can be used, quite naturally, as the context of a predicate.}
-\notes{The meaning of predicate is modelled by a triple type including concrete classes, types of domains and ranges.}
-\notes{We have one triple type (predicate and types of S and O) mapped to one meaning.}
-\notes{The representation requires using contextual reasoning \cite{cyc}.}
-\notes{One of the pros is that contextual representation and reasoning is close to the natural language \cite{Fahlman2011}.}
-\notes{Pitfalls of word sense disambiguation and contextual reasoning....}}
-
-\memo{
-How to define types of predicates when we have $\land$ and $\lor$-types possibly in different ontologies, RDF graphs, or KGs.
-Different situations where and how the domains and ranges of predicate can be defined.
-List some possibilities: diff ontologies, diff contexts, explicit definition of union in a context,...
-We are goiung to use OWL syntax for the definition of domains and ranges.
-For simplicity we assume that for each predicate we have a definition of the domain (range) in disjunctive noraml form.
-}
-%----------------------------------------------------------------
-
-
-
-
-\subsubsection{\ref{sec:stored-3types}.1 KGs with RDF-Schema.}
-Let us first define the rules for finding a stored type of a triple in
-the case RDF-Schema semantics is used in a KG. We first determine all
-stored triple types for a given triple $t=(s,p,o)$. A stored type is
-constructed by selecting triple types that are composed of a predicate
-$p$ and the domain and range types linked to predicates
-$p'\succeq\/p$. The domain and range types can be defined for the
-predicate $p$ and/or inherited from the predicates $p'\succ\/p$.
+We first determine \emph{all} valid schema types for a given triple
+$t=(s,p,o)$. A schema triple type comprises a predicate $p$ and the domain and range types
+linked to predicates $p'\succeq\/p$. The domain and range types can be
+defined for the predicate $p$ and/or inherited from the predicates
+$p'\succ\/p$. In addition, the domain and range types can be, in
+general, inherited from two different super-predicates of $p$.
 
 \begin{equation}
 \label{rul:3-stored1}
@@ -1376,21 +1333,20 @@ predicate $p$ and/or inherited from the predicates $p'\succ\/p$.
       {t:_\uarr\/\land[T_i^{i\in[1,n]}]*p*\land[S_j^{j\in[1,m]}]}
 \end{equation}
 
-The above rule generates the types of the domain and range of a
-predicate $p$. The valid domain or range types of the predicate $p$
-can be any of types defined as domain or range for some
-$p'\succeq\/p$. (****) Note that domain and range types can be defined for
-different predicates $p_1$ and $p_2$ "above" $p$ ($p_1,p_2\succeq\/p$)
-which have to be comparable, i.e., $p_1\sim\/p_2$. This condition
-restricts the domain and range to be defined on the same path from $p$
-to some maximal element $m$ of the predicate $p$ poset. In the second
-part of the premise the domain and range types are gathered for the
-selected predicates $p_1$ and $p_2$, respectively.
+The above rule generates pairs of types of the domain and range of a
+predicate $p$. We allow that a domain and range types are defined for
+different predicates $p_1,p_2\preceq\/p$ since such a situation can
+appear in a KG. However, we have to be careful that the rules of
+inheritance are respected. We can only inherit from $p_1$ and $p_2$
+that are related by subtype relation:
+$p\preceq\/p_1\preceq\/p_2$. This condition restricts the domain and
+range to be defined on the same path from $p$ to some maximal element
+$m$ of the predicate $p$ poset. 
 
-The above Rule \ref{rul:3-stored1} generates all valid stored types of
+The above Rule \ref{rul:3-stored1} generates all valid schema types of
 a triple $t$. From the set of all valid stored types of $t$ we select
 the subset including only the minimal types. The following rule is a
-logical judgment for a minimal stored triple type of a $t$. 
+logical judgment for a minimal schema type of a $t$. 
 
 \begin{equation}
 \label{rul:min-stored-type}
@@ -1398,64 +1354,63 @@ logical judgment for a minimal stored triple type of a $t$.
       {t:_{\uarr}\/T}
 \end{equation}
 
-The first part of premise says that $t$ is a ground triple and there
-exists $T\in\T$ which is a type of $t$. The second part of the
-premise requires that $T$ is the minimal type of all types $S$ of
-$t$. In other words, there is no type $S_i^{i\in[1,n]}$ of $t$ that is
-a subtype of $T$. Hence, $T$ is the minimal type of the stored triple
-types of $t$. Note that if the stored typing of a KG (using
-RDF.Schema) is correct then the condition $T\sim\/S_i$ is always
-$true$.
+The first part of the premise says that $t$ is a ground triple and there
+exists $T\in\T$ which is a type of $t$. The second part of the premise
+requires that $T$ is the minimal type of all types $S$ of $t$. In
+other words, there is no type $S_i^{i\in[1,n]}$ of $t$ that is a
+subtype of $T$. Hence, $T$ is the minimal type of the stored triple
+types of $t$.
 
-In the case that our KG is restricted to RDF-Schema data model then
-one predicate must represent exactly one meaning. Therefore, Rule
-\ref{rul:min-stored-type} generates exactly one minimal
-type. Furthermore, under the restrictions of RDF-Schema we can not
-define a predicate $p$ with two meanings. If we would specify two
-different domains or ranges of $p$ then reasoner would treat the
+Note that if the schema is defined by using RDF-Schema, and the stored
+schema typing is correct, then the condition $T\sim\/S_i$ is always
+$true$, and Rule \ref{rul:min-stored-type} generates exactly one
+minimal type. Furthermore, under the restrictions of RDF-Schema, we can
+not define a predicate $p$ with two meanings. If we were to specify two
+different domains or ranges of $p$, then the reasoner would treat the
 domain and range types as $\land$-types. Each instance of the domain
-(range) type have to be an instance of all specified types of the
+(range) type has to be an instance of all specified types of the
 domain (range).
 
+% 
 
 
 
 \subsubsection{\ref{sec:stored-3types}.2 KGs with the contextual representation.}
 
 The collective findings of the research in the area of Cognitive
-science \cite{Hollister2017} show that natural language is inherently
+Science \cite{Hollister2017} shows that natural language is inherently
 contextual, and the context is essential in the human representation
 of knowledge and reasoning. 
 
 While the current trend is to enforce exactly one meaning of a
-predicates in KGs, the contextual representation and reasoning allows
+predicate in KGs, the contextual representation and reasoning allow
 the definition of multiple senses of a predicate. There are many
 motivations for adopting contextual representation and reasoning in a
-KG. First, with the evolvment of KGs there are many examples where a
-KG is represented in the modular way spliting the dataset into parts
+KG. First, with the evolution of KGs, there are many examples where a
+KG is represented in a modular way, splitting the dataset into parts
 that correspond to the contexts. The meaning of a predicate can be
-different in different contexts while the reasoner is able to
+different in different contexts, while the reasoner is able to
 disambiguate among the different meanings of a predicate.
 The practical examples of KGs using contexts include the named graphs
-in DBpedia \cite{Auer2007}, Wiki Data \cite{vrandecic2014} and Yago
+in DBpedia \cite{Auer2007}, Wikidata \cite{vrandecic2014}, and Yago
 \cite{Hoffart2013}. Another example is Cyc \cite{cyc} that uses
-microtheories to represent different contexts. Similarly to Cyc, Scone
+microtheories to represent different contexts. Similar to Cyc, Scone
 \cite{Fahlman2011} is a KR system that can define spaces (contexts)
 and uses contextual reasoning.
 
 The second motivation for using contextual representation of KGs is
-the problem of a predicate with mutiple senses represented with
+the problem of a predicate with multiple senses represented with
 multiple sub-predicates. In a query---whether expressed in natural
 language, logic or as a database query---it is difficult to
 disambiguate the correct sub-predicate for the particular query. The
-alternative is that a user must explicitely select a correct sense of
+alternative is that a user must explicitly select a correct sense of
 a predicate (i.e., a sub-predicate) in the query.
 
 Finally, a predicate can be compared to a mathematical function since
 it represents a binary relation. In mathematics, a function is not
 represented by its name only, but with a function type including,
 besides the function name, also the types of its domain and
-range. Types of function can disambiguate among the different
+range. Types of functions can disambiguate among the different
 functions with the same name but different domain and range
 types. Similarly, the types can be effectively used to disambiguate
 the meaning of the predicate in a KG.
@@ -1463,27 +1418,25 @@ the meaning of the predicate in a KG.
 To be able to study the behavior of KG predicates with multiple senses
 in the presence of triple types, we propose a minimal KR schema
 language that includes the triple types stored in a KG as triples. In
-the case there are more than one triple types including a predicate
-$p$ then these are treated as alternatives. For example, if a KG
-includes triples $(c_1,p,c_2)$ and $(c_3,p,c_4)$, where $c_i\in\I_c$,
-then the type of ground triples including $p$ is
+In the case there is more than one triple type including a predicate
+$p$, then these are treated as alternatives. For example, if a KG
+includes triples $(c_1,p,c_2)$ and $(c_3,p,c_4)$, where $c_i\in\T_i$, then the type of ground triples including $p$ is
 $c_1*p*c_2\lor\/c_3*p*c_4$.
 
 Further, the proposed KR language can use $\land$ and $\lor$-types in
 subject and object components of triple types. The $\land$ and
 $\lor$-types are often implemented in KGs in the form of OWL type
 constructors owl:intersectionOf and owl:unionOf\footnote{The OWL union
-  and intersection type constructors are employed mostly in domain
-  specific KGs like biomedical and genomic ontologies. In these
-  scientific fields the knowledge base includes large ontologies where
+  and intersection type constructors are employed mostly in domain-specific KGs like biomedical and genomic ontologies. In these
+  scientific fields, the knowledge base includes large ontologies where
   new classes can be defined as logical combinations of existing
-  classes.}. The use of $\lor$-type in place of the domain or range
+  classes.} The use of $\lor$-type in place of the domain or range
 type is redundant since it can be expressed with multiple triple
 types. Hence, the \emph{minimal} KR schema language includes solely
 the triple types of the form
 $$\land[c_i^{i\in[1,n]}]*p*\land[c_j^{j\in[1,m]}].$$
 
-Let us now present the rules which derive the stored types of a ground
+Let us now present the rules that derive the stored types of a ground
 triple $t$ in the case our minimal KR schema language is used for the
 definition of the KG schema. First, the following Rule
 \ref{rul:3-stored2} generates all valid alternatives of stored triple
@@ -1496,12 +1449,12 @@ domains and ranges of $p$ that can stand for a $\land$-type.
       {t:_\uarr\/\lor[T_i^{i\in[1,n]}]}
 \end{equation}
 
-A stored triple type $\lor[T_i^{i\in[1,n]}]$ of $t$ is a disjunction
-of all valid stored triple types of $t$. Similarly to Rules
+A schema triple type $\lor[T_i^{i\in[1,n]}]$ of $t$ is a disjunction
+of all valid schema triple types of $t$. Similar to Rules
 \ref{rul:min}-\ref{rul:min-gather}, which are defined to find minimal
 types of a set of classes, the following Rules
 \ref{rul:3-min}-\ref{rul:3-min-gather} generate the set of minimal
-stored triple types of a set including all valid stored tyes of $t$.
+schema triple types of a set, including all valid schema types of $t$.
 
 \begin{equation}
 \label{rul:3-min}
@@ -1509,7 +1462,7 @@ stored triple types of a set including all valid stored tyes of $t$.
       {t:_{\uarr}S}
 \end{equation}
 
-The rule says that $S$ is a minimal stored triple type of a stored
+The rule says that $S$ is a minimal schema triple type of a stored
 triple type $\lor[T_i^{i\in[1,n]}]$. $S$ is minimal since all other
 types $T_i$ are either more general or equal ($\succeq$), or not
 related to $S$. The following rule gathers all minimal stored triple
@@ -1522,52 +1475,8 @@ types of $\lor[T_i^{i\in[1,n]}]$.
 \end{equation}
 
 The above rule is identical to the Rule \ref{rul:min-gather} except
-that in this settings it handles triples and not identifiers. The
-result is a disjunction of minimal stored triple types $S_j^{j\in[1,m]}$.
-
-
-
-%----------------------------------------------------------------
-\memo{
-The following Rule \ref{rul:3-alg-min} is an algorithmic typing rule
-for deriving a minimal type of a type $\lor[T_i^{i\in[1,n]}]$ by
-computing a set of minimal stored triple types $\{S_j^{j\in[1,m]}\}$
-from a poset of all valide stored triple types
-$(T_i^{i\in[1,n]},\preceq)$.
-
-%The algorithm implementing the operation minimum is presented in
-%Section \ref{sec:alg-MIN}.
-
-\begin{equation}
-\label{rul:3-alg-min}
-\dfrac{t\in\V\quad\vdasharr\/t:_\uarr\lor[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m]}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
-{\vdasharr\/t:_{\Darr}\lor\/[S_j^{j\in[1,m]}]}
-\end{equation}}
-
-\memo{
-\notes{If $p$ inherits from multiple $p'\succeq\/p$, then the above rule generates multiple types. Explain.}
-\nnotes{The type is determined only if the domain and range of $p'\succeq\/p$ is defined.}
-\nnotes{Otherwise, the domain and range shoud be $\top$. This should be included.}}
-
-\memo{
-Somewhere here, the inheritance should be noted.
-Inheritance should be treated in knowledge graphs!
-Predicates inherit in the same way as the classes.
-
-\notes{What is the meaning of triple types that are \emph{not comparable} ($\not\sim$).}
-\nnotes{1. This can be either that we have two $p$ roots with unrelated MIN triple types.}
-\nnotes{This is possible only if $p$ is defined for semantically different concepts.}
-\nnotes{2. Two $p$-rooted but unrelated stored types through multiple inheritance.}
-\nnotes{Therefore, we can have more than one stored MIN types.}}
-
-\memo{
-The implementation view of the above rule is as follows. The schema
-triples are obtained from the inherited values of the predicates
-rdfs:domain and rdfs:range. The inherited values have to be the
-closest when traveling from property $p$ towards the more general
-properties.}
-%----------------------------------------------------------------
-
+that in this setting it handles triples and not identifiers. The
+result is a disjunction of minimal schema triple types $S_j^{j\in[1,m]}$.
 
 
 
@@ -1576,20 +1485,48 @@ properties.}
 
 \subsection{Typing a triple}
 
-... \\
+Before we present the final step in typing a triple $t$, an overview
+of the work done so far is given. First, we derive the ground type of
+the triple $t$ and then infer the minimal upper bound of the ground
+type. The ground typing inspects all ground types of $t$'s
+components. In case the MUB type is close to $\top$ type then there is
+an outlier in the set of ground types, it can be revealed in
+computation of the MUB type. 
 
-The type of a triple $t=(s,p,o)$ is computed by first deriving the
-base type $T$ and the top type $S$ of $t$. Then, we check if $S$ is
-reachable from $T$ through the sub-class and sub-property hierarchies,
-i.e., $T\preceq\/S$.
+Second, the schema triple type of $t$ is derived from the schema. In
+case we use RDF-Schema semantics of a KG then the rules should infer a
+single minimal schema type. If there are more than one schema types
+than there has to be an error in the definition of some domain or
+range type. In this case, the outlier has to be unrelated to other
+domain or range types. In case we use RDF-Schema with $\land$ and
+$\lor$ types then the rules can infer multiple disjunctively connected
+schema types. (****)
+
+Let us now present final typing of $t$ by relating the ground type and
+schema types (minimal schema triple types) via subtyping relation. If
+the RDF-Schema semantics is used then we have a single schema type
+which should be related to the ground type of $t$. The following Rule
+\ref{rul:3-typing-one} derives the final type of $t$ under RDF-Schema
+semantics. 
 
 \begin{equation}
-\label{rul:3-typing}
+\label{rul:3-typing-one}
 \dfrac{t\in\T_i\quad T\in\T_t,\, t:_{\darr}T\quad S\in\T_t,\, t:_\uarr\/S\quad T\preceq\/S}
       {t:S}
 \end{equation}
 
-\medskip
+The type of $t$ is computed by first deriving the ground type $T$ and
+the schema type $S$ of $t$. $S$ is the final type of $t$ if $T$ is a
+subtype of $S$. In case $T\not\preceq\/S$ then the ground type
+$T=\land[T_i^{i\in[1,n}]$ includes at least one $T_i\not\preceq\/S$.
+
+\begin{equation}
+\label{rul:3-typing-one}
+\dfrac{t\in\T_i\quad t:_{\darr}T\quad\/t:_\uarr\/S_i^{j\in[1,m]}\quad U_k^{k\in[1,l]}\in\{S_i^{j\in[1,m]}\},\,T\preceq\/U_k}
+      {t:\lor[U_k^{k\in[1,l]}]}
+\end{equation}
+
+
 
 ... \\
 
