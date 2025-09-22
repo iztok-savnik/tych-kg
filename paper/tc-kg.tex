@@ -18,6 +18,7 @@
 \usepackage{url}
 
 % symbols
+\newcommand{\s}{\scriptscriptstyle\ \,} 
 \newcommand{\ul}{\underline} 
 \newcommand{\ol}{\overline} 
 \newcommand{\darr}{\downarrow} 
@@ -585,7 +586,7 @@ Next, the subtyping relationship $\preceq$ is reflexive.
 \begin{equation}
 \label{rul:Ti-reflexivity}
 \dfrac{I\in\T_i}
-      {I=I}
+      {I\preceq\/I}
 \end{equation}
 
 The subtype relationship is also transitive. 
@@ -595,7 +596,7 @@ The subtype relationship is also transitive.
 \dfrac{I_1,I_2,I_3\in\T_i\quad\/I_1\preceq\/I_2\quad\/I_2\preceq\/I_3}
       {I_1\preceq\/I_3}   
 \end{equation}
-antisymmetric
+
 Finally, the subtype relationship is antisymmetric which is expressed
 using the following rule.
 
@@ -880,6 +881,19 @@ concrete type of a graph pattern variable.
 
 \subsection{Typing identifiers with $\land$ and $\lor$-types}
 
+The $\land$ and $\lor$-types can model the available choices in
+selection of the domain and range types of a triple type. The
+available choices depend on the selected model (e.g., RDF-Schema). As
+usual for the expressions including a variant of $\cup$ and $\cap$
+operators more complex expressions can be transformed by moving
+$\cup$ and $\cap$ either inside expression or towards the outside of
+an expression. We define the rules for these transformations only if
+they are needed for typing ground triples.
+
+We start with gathering the ground types of a ground identifier
+$I\in\V_i$. The ground types are gathered in the premise of the rule by using the typing
+operation $:_\darr$ defined in Section \ref{sec:}
+
 \notes{For $V\in\V$ gather ground types of identifiers with $\land$-type as $V:_{\darr}\land[T_i^{i\in[1,n]}]$.}
 \nnotes{$V\in\V\quad\forall\/T_i\in\T,\ t:_{\darr}T_i$.}
 \nnotes{The ground type of $V$ is a type $T_g=\land[T_i^{i\in[1,n]}]$.}
@@ -887,8 +901,8 @@ concrete type of a graph pattern variable.
 
 \begin{equation}
 \label{rul:land-1}
-\dfrac{V\in\V\quad\/T_i^{i\in[1,n]}\in\T\quad\/V:_{\darr}T_i^{i\in[1,n]}}
-      {V:_{\darr}\land[T_i^{i\in[1,n]}]}
+\dfrac{I\in\V_i\quad\/T_i^{\s\/i=1..n}\in\T_i\quad\/I:_{\darr}T_i^{\s\/i=1..n}}
+      {I:_{\darr}\land_{i=1}^n\/T_i}
 \end{equation}
 
 Let's have a look at $\land$ type composed of $V$'s ground types
@@ -1062,9 +1076,7 @@ $\land$ type.
 
 \section{Typing triples\label{sec:triples}}
 
-
-%----------------------------------------------------------------
-\memo{
+{
 \notes{We would like to type of a triple $t\in\T_i$.}
 \notes{There are two basic aspects of a triple type.}
 \nnotes{1. $t:T_g$ is computed bottom-up: from the stored types of triple components.}
@@ -1084,11 +1096,11 @@ $\land$ type.
 \notes{Schema triple types are user-defined types.}
 \nnotes{Stored types for a predicate $p$ are defined via the predicates rdfs:domain and rdfs:range.}
 \nnotes{From the top of the ontology, the stored type $:_\uarr$ is determined based on $p$.}
-\nnotes{However, given $p$ we can have a triple type $(T_s,p,T_o)$ such that $T_s$ or $T_o$ are}
+\nnotes{However, given $p$ we can have a triple type $(T,p,S)$ such that $T$ or $S$ are}
 \anotes{defined for some $p'\succeq\/p$.}
-\nnotes{Special case: $p'$ has two domains $T_s^1$ and $T_s^2$---type is then}
-\anotes{$(T_s^1\lor\/T_s^2,p,\_)\equiv\/(T_s^1,p,\_)\lor(T_s^2,p,\_)$.}
-\nnotes{$\T_\uarr=\{(T_s,p,T_o)| p\in\I_p\land(p,\text{rdfs:domain},T_s)\in\Delta\land(p,\text{rdfs:range},T_o)\in\Delta\}$} 
+\nnotes{Special case: $p'$ has two domains $T^1$ and $T^2$---type is then}
+\anotes{$(T^1\lor\/T^2,p,\_)\equiv\/(T^1,p,\_)\lor(T^2,p,\_)$.}
+\nnotes{$\T_\uarr=\{(T,p,S)| p\in\I_p\land(p,\text{rdfs:domain},T)\in\Delta\land(p,\text{rdfs:range},S)\in\Delta\}$} 
 \nnotes{Derived types of the stored types are computed using Rule \ref{rul:typing-subsumption}.}
 \nnotes{Derived types of $\T_\uarr$ include the complete top of the ontology }
 
@@ -1119,15 +1131,15 @@ $\land$ type.
 
 \subsection{Triple types\label{sec:3-types}}
 
-A type of a triple $(s,p,o)\in\V$ is a triple $(D,p,R)\in\T$ such that
+A type of a triple $(s,p,o)\in\V_t$ is a triple $(D,p,R)\in\T_t$ such that
 $s:D$ and $o:R$ holds. The types $D$ and $R$ are type expressions that
 represent either a class or a $\land$-type composed of classes.
 
 The $\land$-types reflect the semantics of RDF-Schema \cite{rdfschema}
 which permits the definition of multiple domains and ranges of the
 predicate $p$. Consequently, each predicate $p$ has exactly one triple
-triple type of the form
-$$(\land[S_i^{i\in[1,n]}],p,\land[O_j^{j\in[1,m]}]).$$
+type of the form
+$$(\land_{i=1}^n\/D_i^{\s\/i=1..n},p,\land_{j=1}^m\/R_j).$$
 
 \begin{example}
   If $p$ has two domains $D_1$ and $D_2$, and a single
@@ -1147,7 +1159,7 @@ defines the relationship $\preceq$ beween two triple types.
 
 \begin{equation}
 \label{rul:3-subtype}
-\dfrac{T_1\in\T,\ T_1=(D_1,p_1,R_1)\quad T_2\in\T,\ T_2=(D_2,p_2,R_2)\quad\/D_1\preceq\/D_2\quad\/p_1\preceq\/p_2\quad\/R_1\preceq\/R_2}
+\dfrac{T_1\in\T_t,\ T_1=(D_1,p_1,R_1)\quad T_2\in\T_t,\ T_2=(D_2,p_2,R_2)\quad\/D_1\preceq\/D_2\quad\/p_1\preceq\/p_2\quad\/R_1\preceq\/R_2}
       {T_1\preceq\/T_2}
 \end{equation}
 
@@ -1181,18 +1193,18 @@ to $I$ by one-step type relationship $:_\darr$, as presented by Rule
 graph, $C$ and $I$ are related by the relationship rdf:type.
 
 A ground type of a triple $t=(I_s,p,I_o)$ is a product type
-$T_s*p*T_o$ that we represent as a triple $(T_s,p,T_o)$. A triple type
+$T*p*S$ that we represent as a triple $(T,p,S)$. A triple type
 includes the ground types of $t$'s components $I_s$ and $I_o$, and the
 property $p$, which now has the role of a type. A ground type of a
 triple is defined by the following rule.
 
 \begin{equation}
 \label{rul:3-ground}
-\dfrac{t\in\V,\ t=(I_s,p,I_o)\quad T_s,T_o\in\T\quad I_s:_\darr\/T_s\quad I_o:_\darr\/T_o\quad p:_\darr\text{rdf:Property}}
-      {t:_\darr(T_s,p,T_o)}
+\dfrac{t\in\V_t,\ t=(I_s,p,I_o)\quad T,S\in\T_i\quad I_s:_\darr\/T\quad I_o:_\darr\/S\quad p:_\darr\text{rdf:Property}}
+      {t:_\darr(T,p,S)}
 \end{equation}
 
-The type $T_s$ is either a class identifier or a $\land$-type composed
+The type $T$ is either a class identifier or a $\land$-type composed
 of a conjunction of class identifiers. The predicates are treated
 differently from the subject and object components of triples. The
 predicates have the role of types while they are instances of
@@ -1203,12 +1215,12 @@ minimal ground types of the triple components.
 
 \begin{equation}
 \label{rul:3-min-ground}
-\dfrac{t\in\V,\ t=(I_s,p,I_o)\quad T_s,T_o\in\T\quad I_s:_\Darr\/T_s\quad I_o:_\Darr\/T_o\quad p:_\darr\text{rdf:Property}}
-      {t:_\darr\/(T_s,p,T_o)}
+\dfrac{t\in\V_t,\, t=(I_s,p,I_o)\quad T,S\in\T_i\quad I_s:_\Darr\/T\quad I_o:_\Darr\/S\quad p:_\darr\text{rdf:Property}}
+      {t:_\darr\/(T,p,S)}
 \end{equation}
 
-The component types $T_s$ and $T_o$ of the minimal ground type
-$(T_s,p,T_o)$ can represent $\land$-types. The following rule transforms
+The component types $T$ and $S$ of the minimal ground type
+$(T,p,S)$ can represent $\land$-types. The following rule transforms
 a triple type including $\land$-types into a $\land$-type of simple
 triple types composed of class identifiers in place of $S$ and $O$
 components. The rule is expressed in a general form by using the
@@ -1217,8 +1229,8 @@ relation.
 
 \begin{equation}
 \label{rul:3-land-transform}
-\dfrac{t\in\V\quad t:(\land[S_i^{i\in[1,n]}],p,\land[R_j^{j\in[1,m]}])}
-      {t:\bigwedge_{i\in[1,n], j\in[1,m]}[(S_i,p,T_j)]}
+\dfrac{t\in\V_t\quad t:(\land_{i=1}^n\/S_i,p,\land_{j=1}^mR_j)}
+      {t:\bigwedge_{i=1..n, j=1..m}(S_i,p,R_j)}
 \end{equation}
 
 The type in the conclusion of the rule is constructed by the Cartesian
@@ -1238,11 +1250,11 @@ on the basis of joins of triple type components $S$ and $O$.
 
 \begin{equation}
 \label{rul:3-join}
-\dfrac{t\in\V,\ t=(I_s,p,I_o)\quad T_s,T_o\in\T\quad I_s:_\sqcup\/T_s\quad I_o:_\sqcup\/T_o\quad p:_\darr\text{rdf:Property}}
-      {t:_\darr\/(T_s,p,T_o)}
+\dfrac{t\in\V_t,\ t=(I_s,p,I_o)\quad T,S\in\T_i\quad I_s:_\sqcup\/T\quad I_o:_\sqcup\/S\quad p:_\darr\text{rdf:Property}}
+      {t:_\darr\/(T,p,S)}
 \end{equation}
 
-The join type $(T_s,p,T_o)$ includes in the components $S$ and $O$ the
+The join type $(T,p,S)$ includes in the components $S$ and $O$ the
 $\land$-types comprising one or multiple MUB classes. When we convert
 this type into a conjunction of single MUB triple types, then each MUB
 triple type stands for all ground triple types of~$t$.
@@ -1256,22 +1268,6 @@ All rules defined for the ground triple types rely on inferring the
 types of their components. The reason for this are the stored typing
 of individual identifiers as well as the stored poset relation
 $\preceq$, which are solely defined on classes.
-
-
-
-
-%----------------------------------------------------------------
-\memo{The types of $s$ and $o$ can be any classes $T_s$ and $T_o$ from
-  ${\cal I}_c$, while the type of $p$ has to be a class $T_p$ that is
-  a subclass of rdf:Property. The typing of a triple $t$ is correct
-  since the interpretation of $T$ includes $t$.}
-
-\memo{Moreover, the types $T$ that are derived by the above rule are
-  minimal in the sense that given the information provided, i.e., the
-  types of $t$'s components, their interpretations are minimal
-  possible comparing them to the interpretations of all other derived
-  types of $t$.}
-%----------------------------------------------------------------
 
 
 
@@ -1327,10 +1323,10 @@ general, inherited from two different super-predicates of $p$.
 \begin{equation}
 \label{rul:3-stored1}
 \dfrac{\begin{array}{c}
-       t\in\V,\, t=(s,p,o)\quad p_1,p_2\in\T,\, p\preceq\/p_1\preceq\/p_2\quad \\
-       T_i^{i\in[1,n]}\in\T,\, (p_1,\text{domain},T_i)\in\/\Delta\quad S_j^{j\in[1,m]}\in\T,\, (p_2,\text{range},S_j)\in\Delta
+       t\in\V_i,\, t=(s,p,o)\quad p_1,p_2\in\T_p,\, p\preceq\/p_1\preceq\/p_2\quad \\
+       T_i^{\s\/i=1..n}\in\T,\, (p_1,\text{domain},T_i)\in\/\Delta\quad S_j^{\s\/j=1..m}\in\T,\, (p_2,\text{range},S_j)\in\Delta
        \end{array}}
-      {t:_\uarr\/\land[T_i^{i\in[1,n]}]*p*\land[S_j^{j\in[1,m]}]}
+      {t:_\uarr\/(\bigwedge_{i=1}^n\/T_i, p, \bigwedge_{j=1}^m\/S_j)}
 \end{equation}
 
 The above rule generates pairs of types of the domain and range of a
@@ -1350,7 +1346,7 @@ logical judgment for a minimal schema type of a $t$.
 
 \begin{equation}
 \label{rul:min-stored-type}
-\dfrac{t\in\T_i\quad T\in\T,\, t:_\uarr\/T\quad\/S_i^{i\in[1,n]}\in\T,\, t:_\uarr\/S_i\quad T\preceq\/S_i\lor\/T\not\sim\/S_i}
+\dfrac{t\in\T_i\quad T\in\T,\, t:_\uarr\/T\quad\/S_i^{\s\/i\in[1,n]}\in\T,\, t:_\uarr\/S_i\quad T\preceq\/S_i\lor\/T\not\sim\/S_i}
       {t:_{\uarr}\/T}
 \end{equation}
 
@@ -1418,10 +1414,11 @@ the meaning of the predicate in a KG.
 To be able to study the behavior of KG predicates with multiple senses
 in the presence of triple types, we propose a minimal KR schema
 language that includes the triple types stored in a KG as triples. In
-In the case there is more than one triple type including a predicate
-$p$, then these are treated as alternatives. For example, if a KG
-includes triples $(c_1,p,c_2)$ and $(c_3,p,c_4)$, where $c_i\in\T_i$, then the type of ground triples including $p$ is
-$c_1*p*c_2\lor\/c_3*p*c_4$.
+case there is more than one triple type including a predicate $p$,
+then these are treated as alternatives. For example, if a KG includes
+triples $(T_1,p,T_2)$ and $(T_3,p,T_4)$, where
+$T_j^{\s\/j=1..4}\in\T_i$, then the type of ground triples including
+$p$ is $T_1*p*T_2\lor\/T_3*p*T_4$.
 
 Further, the proposed KR language can use $\land$ and $\lor$-types in
 subject and object components of triple types. The $\land$ and
@@ -1432,9 +1429,9 @@ constructors owl:intersectionOf and owl:unionOf\footnote{The OWL union
   new classes can be defined as logical combinations of existing
   classes.} The use of $\lor$-type in place of the domain or range
 type is redundant since it can be expressed with multiple triple
-types. Hence, the \emph{minimal} KR schema language includes solely
+types. Hence, the \emph{minimal KR schema language} includes solely
 the triple types of the form
-$$\land[c_i^{i\in[1,n]}]*p*\land[c_j^{j\in[1,m]}].$$
+$$\textstyle\bigwedge_{i=1}^n\/D_i*p*\bigwedge_{j=1}^m\/R_j.$$
 
 Let us now present the rules that derive the stored types of a ground
 triple $t$ in the case our minimal KR schema language is used for the
@@ -1445,11 +1442,11 @@ domains and ranges of $p$ that can stand for a $\land$-type.
 
 \begin{equation}
 \label{rul:3-stored2}
-\dfrac{t\in\V,\, t=(s,p,o)\quad T_i^{i\in[1,n]}\in\T,\, T_i=(D_i,p,R_i)\quad\/T_i^{i\in[1,n]}\in\Delta}
-      {t:_\uarr\/\lor[T_i^{i\in[1,n]}]}
+\dfrac{t\in\V_t,\, t=(s,p,o)\quad T_i^{\s\/i=1..n}\in\T_t,\, T_i=(D_i,p,R_i)\quad\/T_i^{\s\/i=1..n}\in\Delta}
+      {t:_\uarr\/\bigvee_{i=1}^n\/T_i}
 \end{equation}
 
-A schema triple type $\lor[T_i^{i\in[1,n]}]$ of $t$ is a disjunction
+A schema triple type $\bigvee_{i=1}^nT_i$ of $t$ is a disjunction
 of all valid schema triple types of $t$. Similar to Rules
 \ref{rul:min}-\ref{rul:min-gather}, which are defined to find minimal
 types of a set of classes, the following Rules
@@ -1458,25 +1455,25 @@ schema triple types of a set, including all valid schema types of $t$.
 
 \begin{equation}
 \label{rul:3-min}
-\dfrac{t\in\V\quad\/t:_\uarr\lor[T_i^{i\in[1,n]}]\quad\/S\in\/\{T_k^{k\in[1,n]}\}\quad\forall\/i\in[1,n],\ S\preceq\/T_i\lor\/S\not\sim\/T_i}
-      {t:_{\uarr}S}
+\dfrac{t\in\V_t\quad\/t:_\uarr\bigvee_{i=1}^n\/T_i\quad\/S\in\/\{T_i\}_{i=1}^n\quad\forall\/i=1..n,\, S\preceq\/T_i\lor\/S\not\sim\/T_i}
+      {t:_{\Darr}S}
 \end{equation}
 
-The rule says that $S$ is a minimal schema triple type of a stored
-triple type $\lor[T_i^{i\in[1,n]}]$. $S$ is minimal since all other
-types $T_i$ are either more general or equal ($\succeq$), or not
-related to $S$. The following rule gathers all minimal stored triple
-types of $\lor[T_i^{i\in[1,n]}]$.
+The rule says that $S$ is a minimal schema type of a schema type
+$\bigvee_{i=1}^n\/T_i$. $S$ is minimal since all other types $T_i$ are
+either more general or equal ($\succeq$), or not related to $S$. The
+following rule gathers all minimal schema types of
+$\bigvee_{i=1}^n\/T_i$.
 
 \begin{equation}
 \label{rul:3-min-gather}
-\dfrac{t\in\V\quad\forall\/i\in[1,m],\ t:_\uarr\/S_i}
-      {t:_{\uarr}\lor[S_j^{j\in[1,m]}]}
+\dfrac{t\in\V_t\quad\forall\/j=1..m,\, t:_\Darr\/S_j}
+      {t:_{\uarr}\bigvee_{j=1}^m\/S_j}
 \end{equation}
 
 The above rule is identical to the Rule \ref{rul:min-gather} except
 that in this setting it handles triples and not identifiers. The
-result is a disjunction of minimal schema triple types $S_j^{j\in[1,m]}$.
+result is a disjunction of minimal schema types $S_1,\ldots,S_m$.
 
 
 
@@ -1493,14 +1490,16 @@ components. In case the MUB type is close to $\top$ type then there is
 an outlier in the set of ground types, it can be revealed in
 computation of the MUB type. 
 
-Second, the schema triple type of $t$ is derived from the schema. In
-case we use RDF-Schema semantics of a KG then the rules should infer a
-single minimal schema type. If there are more than one schema types
-than there has to be an error in the definition of some domain or
-range type. In this case, the outlier has to be unrelated to other
-domain or range types. In case we use RDF-Schema with $\land$ and
-$\lor$ types then the rules can infer multiple disjunctively connected
-schema types. (****)
+Second, the schema type of $t$ is derived from the schema of a KG. In
+case we use RDF-Schema semantics of a KG then the rules infer a single
+minimal schema type. If there are more than one schema types than the
+domains and ranges from the different definitions are merged into one
+$\land$-type. At this point we can not verify if there are any errors
+in types from the domain and/or range of a predicate. in schema
+(stored) typing. In case we use RDF-Schema with $\land$ and $\lor$
+types, then the rules can infer multiple disjunctive schema
+types. Also in this case there are no additional constraints that
+could be verified.
 
 Let us now present final typing of $t$ by relating the ground type and
 schema types (minimal schema triple types) via subtyping relation. If
@@ -1522,8 +1521,8 @@ $T=\land[T_i^{i\in[1,n}]$ includes at least one $T_i\not\preceq\/S$.
 
 \begin{equation}
 \label{rul:3-typing-one}
-\dfrac{t\in\T_i\quad t:_{\darr}T\quad\/t:_\uarr\/S_i^{j\in[1,m]}\quad U_k^{k\in[1,l]}\in\{S_i^{j\in[1,m]}\},\,T\preceq\/U_k}
-      {t:\lor[U_k^{k\in[1,l]}]}
+\dfrac{t\in\T_i\quad t:_{\darr}T\quad\/t:_\uarr\bigvee_{j=1}^{m}\/S_j}
+      {t:\bigvee\{S_j\mid\/j\in[1,m], T\preceq\/S_j\}}
 \end{equation}
 
 
@@ -1537,9 +1536,9 @@ $T=\land[T_i^{i\in[1,n}]$ includes at least one $T_i\not\preceq\/S$.
 \memo{
 \notes{Why using $\land$ and $\sqcap$ types for typing a triple $t$?}
 \nnotes{We would like to check typing of a triple $t\in\T_i$.}
-\nnotes{We compute first the ground type $T_g=\land[T_i^{i\in[1,n]}]$ and a stored type $T_s$ of $t$.}
+\nnotes{We compute first the ground type $T_g=\land[T_i^{i\in[1,n]}]$ and a stored type $T$ of $t$.}
 \nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
-\nnotes{The subtype relation should hold $T_g\preceq\/T_s$.}
+\nnotes{The subtype relation should hold $T_g\preceq\/T$.}
 
 \notes{Two ways of defining semantics.}
 \notes{1) enumeration style: stored types are enumerated as alternatives ($\lor$).}
