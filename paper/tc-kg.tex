@@ -301,17 +301,17 @@ the triple types that altogether define the schema of a KG.}
 We do not use standard typing rule language
 \cite{Pierce2002,Hindley1997} that includes a context $\Gamma$ where
 the types of the variables are stored. We use a meta-language that is
-rooted in first-order logic (abbr., FOL) but similar to the one used by
-Pierce in \cite{Pierce2002} for the representation of records and
-subtyping.
+rooted in first-order logic (abbr., FOL) but similar to the one used
+by Pierce in \cite{Pierce2002}, in particular, for the representation
+of records and subtyping, as well as for the definition of the
+universal quantification.
 
 The rules are composed of a set of premises and a conclusion. The
 premises can be expressions stating the set membership of an object,
 typing and subtyping judgements, or expressions in the FOL including
 the previous two forms. The expressions of FOL can express complex
-premises such as the requirements for the LUB and GLB triple
-types. The conclusion part of the rule is a typing or subtyping
-judgment.
+premises such as, for example, the conditions for the LUB types. The
+conclusion part of the rule is a typing or subtyping judgment.
 
 The symbols used in a rule are grounded by stating their membership in
 the sets of identifiers ($\V$, $\V_i$ and $\V_t$) and triples ($\T$,
@@ -323,13 +323,23 @@ premises of the rule are treated from the left to the right. The
 quantification of the symbols binds the symbols up to the last premise
 unless defined differently by the parentheses.
 
+\memo{
 Similar to \cite{Dunfield2021}, we differ between two interpretations
 of rules. First, the \emph{generator} view of rules is the forward
 interpretation where rules infer the types from the types derived by
 premises. Second, the \emph{type-checking} view of the rules is the
 backward interpretation. Given the expression and its type, the rules
-are applied backwards to verify that the expression has that type.
-
+are applied backwards to verify that the expression has that type.}
+In this section we present the basic typing of individual (ground)
+identifiers $\V_i$. Typing of literals $\V_l$ is described in Section
+\ref{sec:literals}. Nest, the rules for typing ground identifiers are
+presented in Section \ref{sec:idents-ground}. Section
+\ref{sec:idents-typing} further extends ground typing and subtyping to
+the complete poset set of individual identifiers $\T_i$. Finally, The
+sub-typing relation $\preceq$ is defined and the types of individual
+identifiers are presented. The rules for typing individual identifiers
+are further used for typing individual triples $\V_t$ in Section
+\ref{sec:triples}.
 
 
 
@@ -337,25 +347,28 @@ are applied backwards to verify that the expression has that type.
 
 \section{Typing identifiers}
 
-In this section we present the basic typing of ground identifiers
-$\V_i$. The rules for typing ground identifiers are further used for
-typing ground triples $\V_t$ in Section \ref{sec:triples}.  Typing of
-literals $\V_l$ is described in Section \ref{sec:literals}. The rules
-for deriving the stored types of ground identifiers are given in
-Section \ref{sec:idents-stored}. Finally, the sub-typing relation
-$\preceq$ is defined for the class identifiers $\T_i$ and the types of
-ground identifiers are presented in Section \ref{sec:idents-typing}.
+In this section, we present the basic typing of an individual (ground)
+identifiers $\V_i$. Typing of literals $\V_l$ is described in Section
+\ref{sec:literals}. Next, the rules for typing ground identifiers are
+presented in Section \ref{sec:idents-stored}. Section
+\ref{sec:idents-typing} further extends ground typing and subtyping to
+the complete poset set of individual identifiers $\T_i$. The
+sub-typing relation $\preceq$ is defined, and typing rules for the
+individual identifiers are presented. The rules for typing individual
+identifiers are further used for typing individual triples $\V_t$ in
+Section \ref{sec:triples}.
 
 
 
 
 
 \subsection{Typing literals\label{sec:literals}}
+% check-gramm
 
 Literal values $\V_l\subseteq\V_i$ are the instances of literal types
-$\T_l\subseteq\T_i$. The literal types $\V_l$ are provided by the
-RDF-Schema dictionary \cite{rdfschema}. RDF-Schema defines a list of
-literal types, such as xsd:integer, xsd:string, or xsd:boolean.
+$\T_l\subseteq\T_i$. The literal types $\T_l$ are provided by the
+RDF-Schema dictionary \cite{rdfschema}. RDF-Schema defines a rich set
+of literal types, such as xsd:integer, xsd:string, or xsd:boolean.
 
 The literals are composed of literal values and literal types. For
 example, the literal
@@ -379,13 +392,14 @@ dictionary.
 
 
 \subsection{Ground typing and subtyping of identifiers\label{sec:idents-stored}}
+% check-gramm
 
 The typing expression $V:_\darr\/T$ is a \emph{ground typing} relation
 $:_\darr$ that links a value $V\in\V$ to a ground type $T\in\T$. The
 ground typing relation is a one-step typing relation based on typing
 stored in a KG.
 
-In this section we deal with the identifiers $I\in\V_i$ which are the
+In this section, we deal with the identifiers $I\in\V_i$, which are the
 values of type $T\in\T_i$. The ground types are directly linked to the
 ground identifiers via a stored typing relation in the form
 $(I,\text{rdf:type},T)\in\Delta$. The expression $I:_\darr\/T$ states that a
@@ -396,7 +410,7 @@ relationship between the types $T_1$ and $T_2$. In the case we deal
 with the identifiers, the relation $T_1\preceq_\darr\/T_2$ denotes the
 subclass relations since $T_1,T_2\in\T_i$. The relation $\preceq_\darr$ is
 a one-step relation that is stored in $\Delta$. Note that a unique
-notation for gound typing allows us to address differently the
+notation for ground typing allows us to address differently the
 \emph{stored} and the \emph{derived} types of a KG.
 
 The rule for the one-step typing relation $:_\darr$ is defined using the
@@ -408,14 +422,14 @@ predicate rdf:type.
       {I :_\darr T}
 \end{equation}
 
-The individual entity $I$ can have more than one stored types. By
+The individual entity $I$ can have more than one stored type. By
 using Rule \ref{rul:ident-1step-type} as a generator, it synthesizes
 all types $T_j^{j\in[1,n]}$ such that $I:_\darr\/T_j^{j\in[1,n]}$.
 
 If we want to obtain all valid ground types of $I$, the rule can be
 used either in some other rule that employs it as a generator, or we
-can update above rule to generate a $\land$-type including all the
-types of $I$ as presented in Section \ref{sec:intsc-union}.
+can update the above rule to generate a $\land$-type, including all
+the types of $I$ as presented in Section \ref{sec:intsc-union}.
 
 The one-step subtyping relationship $\preceq_\darr$ is defined on
 classes by using the RDF predicate rdfs:sub\-ClassOf as follows.
@@ -440,16 +454,22 @@ that they represent the names of the binary relations.
 
 
 \subsection{Typing and subtyping identifiers\label{sec:idents-typing}}
+% check-gramm
 
 The one-step relationship $\preceq_\darr$ is extended with the
-reflectivity, transitivity and antisymmetry to obtain the subtyping
-relationship $\preceq$. The relation $\preceq$ forms a partial ordering of
-class identifiers. The ground typing relation $:_\darr$ is then
-extended with the \emph{rule of subsumption} presented as Rule
-\ref{rul:typing-subsumption} to obtain a typing relation $:$.
+reflectivity, transitivity, and antisymmetry to obtain the subtyping
+relationship $\preceq$. The relation $\preceq$ forms a partial
+ordering of individual identifiers.
+
+The ground typing relation $:_\darr$ is then extended with the
+\emph{rule of subsumption} presented as Rule
+\ref{rul:typing-subsumption} to obtain a typing relation $:$. The
+rules are defined for the set of types $\T$ that includes the types of
+individual identifiers $\T_i$ and triple types $\T_t$.
 
 First, the one-step relationship $\preceq_\darr$ is generalized to the
-relationship $\preceq$ defined over class identifiers $\T_i$.
+relationship $\preceq$ defined over the type identifiers
+$\T_i$. 
 
 \begin{equation}
 \label{rul:Ic-extended}
@@ -473,7 +493,7 @@ The subtype relationship is also transitive.
       {I_1\preceq\/I_3}   
 \end{equation}
 
-Finally, the subtype relationship is antisymmetric which is expressed
+Finally, the subtype relationship is antisymmetric, which is expressed
 using the following rule.
 
 \begin{equation}
@@ -484,12 +504,12 @@ using the following rule.
 
 As a consequence of the rules
 \ref{rul:Ti-reflexivity}-\ref{rul:Ti-antisymmetry} the relation
-$\preceq$ is a poset.
+$\preceq$ defines a poset $(\T_i,\preceq)$.
 
 Knowledge graphs include a special class $\top$ that represents the
-root class of the ontology. In RDF ontologies $\top$ is usually
+root class of the ontology. In RDF ontologies, $\top$ is usually
 represented by the predicate owl:Thing \cite{Hoffart2013}. The
-following rule specifys that all class identifiers are more specific
+following rule specifies that all class identifiers are more specific
 than $\top$.
 
 \begin{equation}
@@ -507,8 +527,8 @@ The following rule states that a stored type is a type.
       {I:C}
 \end{equation}
 
-The link between the typing relation and subtype relation is provided
-by adding a typing rule called \emph{rule of subsumption}
+The link between the typing relation and the subtype relation is
+provided by adding a typing rule called \emph{rule of subsumption}
 \cite{Pierce2002}.
 
 \begin{equation}
@@ -525,105 +545,92 @@ by adding a typing rule called \emph{rule of subsumption}
 
 
 \section{Intersection and union types\label{sec:intsc-union}}
+% check-gramm
 
-\memo{
-The meaning of the $\land$ and $\lor$ types can be defined through
-their interpretations. The following definition expresses the
-denotation of a $\lor$ type with the interpretations of its component
-types. Suppose we have a set of types
-$\forall\/i\in\/[1..n],\ T_i\in\T$.
+The rules for the $\land$ and $\lor$-types presented in this section
+are general---they apply for the identifier types $\T_i$ and triple
+types $\T_t$.
 
-\begin{displaymath}
-  \llbracket\lor[T_i^{i\in[1,n]}]\rrbracket_\D = \bigcup_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
-\end{displaymath}
-
-Similarly, the interpretation of a $\land$ type is the intersection of
-the interpretations of its component types.
-
-\begin{displaymath}
-\llbracket\land[T_i^{i\in[1,n]}]\rrbracket_\D = \bigcap_{i\in[1..n]}\llbracket\/T_i\rrbracket_\D
-\end{displaymath}}
-
-\notes{CHECK: upper and lower bounds in the following rules.}
-
-The meaning of the $\land$ and $\lor$ types can be seen through
+The meaning of the $\land$ and $\lor$-types can be seen through
 their interpretations. The instances of the intersection type
 $T_1\land\/T_2$ are objects belonging to both $T_1$ and $T_2$. The
 type $T_1\land\/T_2$ is the greatest lower bound of the types $T_1$
-and $T_2$. In general, $\land[T_i^{i\in[1,n]}]$ is the greatest lower
-bound (abbr. GLB) of types $T_i^{i\in[1,n]}$
+and $T_2$. In general, $\land_{i=1}^n\/T_i$ is the greatest lower
+bound (abbr. GLB) of types $T_i^{\s\/i=1..n}$
 \cite{Pierce1991,Pierce1996}. The instances of the type
-$\land[T_i^{i\in[1,n]}]$ form a maximal set of objects that belong to
+$\land_{i=1}^n\/T_i$ form a maximal set of objects that belong to
 all types $T_i$.
 
-The rules for the $\land$ and $\lor$ types presented in this section
-are general---they apply for the identifier types $\I_c$ and triple
-types $\T_t$. The set of types $\T=\I_c\cup\T_t$ is used to ground
-the types in the rules.
+The union type is dual to the intersection type. The instances of
+the union type $T_1\lor\/T_2$ are objects from the interpretations of
+both types, $T_1$ and $T_2$. The type $T_1\lor\/T_2$ denotes the least
+upper bound of types $T_1$ and $T_2$. A general form of union type is
+$\lor_{i=1}^n\/T_i$. The interpretation of $\lor_{i=1}^n\/T_i$
+represent the minimal set of instances that include the instances of
+all types $T_i^{\s\/i=1..n}$.
 
-The interpretation of a type $\land[T_i^{i\in[1,n]}]$ in included in
-interpretation of every particular type $T_i$. Hence, the type
-$\land[T_i^{i\in[1,n]}]$ is the greatest lower bound of types
-$T_i^{i\in[1,n]}$. This is stated by the following rule.
+The interpretation of a type $\land_{i=1}^n\/T_i$ is included in
+interpretation of every particular type $T_i$ which means
+$\land_{i=1}^n\/T_i\preceq\/T_i$. This is stated by the following
+rule.
 
 \begin{equation}
 \label{rul:land-preceq-elems}
-\dfrac{T_i^{i\in[1,n]}\in\T}
-      {\land[T_i^{i\in[1,n]}] \preceq\/T_i^{i\in[1,n]}} 
+\dfrac{T_i^{\s\/i=1..n}\in\T}
+      {\land_{i=1}^n\/T_i\preceq\/T_i^{\s\/i=1..n}} 
 \end{equation}
 
 Further, the following rule states that if the type $S$ is a subtype
-of every type $T_i^{i\in[1,n]}$ then $S$ is a subtype of
-$\land[T_i^{i\in[1,n]}]$.
+of every type $T_i^{\s\/i=1..n}$ then $S$ is a subtype of
+$\land_{i=1}^n\/T_i$.
 
 \begin{equation}
 \label{rul:lbound-preceq-land}
-\dfrac{S\in\T\quad\/T_i^{i\in[1,n]}\in\T\quad\/S\preceq\/T_i^{i\in[1,n]}}
-      {S\preceq\land[T_i^{i\in[1,n]}]}  
+\dfrac{S\in\T\quad\/T_i^{\s\/i=1..n}\in\T\quad\/S\preceq\/T_i^{\s\/i=1..n}}
+      {S\preceq\land_{i=1}^n\/T_i}  
 \end{equation} 
 
 The opposite to the above rule, the following rule states the
 necessary conditions that must be met so that a type $T$ is a
-supertype of a $\land$-type $\land[S_i^{i\in[1,n]}]$.
-% this are upper bound types
+supertype of a type $\land_{i=1}^n\/T_i$. It is enough that there is
+one type $S_i\preceq\/T$ for the intersection of $S_i^{\s\/i=1..n}$ to
+be included in $T$.
 
 \begin{equation}
 \label{rul:land-preceq-ubound}
-\dfrac{T\in\T\quad\/S_i^{i\in[1,n]}\in\T\quad\/S\in\{S_i^{i\in[1,n]}\}\quad\/S\preceq\/T}
-      {\land[S_i^{i\in[1,n]}]\preceq\/T}  
+\dfrac{T\in\T\quad\/S_i^{\s\/i=1..n}\in\T\quad\/S\in\{S_i\}_{i=1}^n\quad\/S\preceq\/T}
+      {\land_{i=1}^n\/S_i\preceq\/T}  
 \end{equation} 
 
-The intersection and union types are dual. This can be seen also from
-the duality of the rules for the $\land$ and $\lor$ types.
+The duality of the intersection and union types can also be seen from
+the duality of the rules for the $\land$ and $\lor$-types.
 
-The instances from the union type $T_1\lor\/T_2$ are either the
-instances of $T_1$ or $T_2$, or the instances of both
-types. Therefore, $\lor[T_i^{i\in[1,n]}]$ is the least upper bound of
-types $T_i^{i\in[1,n]}$ \cite{Pierce1991}.
+The union type $\lor_{i=1}^n\/T_i$ is the least upper bound of
+types $T_i^{\s\/i=1..n}$ \cite{Pierce1991}. This means that all types
+$T_i^{\s\/i=1..n}$ are subtypes of their union. 
 
 \begin{equation}
 \label{rul:lor-preceq-elems}
-\dfrac{T_i^{i\in[1,n]}\in\T}
-      {T_i^{i\in[1..n]}\preceq\/\lor[T_i^{i\in[1,n]}]}
+\dfrac{T_i^{\s\/i=1..n}\in\T}
+      {T_i^{\s\/i=1..n}\preceq\lor_{i=1}^n\/T_i}
 \end{equation}
 
-Finally, the following rules defines the necessary conditions to be
-met for a type $T$ to be a supertype of a type
-$\lor[S_i^{i\in[1,n]}]$.
+The following rule defines the necessary conditions to be met for a
+type $T$ to be a supertype of a type $\lor_{i=1}^n\/S_i$.
 
 \begin{equation}
 \label{rul:lor-preceq-ubound}
-\dfrac{T\in\T\quad\/S_i^{i\in[1..n]}\in\T\quad\/S_i^{i\in[1..n]}\preceq\/T}
-      {\lor[S_i^{i\in[1..n]}]\preceq\/T}  
+\dfrac{T\in\T\quad\/S_i^{\s\/i=1..n}\in\T\quad\/S_i^{\s\/i=1..n}\preceq\/T}
+      {\lor_{i=1}^n\/S_i\preceq\/T}  
 \end{equation}
 
-Again, the opposite rule that defines the premises that must hold so
-that $S$ is a subtype of a type $\lor[T_i^{i\in[1,n]}]$.
+Again, the opposite rule defines the premises that must hold so that
+$T$ is a subtype of a type $\lor_{i=1}^n\/S_i$.
 
 \begin{equation}
 \label{rul:lbound-preceq-lor}
-\dfrac{T\in\T\quad\/S_i^{i\in[1..n]}\in\T\quad\/S\in\{S_i^{i\in[1..n]}\}\quad\/T\preceq\/S}
-      {T\preceq\lor[S_i^{i\in[1..n]}]}  
+\dfrac{T\in\T\quad\/S_i^{\s\/i=1..n}\in\T\quad\/S\in\{S_i\}_{i=1}^n\quad\/T\preceq\/S}
+      {T\preceq\lor_{i=1}^n\/S_i}  
 \end{equation}
 
 Note that besides checking the subtype relation between a type treated
@@ -632,38 +639,27 @@ as a whole and some logical type, Rules
 check the subtyping among arbitrary logical types.
 
 
-\memo{
-Note that the interpretation of a class $C$ is a set of instances
-$\llbracket\/C\rrbracket_\D=\{I\ |\ I\in\I_i\land\/I:C\}$. Further, the
-interpretation of a triple type $T$ is the set of ground triples
-$\llbracket\/T\rrbracket_\D=\{t\ |\ t\in\T_t\land\/t:T\}$\footnote{Triple
-  types $\T_t$ are presented in the following Section
-  \ref{sec:triples}.}\cite{Savnik2025}.\\}
-
-\memo{Put together the base types of ground identifiers using $\land$ type.}
-\memo{First, the base type of an ground identifier is the $\land$ of all base types.}
-\memo{The \emph{base type} of a ground identifier is defined explicitely!}
-
 
 
 
 
 \subsection{The join and meet types\label{sec:join-meet-types}}
 
-The $\lor$ and $\land$ types are logical types defined through the
-sets of instances. Given two types $T$ and $S$ we have a least upper
-bound $S\lor\/T$, and a greatest lower bound $S\land\/T$ types where
-$S\lor\/T$ denotes a minimal set of objects that are of type $S$
-\emph{or} $T$ (or both), and $S\land\/T$ denotes a maximal set of
-objects that are of type $S$ \emph{and} $T$.
+The $\lor$ and $\land$ types are logical types defined on the basis of
+their interpretations, i.e., the sets of instances. Given two types
+$T$ and $S$ we have a least upper bound $S\lor\/T$, and a greatest
+lower bound $S\land\/T$ types where $S\lor\/T$ denotes a minimal set
+of objects that are of type $S$ \emph{or} $T$ (or both), and
+$S\land\/T$ denotes a maximal set of objects that are of type $S$
+\emph{and} $T$.
 
 A KG includes a stored poset of classes and triple types that
-represent types of the individual objects and ground triples. The
+represent types of the individual identifiers and ground triples. The
 poset can be used to compute a join $S\sqcup\/T$ and a meet
-$S\sqcap\/T$. Usual definition of the join and meet operators is by
-using a least upper bound and a greatest lower bound if they exist
-\cite{Pierce2002}, respectively. However, in a KG we are also
-interested in the upper bound and lower bound types
+$S\sqcap\/T$ of the parameter types. Usual definition of the join and
+meet operators is by using a least upper bound and a greatest lower
+bound if they exist \cite{Pierce2002}, respectively. However, in a KG
+we are also interested in the upper bound and lower bound types
 \cite{DaveyPriestley2002}. Let us present an example.
 
 \begin{example}
@@ -679,66 +675,71 @@ interested in the upper bound and lower bound types
   bounds $c$ and $d$. $\finbox$
 \end{example}
 
-The least upper bound (abbr. LUB) is by definition one element. It has
-to be related to all upper bounds via the relationship $\preceq$.  On
+The least upper bound (abbr., LUB) is by definition one element. It has
+to be related to all upper bounds via the relationship $\preceq$. On
 the other hand, the most interesting upper and lower bounds are
-minimal upper bounds (abbr. MUB) and maximal lower bounds (abbr. MLB)
-\cite{Knudstorp2024}. They are lower than the least upper bound and
+minimal upper bounds (abbr., MUB) and maximal lower bounds (abbr. MLB)
+\cite{Knudstorp2024}. They can be lower than the least upper bound and
 higher than the greatest lower bound, respectively. They represent
 more detailed information about the parameter set of types $S$ than
 the LUB type of $S$.
 
-The join $J=\sqcup[T_i^{i\in[1,n]}]$ is a set of MUB types
+The join $J=\sqcup_{i=1}^n\/T_i$ is a set of MUB types
 $J_j^{j\in[1,m]}\in\/J$ such that $J_j$ is an upper bound with
-$T_i^{i\in[1,n]}\preceq\/J_j$, and there is no such $L$ where
-$T_i^{i\in[1,n]}\preceq\/L$ without also having $J_j\preceq\/L$. Since
+$T_i^{\s\/i=1..n}\preceq\/J_j$, and there is no such $L$ where
+$T_i^{\s\/i=1..n}\preceq\/L$ without also having $J_j\preceq\/L$. Since
 we have a top type $\top$ defined in a KG, the join of arbitrary two
 types always exists.
 
-The meet of types $T_i^{i\in[1,n]}]$, $M=\sqcap[T_i^{i\in[1,n]}]$, is
+The meet of types $T_i^{\s\/i=1..n}]$, $M=\sqcap_{i=1}^n\/T_i]$, is
 a set of the maximal lower bound types $M_j^{j\in[1,m]}\in\/M$ such
-that $M_j$ is lower bound with $M_j\preceq\/T_i^{i\in[1,n]}$, and all
-other lower bounds $U$ with $U\preceq\/T_i^{i\in[1,n]}$ entail
+that $M_j$ is lower bound with $M_j\preceq\/T_i^{\s\/i=1..n}$, and all
+other lower bounds $U$ with $U\preceq\/T_i^{\s\/i=1..n}$ entail
 $U\preceq\/M_j$. Note that the meet of the set of types from a KG does
 not always exist.
 
 The join type is related to the $\lor$-type. Given a set of types
-$\{T_i^{i\in[1,n]}\}$, the join $J=\sqcup[T_i^{i\in[1,n]}]$ is a set
-of types $J_j^{j\in[1,m]}\in\/J$ that are the minimal upper bounds
-such that $T_i\preceq\/J_j$ for $i\in[1,n]$. On the other hand,
-Rule \ref{rul:lor-preceq-elems} for the $\lor$-types states
-$T_i\preceq\lor[T_i^{i\in[1,n]}]$. However, the join type and
-$\lor$-type differ in the interpretation.
-$$\llb\lor[T_i^{i\in[1,n]}]\rrb_\D=\bigcup_{i\in[1..n]}\llb\/T_i\rrb_\D\subseteq\bigcup_{j\in[1,m]}\llb\/J_j\rrb_\D=\llb\sqcup[T_i^{i\in[1,n]}]\rrb_\D$$
+$\{T_i\}_{i=1}^n$, the join $J=\sqcup_{i=1}^n\/T_i$ is a set of types
+$J_j^{j\in[1,m]}\in\/J$ that are the minimal upper bounds such that
+$T_i^{\s\/i=1..n}\preceq\/J_j$. On the other hand, Rule
+\ref{rul:lor-preceq-elems} for the $\lor$-types states
+$T_i^{\s\/i=1..n}\preceq\lor_{i=1}^n\/T_i]$. However, the join type and $\lor$-type
+differ in the interpretation.
+$$\llb\lor_{i=1}^n\/T_i\rrb_\D=\bigcup_{i=1}^n\llb\/T_i\rrb_\D\subseteq\bigcup_{j=1}^m\llb\/J_j\rrb_\D=\llb\sqcup_{i=1}^n\/T_i\rrb_\D$$
 
-While the interpretation of the type $\lor[T_i^{i\in[1,n]}]$ includes
+While the interpretation of the type $\lor_{i=1}^nT_i]$ includes
 precisely the instances of all $T_i$, the interpretation of the type
-$\sqcup[T_i^{i\in[1,n]}]$ contains the instances of minimal upper bound
-types. The interpretation of $\sqcup[T_i^{i\in[1,n]}]$ can include
-interpretations of classes that are not among $T_i^{i\in[1,n]}$.
+$\sqcup_{i=1}^n\/T_i$ contains the instances of minimal upper bound
+types. The interpretation of $\sqcup_{i=1}^n\/T_i$ can include
+interpretations of classes that are not among $T_i^{\s\/i=1..n}$.
 
-A meet type of $T_i^{i\in[1,n]}$ may not exist in a poset of types
-from a KG. In general, the meet types $M=\sqcap[T_i^{i\in[1,n]}]$
-exist in a class ontology if the types $T_i^{i\in[1,n]}$ are
+A meet type of $T_i^{\s\/i=1..n}$ may not exist in a poset of types
+from a KG. In general, the meet types $M=\sqcap_{i=1}^n\/T_i$
+exist in a class ontology if the types $T_i^{\s\/i=1..n}$ are
 \emph{bounded below} \cite{Pierce2002} which means that there exists a
 type $L$ such that $L\preceq\/T_i$ for all $i$. The meet types are not
 frequent on the lower levels of a class ontology from a KG.
 
 As in the case of the $\lor$-type and the join type, the semantics of
-the $\land$-type is similar to the semantics of the meet type. A
+the $\land$-type is similar to the semantics of the meet type. An
 $\land$-type is a type that implements logical view of the greatest
 lower bound type. Differently, the meet types are based on the
 concrete poset of KG types and represent concrete types though their
 interpretation is contained in the interpretation of a
-$\land$-type. The type $\land[T_i^{i\in[1,n]}]$ denotes the
-intersection $\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a
-meet type $M_j\in\sqcap[T_i^{i\in[1,n]}]$ includes the interpretation
-of the meet types from $M$. Note that the instances of the meet types
+$\land$-type. The type $\land_{i=1}^n\/T_i$ denotes the intersection
+$\bigcap\/\llb\/T_i\rrb_\D$ while the interpretation of a meet types
+$M_j^{\s\/j=1..m}\in\sqcap_{i=1}^n\/T_i$ includes the union
+$\cup_{j\in[1,m]}\llb\/M_j\rrb_\D$. Since
+$M_j\preceq\/T_i^{\s\/i=1..n}$, then
+$\llb\/M_j\rrb_\D\subseteq\llb\/T_i^{\s\/i=1..n}\rrb_\D$. Hence,
+$\llb\sqcap[T_i^{\s\/i=1..n}]\rrb_\D=\cup_{j=1}^m\llb\/M_j\rrb_\D$
+
+Note that the instances of the meet types
 are in the intersection of the instances of types
-$T_i^{i\in[1,n]}$. The set $\bigcap\/\llb\/T_i\rrb_\D$ can also
+$T_i^{\s\/i=1..n}$. The set $\bigcap\/\llb\/T_i\rrb_\D$ can also
 include objects that are not instances of any meet type from
 $M$. Hence,
-$$\llb\land[T_i^{i\in[1,n]}]\rrb_\D=\bigcap_{i\in[1..n]}\/\llb\/T_i\rrb_\D\supseteq\bigcap_{j\in[1,m]}\llb\/M_j\rrb_\D=\llb\sqcap[T_i^{i\in[1,n]}]\rrb_\D.$$
+$$\llb\land_{i=1}^n\/T_i\rrb_\D=\bigcap_{i=1}^n\llb\/T_i\rrb_\D\supseteq\bigcup_{j=1}^m\llb\/M_j\rrb_\D=\llb\sqcap_{i=1}^n\/T_i\rrb_\D.$$
 
 In type-checking the ground triples, the join types are used in the
 procedure for checking the types derived bottom-up against the stored
@@ -756,13 +757,13 @@ concrete type of a graph pattern variable.
 \subsection{Typing identifiers with $\land$ and $\lor$-types}
 
 The $\land$ and $\lor$-types can model the available choices in
-selection of the domain and range types of a triple type. The
-available choices depend on the selected model (e.g., RDF-Schema). As
-usual for the expressions including a variant of $\cup$ and $\cap$
-operators more complex expressions can be transformed by moving
-$\cup$ and $\cap$ either inside expression or towards the outside of
-an expression. We define the rules for these transformations only if
-they are needed for typing ground triples.
+selection of the domain and range types of a triple type. The choices
+depend on the selected model (e.g., RDF-Schema). As usual for the
+expressions including a variant of $\cup$ and $\cap$ operators more
+complex expressions can be transformed by moving $\cup$ and $\cap$
+either inside expression or towards the outside of an expression. We
+define the rules for these transformations only if they are needed for
+typing ground triples.
 
 We start with a rule for gathering the ground types of a ground
 identifier $I\in\V_i$. The ground types are gathered in the premise of
@@ -858,143 +859,27 @@ in Section \ref{sec:stored-3types}.
 
 
 
-%----------------------------------------------------------------
-\memo{
-The rule for filtering $\land[T_i^{i\in[1,n]}]$ of all
-$T_i\succeq\/T_j$ where $i\not=j$ by using algorithmic typing is
-defined as follows. The algorithm implementing the operation MIN is
-presented in Section \ref{sec:alg-MIN}.
-
-\begin{equation}
-\label{rul:alg-min}
-\dfrac{V\in\V\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\vdasharr\/\{S_j^{j\in[1,m}\}=\,\Darr\kern -3pt[T_i^{i\in[1,n]}]}
-{\vdasharr\/V:_{\Darr}\land\/[S_j^{j\in[1,m]}]}
-\end{equation}}
-
-\memo{
-The following Rule \ref{rul:join-alg} derives the complete join type
-in one step. The operator join $\sqcup[T_i^{i\in[1,n]}]$ returns as a
-result a set of minimal upper bound types of $T_i^{i\in[1,n]}$. Since
-all the join types are valid types of $V$, we can group them into one
-$\land$ type.
-
-\begin{equation}
-\label{rul:join-alg} 
-\dfrac{V\in\V\quad\vdasharr\/V:_\darr\land[T_i^{i\in[1,n]}]\quad\/\vdasharr\{S_j^{j\in[1,m]}\}=\sqcup[T_i^{i\in[1,n]}]}
-      {\vdasharr\/V:_\sqcup\land[S_j^{j\in[1,m]}]}
-\end{equation}}
-
-\memo{
-%\notes{Integrate this explanation above.}
-%\notes{Why computing a join type $S=\sqcup[S_1..S_n]$ of $\land[S_1..S_m]$?}
-%\nnotes{Show how the $\land$ and $\sqcup$ types of $V$ are used to compute a type of $V$.}
-%\nnotes{$V:_\sqcup\/S$ and there should be a path from $S$ to class components of schema triple types $T$.}
-%\nnotes{... details about the above statement.}
-%\nnotes{As such, $S$ is an approprite point to start searching stored types of $t$.}
-
-\notes{Example from a KG.}
-\notes{Let's have a look at $\sqcup$ types of $I$'s ground types $S_1..S_n$ from a KG. }
-\nnotes{In many cases $I$ has a single type $S_1$ which is the same as the join type $S$.}
-\nnotes{The super-classes of the join type $S$ have to be part of schema triple types}
-\nnotes{to be selected as the types of subject or object.}
-\nnotes{Often join type $S$ is close to the classes that are components of schema triple types.}
-\notes{Can the situation with two super-predicates of a predicate $p$ lead to two different definitions of $p$?}}
-%----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
 
 
 
 \section{Typing triples\label{sec:triples}}
 
-...
 
-\memo{
-  Now we have a minimal ground type of a value $V$ in the form of a
-conjunction of minimal types $S_i$ of $V$. The types that are
-important from the perspective of typing computer languages defined on
-values from a KG are the user-defined types of triples. The definition
-of a user-defined triple type requires the knowledge about the meaning
-of the binary relationship defined by a predicate---this is reflected
-in the selection of the domain and range of the predicate.
+%\subsection{Triple types\label{sec:3-types}}
 
-The first step in verifying the relations between the ground and
-schema types of a value $V$ is the computation of a join type
-from a ground type of $V$. The join type of a ground type should be a
-subtype of the user-defined types that describe the value $V$. If the
-join type is not a subtype of the user-defined type then there is an
-error in stored types of a value $V$.}
-
-\memo{
-\notes{We would like to type of a triple $t\in\T_i$.}
-\notes{There are two basic aspects of a triple type.}
-\nnotes{1. $t:T_g$ is computed bottom-up: from the stored types of triple components.}
-\nnotes{2. $t:T_u$ can be computed from the user-defined types of properties.}
-\nnotes{The relation $T_g\preceq\/T_u$ must hold if the typing of KG is correct.}
-\nnotes{If the predicate $p$ of type $T_u$ is defined in multiple contexts, some of disjunctively}
-\nnotes{linked components of $T_u$ may not be related to $T_g$.}
-\nnotes{The filtering of $T_u$ is done by Rule \ref{rul:3-typing-one}.}
-
-\notes{About the types that are computed bottom-up.}
-\nnotes{Ground type of a triple is computed first by extending $:_\darr$ to triples.}
-\nnotes{A triple can have multiple ground types $T_g=(\land[S_i^{i\in[1,k]}],p,\land[O_j^{j\in[1,m]}])$.}
-\nnotes{Next, the join type $\sqcup[T_g]$ of ground type $T_g$ is derived.}
-\nnotes{The type $\sqcup[T_g]$ is used as a stepping stone to determine the final type of $t$.}
-\nnnotes{To be used for type-checking graph patterns.}
-
-\notes{Schema triple types are user-defined types.}
-\nnotes{Stored types for a predicate $p$ are defined via the predicates rdfs:domain and rdfs:range.}
-\nnotes{From the top of the ontology, the stored type $:_\uarr$ is determined based on $p$.}
-\nnotes{However, given $p$ we can have a triple type $(T,p,S)$ such that $T$ or $S$ are}
-\anotes{defined for some $p'\succeq\/p$.}
-\nnotes{Special case: $p'$ has two domains $T^1$ and $T^2$---type is then}
-\anotes{$(T^1\lor\/T^2,p,\_)\equiv\/(T^1,p,\_)\lor(T^2,p,\_)$.}
-\nnotes{$\T_\uarr=\{(T,p,S)| p\in\I_p\land(p,\text{rdfs:domain},T)\in\Delta\land(p,\text{rdfs:range},S)\in\Delta\}$} 
-\nnotes{Derived types of the stored types are computed using Rule \ref{rul:typing-subsumption}.}
-\nnotes{Derived types of $\T_\uarr$ include the complete top of the ontology }
-
-\notes{Schema triple types for a given predicate $p$ are computed as MIN of valid stored types for $p$.}
-\nnotes{The MIN types of types obtained using $:_\uarr$ are the smallest triple types}
-\nnotes{including MIN classes as components.}
-\nnotes{Stored type have to be minimal to have minimal interpretaton (e.g., type of a triple pattern).}
-\nnotes{Finally, the type $:$ of $t$ is deterimned by summing alternative $:_\Darr$ types.}
-\nnotes{Note there can be more than one $\Darr$-type.}
-\nnotes{This happens when triple types include property that is defined in two different contexts.}
-
-\notes{Interactions between the $\land/\lor$ types of triple components and triples must be added.}
-\nnotes{Analogy between the types of functions in LC and types of triples.}
-\nnotes{Show rules relating $\land/\lor$ types and triple types. Example.}
-\nnotes{E.g., $(S_1\land\/S_2)*p*R = S_1*p*R\land\/S_2*p*R$.}
-\nnotes{Are all rules covered?}
-
-\notes{Predicates should be treated in the same way as the classes.}
-\nnotes{They can have a rich hierarchy.}
-\nnotes{\emph{Note:} Discussion on special role of predicates and their relations to classes?}
-\nnotes{Mention Cyc as the practical KB with rich hierarchy of predicates.}}
-%----------------------------------------------------------------
-
-
-
-
-
-
-\subsection{Triple types\label{sec:3-types}}
-
-A type of a triple $(s,p,o)\in\V_t$ is a triple $(D,p,R)\in\T_t$ such that
-$s:D$ and $o:R$ holds. The types $D$ and $R$ are type expressions that
-represent either a class or a $\land$-type composed of classes.
+A type of a triple $(s,p,o)\in\V_t$ is a is a product type $D*p*R$
+where $s:D$ and $o:R$ holds. In our model, the triple types are
+represented by a triple $(D,p,R)\in\T_t$. The types $D$ and $R$ are
+type expressions that represent either a class identifier or an 
+expression composed of classes related by $\land$ and/or $\lor$
+operators. The available logical operators depend on the schema
+languege of a KG. For now, we assume the schema language is
+RDF-Schema.
 
 The $\land$-types reflect the semantics of RDF-Schema \cite{rdfschema}
 which permits the definition of multiple domains and ranges of the
-predicate $p$. Consequently, each predicate $p$ has exactly one triple
-type of the form
+predicate $p$ that are linked with $\land$-types. Consequently, each
+predicate $p$ has exactly one triple type of the form
 $$(\land_{i=1}^n\/D_i^{\s\/i=1..n},p,\land_{j=1}^m\/R_j).$$
 
 \begin{example}
@@ -1008,10 +893,10 @@ The interpretation of a triple type $(D,p,R)$ is defined as
 follows.
 $$\llb(D,p,R)\rrb_\Delta=\{(s,p,o)\mid\/s\in\llb\/D\rrb_\Delta\land\/o\in\llb\/R\rrb_\Delta \}$$
 
-The subtype relationship among the triples is defined on the basis of
-the subtype relationship among the classes and the $\land$ and
-$\lor$-types defined on classes, and predicates. The following rule
-defines the relationship $\preceq$ beween two triple types.
+The subtype relationship among the triple types is defined on the
+basis of the subtype relationship among classes, $\land$ and
+$\lor$-types, and predicates. The following rule defines the
+relationship $\preceq$ beween two triple types.
 
 \begin{equation}
 \label{rul:3-subtype}
@@ -1019,11 +904,9 @@ defines the relationship $\preceq$ beween two triple types.
       {T_1\preceq\/T_2}
 \end{equation}
 
-It is obvious from the definition of the subtyping relationship among
-the triple types that
-$\llb\/T_1\rrb_\Delta\subseteq\llb\/T_2\rrb_\Delta$. Note that Rule
-\ref{rul:3-subtype} handles the $\land$-types of the subject and
-object through Rules
+\noindent
+The above Rule \ref{rul:3-subtype} handles the $\land$-types of the
+subject and object through Rules
 \ref{rul:land-preceq-elems}-\ref{rul:land-preceq-ubound}.
 
 
@@ -1209,7 +1092,7 @@ logical judgment for a minimal schema type of a $t$.
 The first part of the premise says that $t$ is a ground triple and there
 exists $T\in\T$ which is a type of $t$. The second part of the premise
 requires that $T$ is the minimal type of all types $S$ of $t$. In
-other words, there is no type $S_i^{i\in[1,n]}$ of $t$ that is a
+other words, there is no type $S_i^{\s\/i=1..n}$ of $t$ that is a
 subtype of $T$. Hence, $T$ is the minimal type of the stored triple
 types of $t$.
 
@@ -1302,25 +1185,27 @@ domains and ranges of $p$ that can stand for a $\land$-type.
       {t:_\uarr\/\bigvee_{i=1}^n\/T_i}
 \end{equation}
 
-A schema triple type $\bigvee_{i=1}^nT_i$ of $t$ is a disjunction
-of all valid schema triple types of $t$. Similar to Rules
-\ref{rul:min}-\ref{rul:min-gather}, which are defined to find minimal
-types of a set of classes, the following Rules
-\ref{rul:3-min}-\ref{rul:3-min-gather} generate the set of minimal
-schema triple types of a set, including all valid schema types of $t$.
+A schema triple type $\bigvee_{i=1}^nT_i$ of $t$ is a disjunction of
+all valid schema triple types of $t$. Similar to Rule \ref{rul:min},
+which is defined to find minimal types of a set of classes, the
+following Rule \ref{rul:3-min} generates the disjunction of minimal
+schema types.
 
 \begin{equation}
 \label{rul:3-min}
-\dfrac{t\in\V_t\quad\/t:_\uarr\bigvee_{i=1}^n\/T_i\quad\/S\in\/\{T_i\}_{i=1}^n\quad\forall\/i=1..n,\, S\preceq\/T_i\lor\/S\not\sim\/T_i}
-      {t:_{\Darr}S}
+\dfrac{t\in\V_t\quad\/t:_\uarr\bigvee_{i=1}^n\/T_i}
+      {t:_{\Darr}\bigvee\{S \mid S\in\/\{T_i\}_{i=1}^n\land\forall\/i=1..n,\, S\preceq\/T_i\lor\/S\not\sim\/T_i\}}
 \end{equation}
 
-The rule says that $S$ is a minimal schema type of a schema type
-$\bigvee_{i=1}^n\/T_i$. $S$ is minimal since all other types $T_i$ are
-either more general or equal ($\succeq$), or not related to $S$. The
-following rule gathers all minimal schema types of
-$\bigvee_{i=1}^n\/T_i$.
+The rule says that the triple types $S$ are minimal schema types of a
+schema type $\bigvee_{i=1}^n\/T_i$. $S$ is minimal since all other
+types $T_i$ are either more general or equal ($\succeq$), or not
+related to $S$. 
 
+%---------------------------------------------------------------------
+\memo{
+The following rule gathers all minimal schema types of
+$\bigvee_{i=1}^n\/T_i$.
 \begin{equation}
 \label{rul:3-min-gather}
 \dfrac{t\in\V_t\quad\forall\/j=1..m,\, t:_\Darr\/S_j}
@@ -1329,7 +1214,8 @@ $\bigvee_{i=1}^n\/T_i$.
 
 The above rule is identical to the Rule \ref{rul:min-gather} except
 that in this setting it handles triples and not identifiers. The
-result is a disjunction of minimal schema types $S_1,\ldots,S_m$.
+result is a disjunction of minimal schema types $S_1,\ldots,S_m$.}
+%---------------------------------------------------------------------
 
 
 
@@ -1392,7 +1278,7 @@ $T=\land[T_i^{i\in[1,n}]$ includes at least one $T_i\not\preceq\/S$.
 \memo{
 \notes{Why using $\land$ and $\sqcap$ types for typing a triple $t$?}
 \nnotes{We would like to check typing of a triple $t\in\T_i$.}
-\nnotes{We compute first the ground type $T_g=\land[T_i^{i\in[1,n]}]$ and a stored type $T$ of $t$.}
+\nnotes{We compute first the ground type $T_g=\land[T_i^{\s\/i=1..n}]$ and a stored type $T$ of $t$.}
 \nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
 \nnotes{The subtype relation should hold $T_g\preceq\/T$.}
 
