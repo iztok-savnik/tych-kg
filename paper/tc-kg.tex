@@ -203,13 +203,28 @@ the lower levels of ontology to the minimal schema types at the upper
 levels of ontology. Finally, we show that the triple types can be used
 to disambiguate the sense of a predicate with multiple meanings.
 
-...\\
+The paper is organized as follows. The following Section
+\ref{sec:prelim} presents some preliminary topics, including the
+introduction to a knowledge graph as an RDF graph, the description of
+the KG data model, and the definition of the rule language. Next,
+typing of identifiers is presented in Section
+\ref{sec:typ-idents}. Here we present typing literals and introduce
+typing and subtyping of identifiers. In Section \ref{sec:intsc-union}
+we present the semantics of $\land$-$\lor$ types, the associated rules
+for typing and subtyping, and introduce the join and meet
+types. Typing of triples is described in Section \ref{sec:triples}. We
+present the derivation of ground and schema triple types, and the
+rules to combine these two to obtain the final
+type. Section~\ref{sec:related} presents an overview of the related
+work on typing KGs. Finally, in Section \ref{sec:conclude} we discuss
+some directions of further work.
 
 
 
 
 
-\section{Preliminaries}
+
+\section{Preliminaries\label{sec:prelim}}
 
 
 \subsection{Knowledge graph\label{sec:kg}}
@@ -345,7 +360,7 @@ are further used for typing individual triples $\V_t$ in Section
 
 
 
-\section{Typing identifiers}
+\section{Typing identifiers\label{sec:typ-idents}}
 
 In this section, we present the basic typing of an individual (ground)
 identifiers $\V_i$. Typing of literals $\V_l$ is described in Section
@@ -867,7 +882,7 @@ in Section \ref{sec:stored-3types}.
 
 %\subsection{Triple types\label{sec:3-types}}
 
-A type of a triple $(s,p,o)\in\V_t$ is a is a product type $D*p*R$
+A type of a triple $(s,p,o)\in\V_t$ is a product type $D*p*R$
 where $s:D$ and $o:R$ holds. In our model, the triple types are
 represented by a triple $(D,p,R)\in\T_t$. The types $D$ and $R$ are
 type expressions that represent either a class identifier or an 
@@ -880,7 +895,7 @@ The $\land$-types reflect the semantics of RDF-Schema \cite{rdfschema}
 which permits the definition of multiple domains and ranges of the
 predicate $p$ that are linked with $\land$-types. Consequently, each
 predicate $p$ has exactly one triple type of the form
-$$(\land_{i=1}^n\/D_i^{\s\/i=1..n},p,\land_{j=1}^m\/R_j).$$
+$$(\land_{i=1}^n\/D_i^{\s\/i=1..n}, p ,\land_{j=1}^m\/R_j).$$
 
 \begin{example}
   If $p$ has two domains $D_1$ and $D_2$, and a single
@@ -924,12 +939,13 @@ minimal ground type, or a join ground type. The stored ground type
 includes types that are stored in a KG. The minimal ground type then
 consists solely of the minimal types from the stored ground
 types. Finally, the join ground type is the conjunction of minimal
-upper bound types \cite{Knudstorp2024}.
+upper bound types obtained by applying MUB operator to the conjunction
+of minimal ground types \cite{Knudstorp2024}.
  
-A ground type of an individual identifier $I$ is a class $C$ related
+A ground type of an individual identifier $I$ is a class $T$ related
 to $I$ by one-step type relationship $:_\darr$, as presented by Rule
 \ref{rul:ident-1step-type}. In terms of the concepts of a knowledge
-graph, $C$ and $I$ are related by the relationship rdf:type.
+graph, $T$ and $I$ are related by the relationship rdf:type.
 
 A ground type of a triple $t=(I_s,p,I_o)$ is a product type
 $T*p*S$ that we represent as a triple $(T,p,S)$. A triple type
@@ -1042,22 +1058,24 @@ KGs that use RDF-Schema together with $\land$ and $\lor$ types.
 
 
 \subsubsection{\ref{sec:stored-3types}.1 KGs with RDF-Schema.}
-When a KG is restricted by using RDF-Schema, we can specify one or more
-domain and range types. The semantics of RDF-Schema
-\cite{rdfsemantics} interprets multiple domains and ranges with
-$\land$-type. If $p$ has two domains $T_1$ and $T_2$ then $p$ can link
-subjects $I$ that are of type $T_1$ \emph{and} $T_2$. The domain type
-of $p$ is then $T_1\land\/T_2$, or, in terms of OWL \cite{owl},
-owl:intersectionOf$(T_1\ T_2)$. The RDF-Schema does not allow the
-definition of the domain of a predicate with the
-$\lor$-type. Consequently, each predicate can have only one meaning.
+When the semantics of a KG is defined by using RDF-Schema, we can
+specify one or more domain and range types, but no alternative
+types. The semantics of RDF-Schema \cite{rdfsemantics} interprets
+multiple domains and ranges with $\land$-type. If $p$ has two domains
+$T_1$ and $T_2$ then $p$ can link subjects $I$ that are of type $T_1$
+\emph{and} $T_2$. The domain type of $p$ is then $T_1\land\/T_2$, or,
+in terms of OWL \cite{owl}, owl:intersectionOf$(T_1\ T_2)$. The
+RDF-Schema does not allow the definition of the domain or range of a
+predicate with the $\lor$-type. Consequently, each predicate can have
+only one meaning.
 
 We first determine \emph{all} valid schema types for a given triple
-$t=(s,p,o)$. A schema triple type comprises a predicate $p$ and the domain and range types
-linked to predicates $p'\succeq\/p$. The domain and range types can be
-defined for the predicate $p$ and/or inherited from the predicates
-$p'\succ\/p$. In addition, the domain and range types can be, in
-general, inherited from two different super-predicates of $p$.
+$t=(s,p,o)$. A schema triple type comprises a predicate $p$ and the
+domain and range types linked to predicates $p'\succeq\/p$. The domain
+and range types can be defined for the predicate $p$ and/or inherited
+from the predicates $p'\succ\/p$. In addition, the domain and range
+types can be, in general, inherited from two different
+super-predicates of $p$.
 
 \begin{equation}
 \label{rul:3-stored1}
@@ -1077,6 +1095,7 @@ that are related by subtype relation:
 $p\preceq\/p_1\preceq\/p_2$. This condition restricts the domain and
 range to be defined on the same path from $p$ to some maximal element
 $m$ of the predicate $p$ poset. 
+
 
 The above Rule \ref{rul:3-stored1} generates all valid schema types of
 a triple $t$. From the set of all valid stored types of $t$ we select
@@ -1111,6 +1130,7 @@ domain (range).
 
 
 \subsubsection{\ref{sec:stored-3types}.2 KGs with the contextual representation.}
+% checked g
 
 The collective findings of the research in the area of Cognitive
 Science \cite{Hollister2017} shows that natural language is inherently
@@ -1202,22 +1222,6 @@ schema type $\bigvee_{i=1}^n\/T_i$. $S$ is minimal since all other
 types $T_i$ are either more general or equal ($\succeq$), or not
 related to $S$. 
 
-%---------------------------------------------------------------------
-\memo{
-The following rule gathers all minimal schema types of
-$\bigvee_{i=1}^n\/T_i$.
-\begin{equation}
-\label{rul:3-min-gather}
-\dfrac{t\in\V_t\quad\forall\/j=1..m,\, t:_\Darr\/S_j}
-      {t:_{\uarr}\bigvee_{j=1}^m\/S_j}
-\end{equation}
-
-The above rule is identical to the Rule \ref{rul:min-gather} except
-that in this setting it handles triples and not identifiers. The
-result is a disjunction of minimal schema types $S_1,\ldots,S_m$.}
-%---------------------------------------------------------------------
-
-
 
 
 
@@ -1228,24 +1232,24 @@ Before we present the final step in typing a triple $t$, an overview
 of the work done so far is given. First, we derive the ground type of
 the triple $t$ and then infer the minimal upper bound of the ground
 type. The ground typing inspects all ground types of $t$'s
-components. In case the MUB type is close to $\top$ type then there is
+components. In case the MUB type is close to $\top$ type, then there is
 an outlier in the set of ground types, it can be revealed in
-computation of the MUB type. 
+the computation of the MUB type. 
 
 Second, the schema type of $t$ is derived from the schema of a KG. In
 case we use RDF-Schema semantics of a KG then the rules infer a single
-minimal schema type. If there are more than one schema types than the
+minimal schema type. If there is more than one schema type, then the
 domains and ranges from the different definitions are merged into one
-$\land$-type. At this point we can not verify if there are any errors
+$\land$-type. At this point, we can not verify if there are any errors
 in types from the domain and/or range of a predicate. in schema
 (stored) typing. In case we use RDF-Schema with $\land$ and $\lor$
 types, then the rules can infer multiple disjunctive schema
-types. Also in this case there are no additional constraints that
+types. Also in this case, there are no additional constraints that
 could be verified.
 
-Let us now present final typing of $t$ by relating the ground type and
-schema types (minimal schema triple types) via subtyping relation. If
-the RDF-Schema semantics is used then we have a single schema type
+Let us now present the final typing of $t$ by relating the ground type and
+schema types (minimal schema triple types) via the subtyping relation. If
+the RDF-Schema semantics are used, then we have a single schema type
 which should be related to the ground type of $t$. The following Rule
 \ref{rul:3-typing-one} derives the final type of $t$ under RDF-Schema
 semantics. 
@@ -1258,82 +1262,37 @@ semantics.
 
 The type of $t$ is computed by first deriving the ground type $T$ and
 the schema type $S$ of $t$. $S$ is the final type of $t$ if $T$ is a
-subtype of $S$. In case $T\not\preceq\/S$ then the ground type
+subtype of $S$. In case $T\not\preceq\/S$, then the ground type
 $T=\land[T_i^{i\in[1,n}]$ includes at least one $T_i\not\preceq\/S$.
+
+Let's assume now that the RDF-Schema together with $\land$-$\lor$ types are used to define the semantics of KG. In particular, assume that
+we use the \emph{minimal KR schema language} as defined in Section
+\ref{sec:stored-3types}.2. Note also that to derive the schema triple
+type we have to use Rules \ref{rul-3-stored2}-\ref{rul:3-min}. The
+rule for selecting the final type of $t$ is now as follows.
 
 \begin{equation}
 \label{rul:3-typing-two}
 \dfrac{t\in\T_i\quad t:_{\darr}T\quad\/t:_\uarr\bigvee_{j=1}^{m}\/S_j}
-      {t:\bigvee\{S_j\mid\/j\in[1,m], T\preceq\/S_j\}}
+      {t:\bigvee_{j=1}^m\{S_j \mid T\preceq\/S_j\}}
 \end{equation}
 
+Only those types $S_j$ that are linked to $T$ via the poset hierarchy
+of types are gathered in the final type. This means that the ground
+triple selects, via its type, the meaning of the predicate $p$.
 
-
-... \\
-
-
-
-
-%----------------------------------------------------------------
-\memo{
-\notes{Why using $\land$ and $\sqcap$ types for typing a triple $t$?}
-\nnotes{We would like to check typing of a triple $t\in\T_i$.}
-\nnotes{We compute first the ground type $T_g=\land[T_i^{\s\/i=1..n}]$ and a stored type $T$ of $t$.}
-\nnotes{The ground type $T_g$ is computed from the ground types of $t$'s components.}
-\nnotes{The subtype relation should hold $T_g\preceq\/T$.}
-
-\notes{Two ways of defining semantics.}
-\notes{1) enumeration style: stored types are enumerated as alternatives ($\lor$).}
-\notes{2) packed together: alternative types are packed in one $\bigvee$ type.}
-\notes{One advantage of (1) is that individual glb types can be processed further individually.}
-\notes{Advantage of (2) is the higer-level semantics without going in implementation.}
-
-\notes{Stored types have to be related to all join ground types to represent the correct type of a triple.}
-\notes{It seems it would be easier to check the pairs one-by-one using (1) in algorithms.}
-\notes{In case of using complete types in the phases, types would further have to be processed by $\land,\lor$ rules.}}
-
-\memo{
-\medskip
-\notes{How to compute $T\preceq\/S$? Refer to position where we have a description.}
-\notes{Order the possible derivations, gatherings (groupings) ... of types.}
-
-\notes{Possible diagnoses.}
-\notes{Components not related to a top type of a triple?}
-\notes{Components related to sub-types of a top type?}
-\notes{Above pertain to all components.}}
-
-\memo{
-\subsection{Typing a graph}
-
-\notes{What is a type of a graph?}
-\nnotes{A type of a graph is a graph!}
-\nnotes{It includes a set of triple types forming a schema graph.}
-
-\notes{Typing schema triples?}
-\nnotes{What can be checked?}
-\nnotes{Is a schema triple properly related to the super-classes and types of components.}
-\nnotes{Consistency of the placement of a class in an ontology.}
-\nnotes{A class or predicate component not related to other classes?}
-\nnotes{A class or predicate component attached to ``conflicting'' set of classes? ?}
-\nnotes{Any other examples?}
-
-\notes{Typing a graph.}
-\nnotes{Checking whether triple types match in the meeting points.}
-\nnotes{What is the type in meeting points of two triple types?}
-\nnotes{Since a tye of a graph should present any legal triple in $\D$}
-}
-%----------------------------------------------------------------
-
-
-
-
-\section{Implementation}
+The examples of final types that include more than one alternative
+type with different meanings can appear when typing basic graph
+patterns. In case a triple pattern includes one or more variables,
+then the ground type of a triple component can not be
+derived. Hence, we can not select precisely one schema type of $t$.
 
 
 
 
 
-\section{Related work}
+
+\section{Related work\label{sec:related}}
 
 Most of the related work is cited in the text when presenting the
 particular topic. In this section, we present only the work that is not
@@ -1373,33 +1332,22 @@ filter semantically invalid results. In most cases, the presented
 approaches use fragments of types that are adapted for the particular
 problem.
 
-% Intersection / Union types in schema
-% Typed embeddings / type-aware representation learning
-% Typing for relation / predicate sense disambiguation
-
-\memo{
-\notes{Comparing typing relation in an OO model with a KG \cite{Pierce2002}.}
-\notes{The values from KGs have similar structure to the values of object-oriented models.}
-\notes{However, the predicates of a KG are more expressive than the data members of the classes.}
-\notes{Similarly, the record types form a lattice under subtype relationship with least upper bound and greatest lower bound based on sets of record attributes.}
-
-\notes{Include the differences between Pierce's (classical) sub-typing view of stored sub-class relationships among classes and the approach taken in this paper}
-\notes{Pierce treats classes as generators of objects that inherit methods and data members from its super-class.}
-\notes{The methods are inherited by copying the definitions in each subclass and then explicitely calling the method in the superclass.}
-\notes{List the differences: classes are identifiers, there is a sub-class relationship included in a sub-typing relationship.}}
 
 
 
 
-
-\section{Conclusions}
+\section{Conclusions\label{sec:conclude}}
 
 Typing of a knowledge graph can serve many theoretical and practical
-purposes. First, typing of a KG can be extended to type-checking that
-can identify inconsistencies in a KG. Next, typing a KG can be used as
-the basis for typing basic graph patterns and SparQL, and with this,
-they also can be used in tasks such as the query optimization and
-reasoning.
+purposes. First, type-based inference can be used for answering
+logical queries about the KG domain by inferring from parts
+of schema, like the poset of types, the domain and range constraints,
+and the stored typing of identifiers. Second, typing of a KG can be
+extended to type-checking that can identify inconsistencies in a
+KG. Third, typing a KG can be used as the basis for typing basic graph
+patterns and SparQL, and with this, they also can be used in tasks
+such as the query optimization and reasoning.
+
 
 ... \\
 
