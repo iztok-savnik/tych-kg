@@ -134,9 +134,9 @@ and program structures used in programming languages
 \cite{Pierce2002,Hindley1997}, the conceptual schema of a KG is more
 expressive: in principle, any data and program structure can be
 represented as a graph. The expressive power comes from logic that
-stands behind a KG, where a graph is a set of named relations, and
-triples are logical statements. Let us depict some of the features of
-the data and knowledge representation language of a KG.
+stands behind a KG, where a graph is a set of named binary relations,
+and triples are logical statements. Let us depict some of the features
+of the data and knowledge representation language of a KG.
 
 First, a KG includes predefined classes and predicates that are
 organized into taxonomies \cite{Baader2002}. Second, typing of ground
@@ -192,16 +192,20 @@ candidates to the MUB ground type by means of a subtype relation. The
 disjunctively bound candidate triple types that are related to the MUB
 ground type via subtype relation form the final type of~$t$.
 
+% The existing approaches to typing a KG deal with the particular
+% problems of typing a KG\footnote{See the related work in
+% Section \ref{sec:related}.}.
+
 The contributions of the presented research are as follows. First, to
-our knowledge, this is the first proposal for typing a knowledge graph
-that encompasses a complete KG. The existing approaches to typing a KG
-deal with the particular problems of typing a KG. Second, the
-presented framework for typing ground triples can serve conveniently
-for the implementation of type-checking the stored typing of a KG. The
-analysis of typing an individual triple spans from the ground types at
-the lower levels of ontology to the minimal schema types at the upper
-levels of ontology. Finally, we show that the triple types can be used
-to disambiguate the sense of a predicate with multiple meanings.
+our knowledge, this is the first proposal for typing ground triples of
+a knowledge graph that uses the product, union and intersection types,
+and encompasses a complete KG. Second, the presented framework for
+typing ground triples can serve conveniently for the implementation of
+type-checking the stored typing of a KG. The analysis of typing an
+individual triple spans from the ground types at the lower levels of
+ontology to the minimal schema types at the upper levels of
+ontology. Finally, we show that the triple types can be used to
+disambiguate the sense of a predicate with multiple meanings.
 
 The paper is organized as follows. The following Section
 \ref{sec:prelim} presents some preliminary topics, including the
@@ -345,16 +349,7 @@ interpretation where rules infer the types from the types derived by
 premises. Second, the \emph{type-checking} view of the rules is the
 backward interpretation. Given the expression and its type, the rules
 are applied backwards to verify that the expression has that type.}
-In this section we present the basic typing of individual (ground)
-identifiers $\V_i$. Typing of literals $\V_l$ is described in Section
-\ref{sec:literals}. Nest, the rules for typing ground identifiers are
-presented in Section \ref{sec:idents-ground}. Section
-\ref{sec:idents-typing} further extends ground typing and subtyping to
-the complete poset set of individual identifiers $\T_i$. Finally, The
-sub-typing relation $\preceq$ is defined and the types of individual
-identifiers are presented. The rules for typing individual identifiers
-are further used for typing individual triples $\V_t$ in Section
-\ref{sec:triples}.
+
 
 
 
@@ -1183,9 +1178,10 @@ Further, the proposed KR language can use $\land$ and $\lor$-types in
 subject and object components of triple types. The $\land$ and
 $\lor$-types are often implemented in KGs in the form of OWL type
 constructors owl:intersectionOf and owl:unionOf\footnote{The OWL union
-  and intersection type constructors are employed mostly in domain-specific KGs like biomedical and genomic ontologies. In these
-  scientific fields, the knowledge base includes large ontologies where
-  new classes can be defined as logical combinations of existing
+  and intersection type constructors are employed mostly in
+  domain-specific KGs like biomedical and genomic ontologies. In these
+  scientific fields, the knowledge base includes large ontologies
+  where new classes can be defined as logical combinations of existing
   classes.} The use of $\lor$-type in place of the domain or range
 type is redundant since it can be expressed with multiple triple
 types. Hence, the \emph{minimal KR schema language} includes solely
@@ -1265,11 +1261,13 @@ the schema type $S$ of $t$. $S$ is the final type of $t$ if $T$ is a
 subtype of $S$. In case $T\not\preceq\/S$, then the ground type
 $T=\land[T_i^{i\in[1,n}]$ includes at least one $T_i\not\preceq\/S$.
 
-Let's assume now that the RDF-Schema together with $\land$-$\lor$ types are used to define the semantics of KG. In particular, assume that
-we use the \emph{minimal KR schema language} as defined in Section
-\ref{sec:stored-3types}.2. Note also that to derive the schema triple
-type we have to use Rules \ref{rul-3-stored2}-\ref{rul:3-min}. The
-rule for selecting the final type of $t$ is now as follows.
+Let's assume now that the RDF-Schema together with $\land$-$\lor$
+types are used to define the semantics of KG. In particular, assume
+that we use the \emph{minimal KR schema language} as defined in
+Section \ref{sec:stored-3types}.2. Note also that to derive the schema
+triple type we have to use Rules
+\ref{rul:3-stored2}-\ref{rul:3-min}. The rule for selecting the final
+type of $t$ is now as follows.
 
 \begin{equation}
 \label{rul:3-typing-two}
@@ -1282,10 +1280,11 @@ of types are gathered in the final type. This means that the ground
 triple selects, via its type, the meaning of the predicate $p$.
 
 The examples of final types that include more than one alternative
-type with different meanings can appear when typing basic graph
-patterns. In case a triple pattern includes one or more variables,
-then the ground type of a triple component can not be
-derived. Hence, we can not select precisely one schema type of $t$.
+types with different meanings can appear when typing triple
+patterns. In case a triple pattern $tp$ includes one or more
+variables, then the ground type of a $tp$ component can not be
+derived, so the $\top$ type is used. Hence, we can not select a
+single schema triple type of $tp$ but we obtain an $\lor$-type.
 
 
 
@@ -1307,8 +1306,9 @@ schema \cite{Horrocks2003}. Alternatively, the rule-based inference
 can be employed on the rules defined as a schema by knowledge
 engineers \cite{Horrocks2004}. Reasoners use them
 automatically. Another alternative is the use of ML-based type
-prediction \cite{Yaghoobzadeh2018}. Various techniques can be used, like entity embeddings and graph neural networks, to produce embeddings
-to be fed into the classifier.
+prediction \cite{Yaghoobzadeh2018}. Various techniques can be used,
+like entity embeddings and graph neural networks, to produce
+embeddings to be fed into the classifier.
 
 The schema-based type checking is about the verification of RDF-Schema
 \cite{rdfschema12} and OWL \cite{owl2} rules and constraints against
@@ -1325,12 +1325,18 @@ Type checking in query answering ensures that the variables and
 results of a query over a KG are consistent with the schema of a KG
 \cite{Zhao2017,Zhang2019}. A type-checker for queries requires that a
 query respects class hierarchies, domain/range constraints, and
-disjointness rules. The type information can also be used to improve
-the query optimization and execution. In \cite{Kollia2013}, they
-propose to leverage type information to optimize query execution and
-filter semantically invalid results. In most cases, the presented
-approaches use fragments of types that are adapted for the particular
-problem.
+disjointness rules. All type manipulation in \cite{Zhao2017,Zhang2019}
+is at the level of SparQL \cite{sparql} variables. This means, for
+example, that triple patterns do not have type, so there is no way to
+reason about typing of triples. Also, the union and intersection types
+are used directly, without the means to manipulate $\land$-$\lor$ type
+expressions.
+
+The type information can also be used to improve the query
+optimization and execution. In \cite{Kollia2013}, they propose to
+leverage type information to optimize query execution and filter
+semantically invalid results. In most cases, the presented approaches
+use fragments of types that are adapted for the particular problem.
 
 
 
