@@ -125,12 +125,12 @@
 
 \section{Introduction}
 
-A knowledge graph (abbr.. KG) includes a data and knowledge
+A knowledge graph (abbr., KG) includes a data and knowledge
 representation language in the form of a graph. It is the
 dictionaries, such as RDF-Schema \cite{rdfschema}, which attach
-meanings to the edges of a graph, turning a graph into a language for
-the representation of data and knowledge. In comparison to the data
-and program structures used in programming languages
+meanings to the edges of a graph, that turn a graph into a language
+for the representation of data and knowledge. In comparison to the
+data and program structures used in programming languages
 \cite{Pierce2002,Hindley1997}, the conceptual schema of a KG is more
 expressive: in principle, any data and program structure can be
 represented as a graph. The expressive power comes from logic that
@@ -244,14 +244,11 @@ $(s,p,o)\in\/S\times\/P\times\/O$. A \emph{RDF graph}
 $g\subseteq\/S\times\/P\times\/O$ is a set of triples. Set of all
 graphs will be denoted as $G$.
 
-The complete set of triples of a RDF graph is in the text denoted as
-$\Delta$. We use $\Delta$ when we want to refer to the original set of
-KG triples and not the data model of a KG presented in the following
-Section.
+The complete set of triples of a RDF graph is in the text
+referred to as $\Delta$. We use $\Delta$ when we want to refer
+to the original set of KG triples and not the data model of a KG
+presented in the following Section.
 
-%We say that RDF graph $g_1$ is \emph{sub-graph} of $g_2$, denoted
-%$g_1 \sqsubseteq g_2$, if all triples in $g_1$ are also triples from
-%$g_2$. 
 
 
 
@@ -259,96 +256,77 @@ Section.
 
 \subsection{A data model of a KG}
 
-To abstract away the details of the RDF data model we unify the
-representation of knowledge graph by separating solely between the
-identifiers and triples. The identifiers include the set of individual
-identifiers and the set of class identifiers. The triples inlcude the
-set of ground triples and the set of triple types.
+To abstract away the details of the RDF data model, we unify the
+representation of the knowledge graph by separating solely between the
+identifiers and the triples. The identifiers include the set of
+individual identifiers, i.e., identifiers that denote individual
+entities, and the set of type identifiers, i.e., the identifiers that
+denote the types of individual entities. The triples include the set
+of ground triples and the set of triple types.
 
-%In view of the above formal representation of RDF triples, the
-%complete set of identifiers is $\I=I\cup\/B\cup\/L$. The identifiers
-%from $\I$ are classified into the sets including literals $\I_l$,
-%individual (ground) identifiers $\I_i$, class identifiers $\I_c$,
-%predicate identifiers $\I_p$.
-
-However, since typing of a KG is based on the separation between the
-values and the types, we use the following classification of
-identifiers and triples. The set of values $\V$ includes the
+However, typing of a KG is based on the separation between the values
+$\V$ and the types $\T$. The set of values $\V$ includes the
 individual identifiers $\V_i$ and the individual (ground) triples
 $\V_t$. To be able to refer to the specific subsets of $\V_i$ in the
-rules, we also introduce the set $\V_l\subseteq\V_i$, which denotes a
-set of literal values, and the set $\V_p\subseteq\V_i$ that refers to
-the set of predicates from a KG. Finally, a set $\T_p\in\T_i$ stands
-for all predicates of a KG that now have the role of types. Note that
-predicates are treated both as values and as types.
+rules, we also introduce the set of literal values
+$\V_l\subseteq\V_i$, and the set of predicates
+$\V_p\subseteq\V_i$. The set of all valid types $\T$ of a KG comprises
+the type identifiers $\T_i$, i.e., types of individual identifiers
+$\V_i$, and the triple types $\T_t$, i.e. the types of individual
+triples $\V_t$.  Finally, a set $\T_c\subseteq\T_i$ is a set of class
+identifiers, and a set $\T_p\subseteq\T_i$ denotes a set of predicates
+that now have the role of types.
 
-The set of all valid types $\T$ of a KG comprises the class
-identifiers $\T_i$, i.e. types of individual identifiers $\V_i$, and
-the triple types $\T_t$, i.e. the types of individual triples $\V_t$.
+The set of type identifiers $\T_i$ is ordered by a subclass relation
+$\preceq$ to form a poset. The meaning of type identifiers is
+established by their interpretations. The interpretation of a type
+identifier $T_i\in\T_i$ is the set of its instances, including the
+instances of type identifiers $T_i'\preceq\/T_i$.
 
-The set of class identifiers $\T_i$ related by subclass relation is a
-poset forming a taxonomy of classes. Similarly also predicates, now
-in the role of types, are ordered in a poset. The meaning of class
-identifiers is established by their interpretations. The
-interpretatation of a class identifier $c$ comprises the instances of
-a given class $c$ es well as the instances of all $c$'s sub-classes. 
-
-The individual triples include solely the individual identfifiers from
+The ground triples include solely the individual identifiers from
 $\V_i$ in places of S and O, and predicates $\V_p$ in the place of P
-component of a triple. The types of individual triples are product
-types $S*p*O$ where $S,O\in\T_i$ and $p\in\T_p$. The product types are
-in our data model of a KG written as a triple $(S,p,O)$. The triple
-types are ordered by a subtype relation to form a poset. The subtype
-relation among the triple types is defined on the basis of the subtype
-relation among the classes and predicates. A more detailed formal
-definition of a KG is given in \cite{Savnik2025}.
+component of a triple. The types of individual triples are the product
+types $S*p*O$ where $S,O\in\T_c$ and $p\in\T_p$. The product types are
+in our data model written as triples $(S,p,O)$. In Section
+\ref{sec:intsc-union}, we extend triple types with $\land$-$\lor$
+types in S and O components.
 
+The triple types $\T_t$ are ordered by a subtype relation $\preceq$ to
+form a poset. The subtype relation $\preceq$ among the triple types is
+induced from a subtype relation defined among the type identifiers
+$\T_i$. A more detailed formal definition of a KG is given in
+\cite{Savnik2025}.
 
 
 
 
 \subsection{Typing rule language}
 
-\memo{
-In this paper we define typing of a data language used to represent an
-ABOX \cite{Brachman2004KnowledgeRR} of a knowledge base given in a
-form of a knowledge graph. The data language specifys the assertions
-in the form of ground triples (ABOX) and the schema of assertions as
-the types of triples (TBOX). The ground triples are the instances of
-the triple types that altogether define the schema of a KG.}
-
-We do not use standard typing rule language
-\cite{Pierce2002,Hindley1997} that includes a context $\Gamma$ where
-the types of the variables are stored. We use a meta-language that is
-rooted in first-order logic (abbr., FOL) but similar to the one used
-by Pierce in \cite{Pierce2002}, in particular, for the representation
-of records and subtyping, as well as for the definition of the
-universal quantification.
+We depart from the standard typing-rule notation with contexts
+($\Gamma$) \cite{Pierce2002,Hindley1997} and instead employ a
+meta-language rooted in first-order logic (FOL). This meta-language is
+inspired by Pierce’s presentation of typing rules \cite{Pierce2002},
+especially in the treatment of records, subtyping, and universal
+quantification.
 
 The rules are composed of a set of premises and a conclusion. The
 premises can be expressions stating the set membership of an object,
-typing and subtyping judgements, or expressions in the FOL including
+typing and subtyping judgements, or expressions in the FOL, including
 the previous two forms. The expressions of FOL can express complex
-premises such as, for example, the conditions for the LUB types. The
+premises, such as, for example, the conditions for the LUB types. The
 conclusion part of the rule is a typing or subtyping judgment.
 
 The symbols used in a rule are grounded by stating their membership in
-the sets of identifiers ($\V$, $\V_i$ and $\V_t$) and triples ($\T$,
+the sets of identifiers ($\V$, $\V_i$, and $\V_t$) and triples ($\T$,
 $\T_i$ and $\T_t$) defined in Section \ref{sec:kg}. When we write
-$O\in\/S$ then we mean the \emph{existence} of $O$ in a set $S$. We
-use universal quantification $\forall\/O\in\/S,\ p(O)$ when we state
-that some property $p(O)$ holds for all objects $O$ from $S$. The
-premises of the rule are treated from the left to the right. The
+$o\in\/s$, then we mean the \emph{existence} of an object $o$ in a set
+$s$. We use universal quantification $\forall\/o\in\/s,\ p(o)$ when we
+state that some property $p(o)$ holds for all objects $o$ from
+$s$. The premises of the rule are treated from left to right. The
 quantification of the symbols binds the symbols up to the last premise
 unless defined differently by the parentheses.
 
-\memo{
-Similar to \cite{Dunfield2021}, we differ between two interpretations
-of rules. First, the \emph{generator} view of rules is the forward
-interpretation where rules infer the types from the types derived by
-premises. Second, the \emph{type-checking} view of the rules is the
-backward interpretation. Given the expression and its type, the rules
-are applied backwards to verify that the expression has that type.}
+
 
 
 
@@ -362,10 +340,10 @@ identifiers $\V_i$. Typing of literals $\V_l$ is described in Section
 \ref{sec:literals}. Next, the rules for typing ground identifiers are
 presented in Section \ref{sec:idents-stored}. Section
 \ref{sec:idents-typing} further extends ground typing and subtyping to
-the complete poset set of individual identifiers $\T_i$. The
+the complete poset of individual identifiers $\T_i$. The
 sub-typing relation $\preceq$ is defined, and typing rules for the
 individual identifiers are presented. The rules for typing individual
-identifiers are further used for typing individual triples $\V_t$ in
+identifiers are further used for typing ground triples $\V_t$ in
 Section \ref{sec:triples}.
 
 
@@ -558,7 +536,7 @@ provided by adding a typing rule called \emph{rule of subsumption}
 % check-gramm
 
 The rules for the $\land$ and $\lor$-types presented in this section
-are general---they apply for the identifier types $\T_i$ and triple
+are general---they apply for the type identifiers $\T_i$ and triple
 types $\T_t$.
 
 The meaning of the $\land$ and $\lor$-types can be seen through
