@@ -126,30 +126,30 @@
 \section{Introduction}
 
 A knowledge graph (abbr., KG) includes a data and knowledge
-representation language in the form of a graph. It is the
-dictionaries, such as RDF-Schema \cite{rdfschema}, which attach
-meanings to the edges of a graph, that turn a graph into a language
-for the representation of data and knowledge. In comparison to the
-data and program structures used in programming languages
-\cite{Pierce2002,Hindley1997}, the conceptual schema of a KG is more
-expressive: in principle, any data and program structure can be
-represented as a graph. The expressive power comes from logic that
-stands behind a KG, where a graph is a set of named binary relations,
-and triples are logical statements. Let us depict some of the features
-of the data and knowledge representation language of a KG.
+representation language in the form of a graph. The dictionaries, such
+as RDF-Schema \cite{rdfschema}, attach the meanings to the edges of a
+graph and turn a graph into a language for the representation of data
+and knowledge. In comparison to the data and program structures used
+in programming languages \cite{Pierce2002,Hindley1997}, the conceptual
+schema of a KG is more expressive: in principle, any data and program
+structure can be represented as a graph. The expressive power comes
+from logic that stands behind a KG, where a graph is a set of named
+binary relations, and triples are logical statements. Let us depict
+some of the features of the data and knowledge representation language
+of a KG.
 
 First, a KG includes predefined classes and predicates that are
 organized into taxonomies \cite{Baader2002}. Second, typing of ground
 identifiers, as well as typing of the predicates with the domain and
 range types, is stored in a KG. Further, similarly to the \emph{roles}
-\cite{Brachman1985} of a knowledge base, the predicates of a KG are
-treated as classes (types) that are included in a taxonomy of
-predicates. However, they also act as individual entities described
-with additional predicates. Finally, the predicates are inherited
-through the taxonomy of classes, and, from the other point of view,
-the domain and range types of the predicates are inherited through the
-hierarchy of predicates.
+\cite{Brachman1985} of a knowledge base, the predicates are treated as
+types that form a taxonomy of predicates. However, they also act as
+individual entities described with additional predicates. Finally, the
+predicates are inherited through the taxonomy of classes, and, from
+the other point of view, the domain and range types of the predicates
+are inherited through the hierarchy of predicates.
 
+\memo{
 Typing a knowledge graph requires a framework for the definition of
 rules, which is different from the framework for classical typing of
 programming languages. While typing in programming languages is based
@@ -158,39 +158,38 @@ built from simple triples. Triples can form rich semantic structures
 depending on the kinds of entities and values. The kind of object,
 for example, can be either a ground value or a class. Typing of a KG
 must, therefore, be able to grasp the kinds of objects in the rules,
-and, in many cases, need to be guided by a procedure.
+and, in many cases, need to be guided by a procedure.}
 
-From a logic perspective, the ground entities and triples represent
-an ABox, while the schema of KG is a TBox and represents logical
+From a logic perspective, the ground entities and triples represent an
+ABox, while the schema of KG is a TBox and represents logical
 statements about classes and binary relations. The syntactical
-structures that we use for types are the following. First, we have 
-the classes and predicates, the types of identifiers, that are
-identifiers themselves. Second, the type of triples is a product type,
-a triple itself. Next, the $\land$ and $\lor$ types capture many
-requirements of the KG domain very naturally. For instance, entities
-belong to multiple classes simultaneously, or a domain of a predicate
-is two different classes. Finally, the taxonomies of classes and
-predicates are hard to grasp structurally; rather, posets can be
-manipulated with algebraic operations.
+structures that we use for types are the following. First, we have the
+classes and predicates, the types of identifiers, that are identifiers
+themselves. Second, the type of triples is a product type that can be
+represented with a triple. Next, the $\land$ and $\lor$ types capture
+many requirements of the KG domain very naturally. For example, a
+domain of a predicate is two different classes. Finally, the
+taxonomies of classes and predicates are hard to grasp structurally;
+rather, posets can be manipulated with algebraic operations.
 
 The paper presents a study of typing a single ground triple $t$. We
 propose to infer first the ground type of $t$ using the stored typing
 of identifiers. The ground type is minimized and then generalized to
-the minimal upper bound (MUB) type. The MUB type is an appropriate
-starting point to search for the triple types from a KG conceptual
-schema.
+the minimal upper bound (MUB) type. The MUB type of $t$ is an
+appropriate starting point to search for the schema types of $t$ from
+a KG conceptual schema.
 
-The final triple type of $t=(s,p,o)$ is selected from the triple types
-provided by a conceptual schema stored in a KG. Using the predicate
-$p$ as the starting point, we choose first all valid triple types
-including a predicate $p$ or one of $p$'s super-predicates. The set of
-selected triple types is minimized to obtain a set of minimal and
-unrelated triple types, the candidates for the type of $t$.
+The schema type of $t=(s,p,o)$ is derived as follows. Using the
+predicate $p$ as the starting point, we choose from a stored schema of
+a KG all valid triple types including a predicate $p$ or one of $p$'s
+super-predicates. The set of all valid schema types is minimized to
+obtain a set of minimal and unrelated schema types, the candidates for
+the type of $t$.
 
 The appropriate candidate triple types are selected by relating the
 candidates to the MUB ground type by means of a subtype relation. The
-disjunctively bound candidate triple types that are related to the MUB
-ground type via subtype relation form the final type of~$t$.
+disjunctively bound candidate schema types, that are related to the
+MUB ground type via subtype relation, represent the final type of~$t$.
 
 % The existing approaches to typing a KG deal with the particular
 % problems of typing a KG\footnote{See the related work in
@@ -208,20 +207,18 @@ ontology. Finally, we show that the triple types can be used to
 disambiguate the sense of a predicate with multiple meanings.
 
 The paper is organized as follows. The following Section
-\ref{sec:prelim} presents some preliminary topics, including the
-introduction to a knowledge graph as an RDF graph, the description of
-the KG data model, and the definition of the rule language. Next,
-typing of identifiers is presented in Section
-\ref{sec:typ-idents}. Here we present typing literals and introduce
-typing and subtyping of identifiers. In Section \ref{sec:intsc-union}
-we present the semantics of $\land$-$\lor$ types, the associated rules
-for typing and subtyping, and introduce the join and meet
-types. Typing of triples is described in Section \ref{sec:triples}. We
-present the derivation of ground and schema triple types, and the
-rules to combine these two to obtain the final
+\ref{sec:prelim} presents definitions of a RDF graph, a KG data model,
+and the typing rule language. Next, typing of identifiers is presented
+in Section \ref{sec:typ-idents}. Here we present typing literals and
+introduce typing and subtyping of identifiers. In Section
+\ref{sec:intsc-union} we present the semantics of $\land$-$\lor$
+types, the associated rules for typing and subtyping, and introduce
+the join and meet types. Typing of triples is described in Section
+\ref{sec:triples}. We present the derivation of ground and schema
+triple types, and the rules to combine these two into the final
 type. Section~\ref{sec:related} presents an overview of the related
 work on typing KGs. Finally, in Section \ref{sec:conclude} we discuss
-some directions of further work.
+some directions of further work. 
 
 
 
@@ -230,19 +227,19 @@ some directions of further work.
 
 \section{Preliminaries\label{sec:prelim}}
 
+In this section we present the definition of a RDF graph, a data model
+of a KG, and the typing rule language that we use in the sequel.
 
-\subsection{Knowledge graph\label{sec:kg}}
 
-This section defines a knowledge graph as a RDF graph \cite{rdf} using
-RDF-Schema \cite{rdfschema} for the representation of the structural
-part of a knowledge base. 
 
-Let $I$ be a set of URI-s, $B$ be a set of blanks and $L$ be a set of
-literals. Let us also define sets $S = I\cup\/B$, $P = I$, and
-$O = I\cup\/B\cup\/L$. A \emph{RDF triple} is a triple
-$(s,p,o)\in\/S\times\/P\times\/O$. A \emph{RDF graph}
-$g\subseteq\/S\times\/P\times\/O$ is a set of triples. Set of all
-graphs will be denoted as $G$.
+\subsection{RDF graph\label{sec:kg}}
+
+A RDF graph \cite{rdf} is defined as follows. Let $I$ be a set of
+URI-s, $B$ be a set of blanks and $L$ be a set of literals. Let us
+also define sets $S = I\cup\/B$, $P = I$, and $O = I\cup\/B\cup\/L$. A
+\emph{RDF triple} is a triple $(s,p,o)\in\/S\times\/P\times\/O$. A
+\emph{RDF graph} $g\subseteq\/S\times\/P\times\/O$ is a set of
+triples. A set of all graphs will be denoted as $G$.
 
 The complete set of triples of a RDF graph is in the text
 referred to as $\Delta$. We use $\Delta$ when we want to refer
@@ -256,40 +253,44 @@ presented in the following Section.
 
 \subsection{A data model of a KG}
 
-To abstract away the details of the RDF data model, we unify the
-representation of the knowledge graph by separating solely between the
-identifiers and the triples. The identifiers include the set of
-individual identifiers, i.e., identifiers that denote individual
-entities, and the set of type identifiers, i.e., the identifiers that
-denote the types of individual entities. The triples include the set
-of ground triples and the set of triple types.
+This section defines a knowledge graph as a RDF graph that uses the 
+RDF-Schema dictionary \cite{rdfschema} for the representation of the
+schema part of a knowledge graph. To abstract away the details of the
+RDF data model, we unify the representation of the knowledge graph by
+separating solely between the \emph{identifiers} and the
+\emph{triples}.
+
+The identifiers include the set of ground (individual) identifiers,
+i.e., identifiers that denote individual entities, and the set of type
+identifiers, i.e., the identifiers that denote the types of individual
+entities. The triples include the set of ground triples and the set of
+triple types.
 
 However, typing of a KG is based on the separation between the values
-$\V$ and the types $\T$. The set of values $\V$ includes the
-individual identifiers $\V_i$ and the individual (ground) triples
-$\V_t$. To be able to refer to the specific subsets of $\V_i$ in the
-rules, we also introduce the set of literal values
-$\V_l\subseteq\V_i$, and the set of predicates
-$\V_p\subseteq\V_i$. The set of all valid types $\T$ of a KG comprises
-the type identifiers $\T_i$, i.e., types of individual identifiers
-$\V_i$, and the triple types $\T_t$, i.e. the types of individual
-triples $\V_t$.  Finally, a set $\T_c\subseteq\T_i$ is a set of class
-identifiers, and a set $\T_p\subseteq\T_i$ denotes a set of predicates
-that now have the role of types.
+$\V$ and the types $\T$. The set of values $\V$ includes the ground
+identifiers $\V_i$ and the ground triples $\V_t$. To be able to refer
+to the specific subsets of $\V_i$ in the rules, we also introduce the
+set of literal values $\V_l\subseteq\V_i$, and the set of predicates
+$\V_p\subseteq\V_i$. The set of all valid types $\T$ comprises the
+type identifiers $\T_i$, i.e., types of ground identifiers $\V_i$, and
+the triple types $\T_t$, i.e. the types of ground triples $\V_t$.
+Finally, a set $\T_c\subseteq\T_i$ is a set of class identifiers, and
+a set $\T_p\subseteq\T_i$ denotes a set of predicates that now have
+the role of types.
 
-The set of type identifiers $\T_i$ is ordered by a subclass relation
+The set of type identifiers $\T_i$ is ordered by a subtype relation
 $\preceq$ to form a poset. The meaning of type identifiers is
 established by their interpretations. The interpretation of a type
 identifier $T_i\in\T_i$ is the set of its instances, including the
 instances of type identifiers $T_i'\preceq\/T_i$.
 
-The ground triples include solely the individual identifiers from
-$\V_i$ in places of S and O, and predicates $\V_p$ in the place of P
-component of a triple. The types of individual triples are the product
-types $S*p*O$ where $S,O\in\T_c$ and $p\in\T_p$. The product types are
-in our data model written as triples $(S,p,O)$. In Section
-\ref{sec:intsc-union}, we extend triple types with $\land$-$\lor$
-types in S and O components.
+The ground triples include solely the ground identifiers from $\V_i$
+in places of S and O, and predicates $\V_p$ in the place of P
+component of a triple. The types of ground triples are the product
+types $T_s*p*T_o$ where $T_s\in\T_c$, $T_o\in\T_c\cup\T_l$. and
+$p\in\T_p$. The product types are in our data model written as triples
+$(T_s,p,T_o)$. In Section \ref{sec:intsc-union}, we extend triple types
+with $\land$-$\lor$ types in S and O components.
 
 The triple types $\T_t$ are ordered by a subtype relation $\preceq$ to
 form a poset. The subtype relation $\preceq$ among the triple types is
@@ -326,6 +327,16 @@ $s$. The premises of the rule are treated from left to right. The
 quantification of the symbols binds the symbols up to the last premise
 unless defined differently by the parentheses.
 
+The usual typing relation $x:T$, saying that $x$ is of type $T$, can
+be annotated to obtain a specific typing relation $x:_*\/T$, where $*$
+stands for any annotation. All annotated typing relations $x:_*\/T$
+imply a usual typing relation $x:T$. The annotation is needed since we
+construct the final type of a triple $t$ from two different types, the
+ground type $t:_\darr\/T_g$ and schema type $t:_\uarr\/T_s$. Moreover,
+the annotation is also employed to be able to guide the application of
+some specific rules. All the annotated typing relations are introduced
+before their use.
+
 
 
 
@@ -335,23 +346,19 @@ unless defined differently by the parentheses.
 
 \section{Typing identifiers\label{sec:typ-idents}}
 
-In this section, we present the basic typing of an individual (ground)
-identifiers $\V_i$. Typing of literals $\V_l$ is described in Section
-\ref{sec:literals}. Next, the rules for typing ground identifiers are
-presented in Section \ref{sec:idents-stored}. Section
-\ref{sec:idents-typing} further extends ground typing and subtyping to
-the complete poset of individual identifiers $\T_i$. The
-sub-typing relation $\preceq$ is defined, and typing rules for the
-individual identifiers are presented. The rules for typing individual
-identifiers are further used for typing ground triples $\V_t$ in
-Section \ref{sec:triples}.
+In this section, we present the typing of ground identifiers
+$\V_i$. First, typing of literals $\V_l$ is described in Section
+\ref{sec:literals}. Next, the rules for ground typing and subtyping of
+ground identifiers are presented in Section
+\ref{sec:idents-stored}. Section \ref{sec:idents-typing} further
+extends ground typing and subtyping to the complete set of type
+identifiers $\T_i$.
 
 
 
 
 
 \subsection{Typing literals\label{sec:literals}}
-% check-gramm
 
 Literal values $\V_l\subseteq\V_i$ are the instances of literal types
 $\T_l\subseteq\T_i$. The literal types $\T_l$ are provided by the
@@ -380,29 +387,17 @@ dictionary.
 
 
 \subsection{Ground typing and subtyping of identifiers\label{sec:idents-stored}}
-% check-gramm
 
-The typing expression $V:_\darr\/T$ is a \emph{ground typing} relation
-$:_\darr$ that links a value $V\in\V$ to a ground type $T\in\T$. The
-ground typing relation is a one-step typing relation based on typing
-stored in a KG.
+The typing expression $V:_\darr\/T$ denotes a \emph{ground typing}
+relation $:_\darr$ that links a value $V\in\V_i$ to a ground type
+identifiers $T\in\T_i$. The ground typing relation is a \emph{one-step
+  typing} relation based on typing stored in a KG.
 
-In this section, we deal with the identifiers $I\in\V_i$, which are the
-values of type $T\in\T_i$. The ground types are directly linked to the
-ground identifiers via a stored typing relation in the form
-$(I,\text{rdf:type},T)\in\Delta$. The expression $I:_\darr\/T$ states that a
-class identifier $T$ is a ground type of an individual identifier $I$.
-
-The subtyping expression $T_1\preceq_\darr\/T_2$ defines a subtype
-relationship between the types $T_1$ and $T_2$. In the case we deal
-with the identifiers, the relation $T_1\preceq_\darr\/T_2$ denotes the
-subclass relations since $T_1,T_2\in\T_i$. The relation $\preceq_\darr$ is
-a one-step relation that is stored in $\Delta$. Note that a unique
-notation for ground typing allows us to address differently the
-\emph{stored} and the \emph{derived} types of a KG.
-
-The rule for the one-step typing relation $:_\darr$ is defined using the
-predicate rdf:type.
+The ground types are linked to the ground identifiers via a stored
+typing relation in the form
+$(I,\text{rdf:type},T)\in\Delta$. Consequently, we can write
+$I:_\darr\/T$. The rule for the one-step ground typing relation
+$:_\darr$ is defined as follows.
 
 \begin{equation}
 \label{rul:ident-1step-type}
@@ -417,19 +412,20 @@ all types $T_j^{j\in[1,n]}$ such that $I:_\darr\/T_j^{j\in[1,n]}$.
 If we want to obtain all valid ground types of $I$, the rule can be
 used either in some other rule that employs it as a generator, or we
 can update the above rule to generate a $\land$-type, including all
-the types of $I$ as presented in Section \ref{sec:intsc-union}.
+the ground types of $I$ as presented in Section \ref{sec:intsc-union}.
 
-The one-step subtyping relationship $\preceq_\darr$ is defined on
+The one-step subtyping relation $\preceq_\darr$ is defined on
 classes by using the RDF predicate rdfs:sub\-ClassOf as follows.
 
 \begin{equation}
 \label{rul:ident-1step-subtype}
-\dfrac{C_1,C_2\in\T_i \quad (C_1,\text{rdfs:subClassOf},C_2)\in\D}
+\dfrac{C_1,C_2\in\T_c\quad (C_1,\text{rdfs:subClassOf},C_2)\in\D}
 {C_1 \preceq_\darr\/C_2}
 \end{equation}
 
 The rule for the definition of the one-step subtyping relationship
-$\preceq_\darr$ is based on the predicate rdfs:subPropertyOf.
+$\preceq_\darr$ on the predicates $\T_p$ is based on the RDF-Schema
+predicate rdfs:subPropertyOf.
 
 \begin{equation}
 \dfrac{P_1,P_2\in\T_p \quad (P_1,\text{rdfs:subPropertyOf},P_2)\in\D}
@@ -442,22 +438,14 @@ that they represent the names of the binary relations.
 
 
 \subsection{Typing and subtyping identifiers\label{sec:idents-typing}}
-% check-gramm
 
-The one-step relationship $\preceq_\darr$ is extended with the
+The one-step relation $\preceq_\darr$ is extended with the
 reflectivity, transitivity, and antisymmetry to obtain the subtyping
-relationship $\preceq$. The relation $\preceq$ forms a partial
-ordering of individual identifiers.
+relation $\preceq$. The relation $\preceq$ forms a poset of type
+identifiers $\T_i$.
 
-The ground typing relation $:_\darr$ is then extended with the
-\emph{rule of subsumption} presented as Rule
-\ref{rul:typing-subsumption} to obtain a typing relation $:$. The
-rules are defined for the set of types $\T$ that includes the types of
-individual identifiers $\T_i$ and triple types $\T_t$.
-
-First, the one-step relationship $\preceq_\darr$ is generalized to the
-relationship $\preceq$ defined over the type identifiers
-$\T_i$. 
+First, the one-step relation $\preceq_\darr$ is generalized to the
+relation $\preceq$ defined over type identifiers $\T_i$.
 
 \begin{equation}
 \label{rul:Ic-extended}
@@ -465,7 +453,9 @@ $\T_i$.
       {I_1 \preceq I_2}
 \end{equation}
 
-Next, the subtyping relationship $\preceq$ is reflexive.
+The following Rules \ref{rul:Ti-reflexivity}-\ref{rul:Ti-antisymmetry}
+define the reflexivity, transitivity and antisymmetry of the
+relation $\preceq$, respectively.
 
 \begin{equation}
 \label{rul:Ti-reflexivity}
@@ -473,16 +463,11 @@ Next, the subtyping relationship $\preceq$ is reflexive.
       {I\preceq\/I}
 \end{equation}
 
-The subtype relationship is also transitive. 
-
 \begin{equation}
 \label{rul:Ti-transitivity}
 \dfrac{I_1,I_2,I_3\in\T_i\quad\/I_1\preceq\/I_2\quad\/I_2\preceq\/I_3}
       {I_1\preceq\/I_3}   
 \end{equation}
-
-Finally, the subtype relationship is antisymmetric, which is expressed
-using the following rule.
 
 \begin{equation}
 \label{rul:Ti-antisymmetry}
@@ -490,34 +475,26 @@ using the following rule.
       {I_1=I_2}   
 \end{equation}
 
-As a consequence of the rules
-\ref{rul:Ti-reflexivity}-\ref{rul:Ti-antisymmetry} the relation
-$\preceq$ defines a poset $(\T_i,\preceq)$.
+\noindent
+As a consequence of Rules
+\ref{rul:Ti-reflexivity}-\ref{rul:Ti-antisymmetry}, the relation
+$\preceq$ orders the types from $\T_i$ into a poset.
 
-Knowledge graphs include a special class $\top$ that represents the
-root class of the ontology. In RDF ontologies, $\top$ is usually
-represented by the predicate owl:Thing \cite{Hoffart2013}. The
-following rule specifies that all class identifiers are more specific
-than $\top$.
+The one-step typing relation $:_\darr$ is generalized to the typing
+relation $:$ with the following rule.
 
 \begin{equation}
-\dfrac{\forall\/S\in\T_i}
-      {S\preceq\top}
+\dfrac{I\in\V_i\quad\/T\in\T_i\quad\/I:_\darr\/T}
+      {I:T}
 \end{equation}
 
-%\subsection{Typing of identifiers.}
-The one-step typing relation $:_\darr$ is now extended to the typing
-relation $:$ that takes into account the subtyping relation $\preceq$.
-The following rule states that a stored type is a type.
+Note that a unique notation for ground typing allows us to address
+differently the \emph{stored} and the \emph{derived} types of ground
+identifiers.
 
-\begin{equation}
-\dfrac{I\in\V_i\quad\/C\in\T_i\quad\/I:_\darr\/C}
-      {I:C}
-\end{equation}
-
-The link between the typing relation and the subtype relation is
-provided by adding a typing rule called \emph{rule of subsumption}
-\cite{Pierce2002}.
+The link between the typing relation $:$ and the subtype relation
+$\preceq$ is provided by adding a typing rule called the \emph{rule of
+  subsumption} \cite{Pierce2002}.
 
 \begin{equation}
 \label{rul:typing-subsumption}
@@ -525,7 +502,15 @@ provided by adding a typing rule called \emph{rule of subsumption}
       {I:T}    
 \end{equation}
 
+Finally, KGs include a special class $\top$ that represents the root
+type of an ontology. In RDF ontologies, $\top$ is usually represented
+by the predicate owl:Thing \cite{Hoffart2013}. The following rule
+specifies that all types are subtypes of $\top$.
 
+\begin{equation}
+\dfrac{\forall\/S\in\T}
+      {S\preceq\top}
+\end{equation}
 
 
 
