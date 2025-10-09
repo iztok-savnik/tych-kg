@@ -83,7 +83,7 @@
 
 \begin{document}
 
-\title{DRAFT! \\ On typing knowledge graphs}
+\title{On typing knowledge graphs}
 
 \author{Iztok Savnik\inst{1}} 
 
@@ -97,19 +97,23 @@
 \maketitle
 
 \begin{abstract}
-  The problem addressed in this paper is typing a single ground
-  triple~$t$ from a knowledge graph. First, the \emph{ground type} of
-  $t$ is inferred bottom-up, from the stored typing of individual
-  entities which are the components of $t$. The ground type is further
-  minimized and then generalized to obtain a minimal upper bound (MUB)
-  type. The MUB type is an appropriate starting point for exploring
-  its relations to the conceptual schema of a knowledge graph. Second,
-  the \emph{schema type} of $t$ is inferred from the conceptual schema
-  based on the predicate of $t$. All valid schema types of $t$ are
-  gathered and then minimized to obtain a schema type with a minimal
-  interpretation. Finally, the minimal schema type is filtered by
-  relating it to the MUB ground type via the subtype relation to
-  compute the final schema type of $t$.
+  This paper presents a formal type system for knowledge graphs (KGs).
+  The schema of a KG represents a language of types comprising the
+  type identifiers---such as classes and predicates---ordered into
+  taxonomies, together with the product, intersection, and union
+  types. To handle the rich hierarchy of types, the typing framework
+  employs algebraic operators on posets to formalize typing relations.
+
+  Typing of ground triples proceeds by first inferring and minimizing
+  the ground type from the stored typing of entities, then
+  generalizing it to a minimal upper bound (MUB) type. The MUB type
+  serves as a basis for relating ground types to the schema of a
+  KG. Next, the schema type is inferred from the predicate’s
+  definition, minimized, and filtered through subtyping with respect
+  to the MUB ground type to produce the final schema type. The
+  proposed typing rules support type inference, provide a framework
+  for type-checking, and enable predicate disambiguation based on the
+  triple types.
 
   \keywords{knowledge representation \and knowledge graphs \and type systems .}
 \end{abstract}
@@ -125,14 +129,15 @@
 
 
 
+
 \section{Introduction}
 
-A knowledge graph (abbr., KG) includes a data and knowledge
-representation language in the form of a graph. The dictionaries, such
-as RDF-Schema \cite{rdfschema}, attach the meanings to the edges of a
-graph and turn a graph into a language for the representation of data
-and knowledge. In comparison to the data and program structures used
-in programming languages \cite{Pierce2002,Hindley1997}, the conceptual
+A knowledge graph (abbr., KG) is a formalism for representing data and
+knowledge in the form of a graph. The vocabularies, such as RDF-Schema
+\cite{rdfschema}, attach the meanings to the edges of a graph, and
+turn a graph into a language for the representation of data and
+knowledge. In comparison to the data and program structures used in
+programming languages \cite{Pierce2002,Hindley1997}, the conceptual
 schema of a KG is more expressive: in principle, any data and program
 structure can be represented as a graph. The expressive power comes
 from logic that stands behind a KG, where a graph is a set of named
@@ -157,21 +162,21 @@ this is often referred to as the intensional knowledge. On the other
 hand, the ground entities (identifiers) and ground triples represent
 the facts about the entities, or the extensional knowledge.
 
-From the perspective of a knowledge graph, that is, a knowledge
-representation language grounded in a database of facts, the schema
-part of a KG is a language of types \cite{Pierce2002}. The sytax of
-type expressions includes the following structures. First, we have the
-classes that are the types of ground identifiers (entities). Second,
-the predicates are the identifiers (names) of binary relations. The
-types of predicates are the product types including the domain and
-range types as well as the predicates. Further, the $\land$ and $\lor$
-types capture many requirements of the KG domain very naturally. For
+From the perspective of a type system, the schema of a KG is presented
+by using a language of types \cite{Pierce2002}, often the
+RDF-Schema. The syntax of type expressions includes the following
+structures. First, we have classes that are the types of ground
+identifiers (entities). Second, the predicates are the identifiers
+(names) of binary relations. The types of predicates are the product
+types, including the domain and range types as well as the
+predicates. Further, the $\land$ and $\lor$ types \cite{Pierce1996}
+capture many requirements of the KG domain very naturally. For
 example, a domain of a predicate can be two different classes that are
 linked by a $\land$-type.
 
 Finally, the taxonomies of classes and predicates are hard to grasp
 structurally; rather, posets can be manipulated with algebraic
-operators. In the proposed type system we often use the operators that
+operators. In the proposed type system, we often use the operators that
 are defined on posets. The algebraic operators employed in the rules
 include the operator \emph{minimum}, which given a poset returns a set
 of minimal poset elements, and the operator for computing
@@ -181,8 +186,8 @@ of minimal poset elements, and the operator for computing
 The paper presents a type system comprising a set of rules for typing
 ground triples from a KG. Let us give an abstract description of
 typing a single ground triple $t$. First, the \emph{ground type} of
-$t$ is inferred bottom-up, from the stored typing of individual
-entities which are the components of $t$. The ground type is further
+$t$ is inferred bottom-up, from the stored typing of ground
+entities, which are the components of $t$. The ground type is further
 minimized to obtain a minimal ground type of $t$. The minimal ground
 type is then generalized to obtain a minimal upper bound (MUB)
 type. The MUB type is an appropriate starting point for exploring its
@@ -199,14 +204,14 @@ our knowledge, this is the first proposal for typing ground triples of
 a knowledge graph that uses the product, union and intersection types,
 and encompasses a complete KG. Second, the presented framework for
 typing ground triples can serve conveniently for the implementation of
-type-checking the stored typing of a KG. The analysis of typing an
-individual triple spans from the ground types at the lower levels of
+type-checking the stored typing of a KG. The analysis of typing a
+ground triple spans from the ground types at the lower levels of
 ontology to the minimal schema types at the upper levels of
 ontology. Finally, we show that the triple types can be used to
 disambiguate the sense of a predicate with multiple meanings.
 
 The paper is organized as follows. The following Section
-\ref{sec:prelim} presents definitions of a RDF graph, a KG data model,
+\ref{sec:prelim} presents definitions of an RDF graph, a KG data model,
 and the typing rule language. Next, typing of identifiers is presented
 in Section \ref{sec:typ-idents}. Here we present typing literals and
 introduce typing and subtyping of identifiers. In Section
@@ -218,42 +223,6 @@ triple types, and the rules to combine these two into the final
 type. Section~\ref{sec:related} presents an overview of the related
 work on typing KGs. Finally, in Section \ref{sec:conclude} we discuss
 some directions of further work. 
-
-
-\memo{
-Typing a knowledge graph requires a framework for the definition of
-rules, which is different from the framework for classical typing of
-programming languages. While typing in programming languages is based
-on the syntactical composition of a program, a knowledge graph is
-built from simple triples. Triples can form rich semantic structures
-depending on the kinds of entities and values. The kind of object,
-for example, can be either a ground value or a class. Typing of a KG
-must, therefore, be able to grasp the kinds of objects in the rules,
-and, in many cases, need to be guided by a procedure.}
-
-\memo{
-We propose to infer first the
-ground type of $t$ using the stored typing of identifiers. The ground
-type is minimized and then generalized to the minimal upper bound
-(MUB) type. The MUB type of $t$ is an appropriate starting point to
-search for the schema types of $t$ from a KG conceptual schema.
-
-The schema type of $t=(s,p,o)$ is derived as follows. Using the
-predicate $p$ as the starting point, we choose from a stored schema of
-a KG all valid triple types including a predicate $p$ or one of $p$'s
-super-predicates. The set of all valid schema types is minimized to
-obtain a set of minimal and unrelated schema types, the candidates for
-the type of $t$. 
-
-The appropriate candidate schema types are selected by relating the
-candidates to the MUB ground type by means of a subtype relation. The
-disjunctively bound candidate schema types, that are related to the
-MUB ground type via subtype relation, represent the final type of~$t$.
-
-% The existing approaches to typing a KG deal with the particular
-% problems of typing a KG\footnote{See the related work in
-% Section \ref{sec:related}.}.
-}
 
 
 
@@ -288,7 +257,7 @@ presented in the following Section.
 \subsection{A data model of a KG}
 
 This Section defines a knowledge graph as an RDF graph that uses the
-RDF-Schema dictionary \cite{rdfschema} for the representation of the
+RDF-Schema vocabulary \cite{rdfschema} for the representation of the
 schema part of a knowledge graph. To abstract away the details of the
 RDF data model, we unify the representation of the knowledge graph by
 separating solely between the \emph{identifiers} and the
@@ -397,7 +366,7 @@ identifiers $\T_i$.
 
 Literal values $\V_l\subseteq\V_i$ are the instances of literal types
 $\T_l\subseteq\T_i$. The literal types $\T_l$ are provided by the
-RDF-Schema dictionary \cite{rdfschema}. RDF-Schema defines a rich set
+RDF-Schema vocabulary \cite{rdfschema}. RDF-Schema defines a rich set
 of literal types, such as xsd:integer, xsd:string, or xsd:boolean.
 
 The literals are composed of literal values and literal types. For
@@ -414,7 +383,7 @@ defined by the following rule.
 The rule states that a literal value $L$ is of a type $T$ if a literal
 "L"\textasciicircum\textasciicircum\/T is an element of a KG
 $\Delta$. A literal type $T$ is referencing a type from the RDF-Schema
-dictionary.
+vocabulary.
 
 
 
@@ -1318,34 +1287,22 @@ use fragments of types that are adapted for the particular problem.
 
 \section{Conclusions\label{sec:conclude}}
 
-The implementation of typing a knowledge graph is currently under way
+The implementation of typing a knowledge graph is currently underway
 in the context of a working prototype RDF store \epsln
 \cite{epsilon2025}, which is used for browsing and querying knowledge
-graphs, especially, for querying the schema part of a KG. Also, we
-have used \epsln as a testing environment for the computation of the
-statistics of knowledge graphs based on types \cite{Savnik2025}.
+graphs, particularly the schema component. \epsln has also been used
+as a prototype environment for computing type-based statistics of KGs
+based on types \cite{Savnik2025}.
 
 The \epsln environment includes a simple language for the manipulation
-of the sets of identifiers and the sets of triples. The algebraic
-operations are used for mapping sets to new sets by using single
-predicates, path expressions, or, transitive closure operations with
-fine control over the computation of closures. Further, we are
-implementing the operations on posets of identifiers and triples,
-which compute minimal and maximal elements from the poset, the MUB and
-MLB as well as the LUB and GLB operations on posets. The typing
-rules are being implemented as procedures.
+of the sets of identifiers and triples. Algebraic operations are
+used for mapping sets to new sets by using single predicates, path
+expressions, or, transitive closure operations with fine control over
+the computation of closures. Additionally, operations on posets of
+identifiers and triples are being implemented to compute minimal and
+maximal elements, the MUB and MLB as well as LUB and GLB. The
+typing rules are implemented as procedures whitin this framework.
 
-
-\memo{
-Typing of a knowledge graph can serve many theoretical and practical
-purposes. First, type-based inference can be used for answering
-logical queries about the KG domain by inferring from parts
-of schema, like the poset of types, the domain and range constraints,
-and the stored typing of identifiers. Second, typing of a KG can be
-extended to type-checking that can identify inconsistencies in a
-KG. Third, typing a KG can be used as the basis for typing basic graph
-patterns and SparQL, and with this, they also can be used in tasks
-such as the query optimization and reasoning.}
 
 
 
