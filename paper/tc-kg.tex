@@ -172,7 +172,7 @@ types, including the domain and range types as well as the
 predicates. Further, the $\land$ and $\lor$ types \cite{Pierce1996}
 capture many requirements of the KG domain very naturally. For
 example, a domain of a predicate can be two different classes that are
-linked by a $\land$-type.
+linked by an $\land$-type.
 
 Finally, the taxonomies of classes and predicates are hard to grasp
 structurally; rather, posets can be manipulated with algebraic
@@ -239,10 +239,11 @@ of a KG, and the typing rule language that we use in the sequel.
 
 An RDF graph \cite{rdf} is defined as follows. Let $I$ be a set of
 URI-s, $B$ be a set of blanks, and $L$ be a set of literals. Let us
-also define sets $S = I\cup\/B$, $P = I$, and $O = I\cup\/B\cup\/L$. A
-\emph{RDF triple} is a triple $(s,p,o)\in\/S\times\/P\times\/O$. A
-\emph{RDF graph} $g\subseteq\/S\times\/P\times\/O$ is a set of
-triples. A set of all graphs will be denoted as $G$.
+also define sets $S = I\cup\/B$, $P = I$, and $O =
+I\cup\/B\cup\/L$. An \emph{RDF triple} is a triple
+$(s,p,o)\in\/S\times\/P\times\/O$. An \emph{RDF graph}
+$g\subseteq\/S\times\/P\times\/O$ is a set of triples. A set of all
+graphs will be denoted as $G$.
 
 The complete set of triples of an RDF graph is in the text
 referred to as $\Delta$. We use $\Delta$ when we want to refer
@@ -293,7 +294,8 @@ component of a triple. The types of ground triples are the product
 types $T_s*p*T_o$ where $T_s\in\T_c$, $T_o\in\T_c\cup\T_l$. and
 $p\in\T_p$. The product types are in our data model, written as
 triples $(T_s,p,T_o)$. In Section \ref{sec:intsc-union}, we extend
-triple types with $\land$-$\lor$ types in S and O components.
+triple types with $\land$-$\lor$ types in the subject and object
+components.
 
 The triple types $\T_t$ are ordered by a subtype relation $\preceq$ to
 form a poset. The subtype relation $\preceq$ among the triple types is
@@ -415,7 +417,7 @@ all types $T_j^{j\in[1,n]}$ such that $I:_\darr\/T_j^{j\in[1,n]}$.
 
 If we want to obtain all valid ground types of $I$, the rule can be
 used either in some other rule that employs it as a generator, or we
-can update the above rule to generate a $\land$-type, including all
+can update the above rule to generate an $\land$-type, including all
 the ground types of $I$ as presented in Section \ref{sec:intsc-union}.
 
 The one-step subtyping relation $\preceq_\darr$ is defined on
@@ -907,7 +909,7 @@ the minimal ground types of the triple components.
 
 The component types $S$ and $T$ of the minimal ground type $(S,p,T)$
 can represent $\land$-types. The following rule transforms a triple
-type including $\land$-types into a $\land$-type of simple triple
+type including $\land$-types into an $\land$-type of simple triple
 types composed of class identifiers in place of the subject and object
 components. The rule is expressed in a general form by using the
 typing relation "$:$", which can be replaced by any labeled typing
@@ -1137,7 +1139,7 @@ triple $t$ in the case our minimal KG schema language is used for the
 definition of the KG schema. First, the following Rule
 \ref{rul:3-stored2} generates all valid alternatives of stored triple
 types given a triple $t$. Note that $D_i$ and $R_i$ are the types of
-domains and ranges of $p$ that can stand for a $\land$-type.
+domains and ranges of $p$ that can stand for an $\land$-type.
 
 \begin{equation}
 \label{rul:3-stored2}
@@ -1225,9 +1227,8 @@ The examples of final types that include more than one alternative
 schema type with different meanings can appear when typing triple
 patterns. In case a triple pattern $tp$ contains one or more
 variables, then the ground type of one or more $tp$'s components can
-not be derived; hence, the $\top$ type is used. Hence, we can not
-select a single schema triple type of $tp$, but we obtain an
-$\lor$-type.
+not be derived; hence, the $\top$ type is used. Consequently, the
+ground type of the triple pattern may match more than one schema type.
 
 
 
