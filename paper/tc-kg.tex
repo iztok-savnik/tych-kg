@@ -137,18 +137,18 @@ binary relations, and triples are logical statements. Let us present
 some of the features of the data and knowledge representation language
 of a KG.
 
-First, a KG stores predefined classes that are organized into
-taxonomies \cite{Baader2002}. Second, typing of ground identifiers, as
-well as typing of the predicates with the domain and range types, is
-stored in a KG. Further, similarly to the \emph{roles}
-\cite{Brachman1985} of a knowledge base, the predicates are treated as
-classes. As classes, predicates are organized into a txonomy. However,
-they also act as individual entities described with additional
-predicates. Finally, the predicates are inherited through the taxonomy
-of classes similarly as data members and methods are inherited from
-classes of object-oriented programming languages. And since predicates
-also act as classes, the predicates of the predicates, like the domain
-and range of a predicate, are inherited through the taxonomy of
+A KG stores predefined classes that are organized into taxonomies
+\cite{Baader2002}. Further, typing of ground identifiers, as well as
+typing of the predicates with the domain and range types, is also
+stored in a KG. Similarly to the \emph{roles} \cite{Brachman1985} of a
+knowledge base, the predicates are treated as classes. As classes,
+predicates are organized into a taxonomy. However, they also act as
+individual entities described with additional predicates. Finally, the
+predicates are inherited through the taxonomy of classes similarly as
+data members and methods are inherited among classes of
+object-oriented programming languages. And since predicates also act
+as classes, the predicates of the predicates, like the domain and
+range of a predicate, are inherited through the taxonomy of
 predicates.
 
 From a logic perspective, the schema of a KG represents the
@@ -164,19 +164,18 @@ structures. First, we have classes that are the types of ground
 identifiers (entities). Second, the predicates are the identifiers
 (names) of binary relations. The types of predicates are the product
 types, including the domain and range types and the associated
-predicates. Further, the $\land$-$\lor$ types \cite{Pierce1996}
+predicate name. Further, the $\land$-$\lor$ types \cite{Pierce1996}
 capture many requirements of the KG domain very naturally. For
 example, a domain of a predicate can be two different classes that are
 linked by an $\land$-type.
 
 Finally, the taxonomies of classes and predicates are hard to grasp
 structurally; rather, posets can be manipulated with algebraic
-operators. In the proposed type system, we often use the operators that
-are defined on posets. The algebraic operators employed in the rules
-include the operator \emph{minimum}, which given a poset returns a set
-of minimal poset elements, and the operator for computing
-\emph{minimal upper bounds} of a subset of elements from a poset
-\cite{DaveyPriestley2002}.
+operators. In the proposed type system, we use the operators defined
+on posets in rules. Examples include the operator \emph{minimum},
+which, given a poset, returns a set of minimal poset elements, and the
+operator for computing \emph{minimal upper bounds} of a subset of
+elements from a poset \cite{DaveyPriestley2002}.
 
 The paper presents a type system comprising a set of rules for typing
 ground triples from a KG. Let us give an abstract description of
@@ -197,13 +196,13 @@ the \emph{final schema type} of $t$.
 The contributions of the presented research are as follows. First, to
 our knowledge, this is the first proposal for typing ground triples of
 a knowledge graph that uses the product, union and intersection types,
-and encompasses a complete KG. Second, the presented framework for
-typing ground triples can serve conveniently for the implementation of
-type-checking the stored typing of a KG. The analysis of typing a
-ground triple spans from the ground types at the lower levels of
-ontology to the minimal schema types at the upper levels of
-ontology. Finally, we show that the triple types can be used to
-disambiguate the sense of a predicate with multiple meanings.
+and encompasses a complete KG when typing a ground triple. Second, the
+presented framework for typing ground triples can serve conveniently
+for the implementation of type-checking the stored typing of a KG. The
+analysis of typing a ground triple spans from the ground types at the
+lower levels of ontology to the minimal schema types at the upper
+levels of ontology. Finally, we show that the triple types can be used
+to disambiguate the sense of a predicate with multiple meanings.
 
 The paper is organized as follows. The following Section
 \ref{sec:prelim} presents definitions of an RDF graph, a KG data model,
@@ -1064,48 +1063,46 @@ super-predicates of $p$.
 \label{rul:3-stored1}
 \dfrac{\begin{array}{c}
        t\in\V_i,\, t=(s,p,o)\quad p_1,p_2\in\TT_p,\, p\preceq\/p_1\preceq\/p_2 \\
-       T_i^{\s\/i=1..n}\in\TT_c,\, (p_1,\text{domain},T_i)\in\/\Delta \\
-       S_j^{\s\/j=1..m}\in\TT_c,\, (p_2,\text{range},S_j)\in\Delta
+       T\in\TT_c,\, (p_1,\text{domain},T)\in\/\Delta \\
+       S\in\TT_c,\, (p_2,\text{range},S)\in\Delta
        \end{array}}
-      {t:_\uarr\/(\land_{i=1}^n\/T_i, p, \land_{j=1}^m\/S_j)}
+      {t:_\uarr\/(T,p,S)}
 \end{equation}
 
-The above rule generates pairs of types of the domain and range of a
+The above rule generates valid schema types $(T,p,S)$ for a given
 predicate $p$. We allow that a domain and range types are defined for
-different predicates $p_1,p_2\preceq\/p$ since such a situation can
-appear in a KG. However, we have to be careful that the rules of
-inheritance are respected. We can only inherit from $p_1$ and $p_2$
-that are related by subtype relation:
-$p\preceq\/p_1\preceq\/p_2$. This condition restricts the domain and
-range to be defined on the same path from $p$ to some maximal element
-$m$ of the predicate $p$ poset. 
+different predicates $p_1,p_2\succeq\/p$ since such cases appear in a
+KG. However, we have to be careful that the rules of inheritance are
+respected. We can only inherit from $p_1$ and $p_2$, which are related
+by a subtype relation: $p\preceq\/p_1\preceq\/p_2$. This condition
+restricts the domain and range to be defined on the same path from $p$
+to some maximal element $m$ of the predicate $p$ poset.
 
-
-The above Rule \ref{rul:3-stored1} generates all valid schema types of
+Rule \ref{rul:3-stored1} generates all valid schema types of
 a triple $t$. From the set of all valid stored types of $t$, we select
 the subset including only the minimal types. The following rule is a
-logical judgment for a minimal schema type of a $t$. 
+logical judgment for a minimal schema type of $t$. 
 
 \begin{equation}
 \label{rul:min-stored-type}
 \dfrac{\begin{array}{c}
-         t\in\TT_i\quad T\in\TT_t,\, t:_\uarr\/T \\
-         S_i^{\s\/i\in[1,n]}\in\TT_t,\, t:_\uarr\/S_i\quad T\preceq\/S_i\lor\/T\not\sim\/S_i
+         t\in\TT_i\quad T_i^{i=1..n}\in\TT_t,\, t:_\uarr\/T_i \\
+         S_j^{j=1..m}\in\TT_t,\, t:_\uarr\/S_j\quad T_i\preceq\/S_j\lor\/T_i\not\sim\/S_j
        \end{array}}
-      {t:_{\uarr}\/T}
+      {t:_{\uarr}\land_{i=1}^n\/T_i}
 \end{equation}
 
-The first part of the premise says that $t$ is a ground triple and there
-exists $T\in\TT_t$ which is a type of $t$. The second part of the premise
-requires that $T$ is the minimal type of all types $S$ of $t$. In
-other words, there is no type $S_i^{\s\/i=1..n}$ of $t$ that is a
-subtype of $T$. Hence, $T$ is the minimal type of the stored triple
-types of $t$.
+The first part of the premise says that $t$ is a ground triple and
+there exists $T_i^{i=1..n}\in\TT_t$, which are the types of $t$. The
+second part of the premise requires that $T_i^{i=1..n}$ are the
+minimal types. In other words, there are no such types $S_j^{j=1..m}$
+of $t$ that are subtypes of $T_i^{i=1..n}$. Hence, $T_i^{i=1..n}$ are
+the minimal types of the stored triple types of $t$.
 
 Note that if the schema is defined by using RDF-Schema, and the stored
-schema typing is correct, then the condition $T\sim\/S_i$ is always
-$true$, and Rule \ref{rul:min-stored-type} generates exactly one
-minimal type.
+schema typing is correct, then $n=m=1$ and the condition
+$T_i\preceq\/S_j$ is $true$. Consequently,
+Rule~\ref{rul:min-stored-type} generates exactly one minimal type.
 
 \memo{
 Furthermore, under the restrictions of RDF-Schema, we can
@@ -1131,7 +1128,7 @@ and defaults often depend on the local assumptions and domain in which
 they are applied.
 
 Most recent KGs enforce exactly one meaning of a predicate in KGs
-through the RDF Schema. On the ther hand, the contextual
+through the RDF Schema. On the other hand, the contextual
 representation and reasoning allow the definition of multiple senses
 of a predicate. There are many motivations for adopting contextual
 representation and reasoning in a KG. First, with the evolution of
@@ -1227,7 +1224,7 @@ case we use RDF-Schema semantics of a KG, then the rules infer a
 single minimal schema type. If there is more than one schema type,
 then the domains and ranges from the different definitions are merged
 into one $\land$-type. At this point, we can not verify if there are
-any errors in types from the domain and/or range of a predicate. In
+errors in types from the domain and/or range of a predicate. In
 case we use RDF-Schema with $\land$-$\lor$ types, then the rules can
 infer multiple disjunctive schema types. Also in this case, there are
 no additional constraints that could be verified.
@@ -1251,7 +1248,7 @@ subtype of $S$. In case $T\not\preceq\/S$, then the ground type
 $T=\land[T_i^{i\in[1,n}]$ includes at least one $T_i\not\preceq\/S$.
 
 Let's now assume that we use the \emph{minimal KG schema language}, as
-defined in Section \ref{sec:schema-3types}.2, for the representation
+defined in Section \ref{sec:schema-3types}, for the representation
 of the KG schema. Note also that we have to use Rules
 \ref{rul:3-stored2}-\ref{rul:3-min} in order to derive the schema
 triple type. The rule for selecting the final type of $t$ is now as
