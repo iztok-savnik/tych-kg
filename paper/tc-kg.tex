@@ -992,10 +992,11 @@ join types of the subject and object components of $t$.
 \end{equation}
 
 The join type $(S,p,T)$ includes in the subject and object components
-the $\land$-types composed of one or multiple MUB classes. When we
-convert this type into a conjunction of basic MUB triple types. Let's
-refer to this $\land$-type as $M$. Each MUB type from $M$ stands for
-all ground triple types of~$t$.
+the $\land$-types composed of one or multiple MUB classes, i.e.,
+$(\land_{i=1}^{n}S_i,p,\land_{j=1}^{m}T_j)$. We convert this type
+using Rule \ref{rul:3-land-transform} into a conjunction of basic MUB
+triple types $M=\land_{i=1..n, j=1..m}(S_i,p,T_j)$ to be used as a
+\emph{final ground type}.
 
 We can easily see that each particular triple type from $M$ is an MUB
 type since it includes MUB types in its components. Further, the MUB
